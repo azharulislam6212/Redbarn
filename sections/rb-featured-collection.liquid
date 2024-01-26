@@ -1,0 +1,130 @@
+{{ 'section-featured-collection.css' | asset_url | stylesheet_tag }}
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+
+
+
+<section class="featured-collection-wrapper {% if section.settings.slider_enable %} featured-collection__enable{% endif %}">
+  <div class="container">
+
+    {% if section.settings.heading %}
+      <h2 class="featured-collection__heading">{{ section.settings.heading }}</h2>
+
+    {% endif %}
+
+    <div class="featured-collection__list   {% if section.settings.slider_enable %} featured-collection__slider  {% endif %}">
+        {% liquid
+            assign collection_handle = section.settings.collection_handle 
+            assign products_to_show = section.settings.products_to_show
+
+         
+            %}
+
+      {% if collection_handle != blank %}
+        {%- for product in collection_handle.products limit: products_to_show -%}
+
+
+          <div class="featured-collection__item" {{ block.shopify_attributes }}>
+
+            {% render 'prduct-card-custom' , product: product  %}
+
+
+        
+          </div>
+        {%- endfor -%}
+      {% endif %}
+
+      {%- if collection_handle == empty -%}
+        {%- for i in (1..8) -%}
+          {% capture j %}{% cycle 1, 2, 3, 4, 5, 6 %}{% endcapture %}
+
+          {% assign product_card = 'product-' | append: j %}
+          {% assign image_demo = product_card | placeholder_svg_tag: 'product-svg-image light-bg' %}
+
+          <div class="featured-collection__item" {{ block.shopify_attributes }}>
+            <div class="prduct-card">
+              <div class="prduct-card__img-wrap">
+     
+                  <a href="javascript:void(0)">
+                    {{ image_demo }}
+                  </a>
+         
+              </div>
+              <div class="prduct-card__info">
+              
+                  <div class="prduct-card__reviews">
+
+                       <span><svg width="79" height="17" viewBox="0 0 79 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M71.996 12.868L68.056 15.288C67.582 15.58 67.3 15.384 67.428 14.845L68.502 10.315L64.995 7.29303C64.573 6.93003 64.671 6.60003 65.235 6.55303L69.837 6.18303L71.615 1.88303C71.825 1.37303 72.165 1.37103 72.377 1.88303L74.157 6.18303L78.759 6.55303C79.311 6.59903 79.425 6.92303 78.996 7.29303L75.489 10.313L76.564 14.845C76.691 15.381 76.417 15.585 75.936 15.289L71.996 12.867V12.868ZM55.996 12.868L52.056 15.288C51.582 15.58 51.3 15.384 51.428 14.845L52.502 10.315L48.995 7.29303C48.573 6.93003 48.671 6.60003 49.235 6.55303L53.837 6.18303L55.615 1.88303C55.825 1.37303 56.165 1.37103 56.377 1.88303L58.157 6.18303L62.759 6.55303C63.311 6.59903 63.425 6.92303 62.996 7.29303L59.489 10.313L60.564 14.845C60.691 15.381 60.417 15.585 59.936 15.289L55.996 12.867V12.868ZM40.123 12.868L36.183 15.288C35.708 15.58 35.427 15.384 35.553 14.845L36.629 10.315L33.121 7.29303C32.699 6.93003 32.797 6.60003 33.361 6.55303L37.963 6.18303L39.741 1.88303C39.951 1.37303 40.291 1.37103 40.503 1.88303L42.281 6.18303L46.884 6.55303C47.438 6.59903 47.551 6.92303 47.124 7.29303L43.616 10.313L44.691 14.845C44.818 15.381 44.544 15.585 44.063 15.289L40.123 12.867V12.868ZM24.076 12.868L20.136 15.288C19.661 15.58 19.379 15.384 19.506 14.845L20.582 10.315L17.075 7.29303C16.653 6.93003 16.751 6.60003 17.313 6.55303L21.916 6.18303L23.696 1.88303C23.906 1.37303 24.246 1.37103 24.456 1.88303L26.236 6.18303L30.838 6.55303C31.392 6.59903 31.505 6.92303 31.078 7.29303L27.57 10.313L28.644 14.845C28.771 15.381 28.498 15.585 28.016 15.289L24.076 12.867V12.868ZM8.12295 12.868L4.18295 15.288C3.70795 15.58 3.42695 15.384 3.55295 14.845L4.62895 10.315L1.11995 7.29203C0.697954 6.92903 0.795954 6.59903 1.35995 6.55203L5.96195 6.18203L7.73995 1.88203C7.94995 1.37203 8.28995 1.37003 8.50195 1.88203L10.28 6.18203L14.883 6.55203C15.437 6.59803 15.55 6.92203 15.123 7.29203L11.615 10.312L12.69 14.844C12.817 15.38 12.543 15.584 12.062 15.288L8.12195 12.866L8.12295 12.868Z" fill="#B3282D"/>
+                        </svg>
+                        </span>
+                        <span>( 80 Reviews )</span>
+    
+                  </div>
+              
+
+                <div class="product-card__title">
+                  <h5>
+                    <a href="javascript:void(0)" >Bully Barbells</a>
+                  </h5>
+                </div>
+                <div class="product-card__price">
+                  <span class="sale-price">$4.19</span>
+                  <span class="regular-price">$4.19</span>
+
+        
+                </div>
+
+                <a href="javascript:void(0)" class="btn product-card____add">
+                  <span>Add to cart</span>
+                  <span><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 12.5H23M23 12.5L19 16.5M23 12.5L19 8.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "RB Featured Collection",
+  "settings": [
+    {
+      "id": "collection_handle",
+      "type": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 25,
+      "step": 1,
+      "default": 10,
+      "label": "Maximum products to show"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Top Sellers"
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_enable",
+      "label": "Enable Slider In Mobile",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "RB Featured Collection"
+    }
+  ]
+}
+{% endschema %}

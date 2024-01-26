@@ -1,0 +1,117 @@
+<div class="container clearfix">
+
+  <div id="resetSuccess" class="hidden"><div class="success"><p>{{ 'customer.recover_password.success' | t }}</p></div></div>
+
+  <div class="twelve"><h1>{{ 'customer.login.title' | t }}</h1>
+  {% include "breadcrumbs" %}
+  </div>
+  
+  <div class="customer-login six" id="customer_login">
+
+    {% form 'customer_login' %}
+
+    {% include 'form-errors-custom' %} 
+
+    <div class="login_email clearfix bottompad-section">
+
+      <div class="form-group">
+        <div class="form-label">
+          <span class="wpcf7-form-control-wrap">
+            <input type="email" required name="customer[email]"  value=""  class="form-control"
+                   id="customer_email" data-empty="true">
+            <label for="customer_email">{{ 'customer.login.email' | t }}</label>
+          </span>
+        </div>
+      </div>
+       
+      
+      <div class="form-group">
+        <div class="form-label">
+          <span class="wpcf7-form-control-wrap">
+            <input type="password" required name="customer[password]"  value=""  class="form-control"
+                   id="customer_password" data-empty="true">
+            <label for="customer_password">{{ 'customer.login.password' | t }}</label>
+          </span>
+        </div>
+      </div>
+<!-- Begin Recharge code -->
+<p><a href="/tools/recurring/login/">Manage Subscriptions</a></p>
+<!-- End Recharge code -->
+
+   
+            <div class="form-group">
+        <div class="twelve">
+       {{ 'customer.login.login_message' | t }}
+          <p></p>
+        </div>
+      </div>
+
+
+
+
+      {% if form.password_needed %}
+      <div class="form-group">
+        <span class="right">
+          <small><a href="javascript:void(0)" id="recover_password_btn" title="{{ 'customer.login.forgot_password' | t }}" class="form">{{ 'customer.login.forgot_password' | t }}</a></small>
+        </span>
+      </div>
+      {% endif %}
+      
+
+
+
+     
+      <span>
+        <button class="btn" type="submit">{{ 'customer.login.sign_in' | t }}</button>
+      </span>
+    </div>
+    {% endform %}
+  </div>
+  
+  <div class="recover-password six bottompad-section hidden" id="recover_password">
+    <h3>{{ 'customer.recover_password.title' | t }}</h3>
+    <p>{{ 'customer.recover_password.subtext' | t }}</p>
+
+    {% form 'recover_customer_password' %}
+
+    {% include 'form-errors-custom' %}
+    
+    <div class="clearfix">
+
+      <div class="form-group">
+        <div class="form-label">
+          <span class="wpcf7-form-control-wrap">
+            <input type="email" required name="email"  value=""  class="form-control {% if form.posted_successfully? %}reset-success {% endif %}{% if form.errors %}reset-error {% endif %} clearfix"
+                   id="recover-email" data-empty="true">
+            <label for="recover-email">{{ 'customer.recover_password.email' | t }}</label>
+          </span>
+        </div>
+      </div>
+      
+      
+      <span>
+        <button class="btn" type="submit">{{ 'customer.recover_password.submit' | t }}</button><a href="javascript:void(0)" id="customer_login_btn" title="{{ 'customer.recover_password.cancel' | t }}" class="account-secondary">{{ 'customer.recover_password.cancel' | t }}</a>
+      </span>
+    </div>
+    {% endform %}
+  </div>
+  
+  <div class="guest-login five right bottompad-section">
+    {% if shop.checkout.guest_login %}
+    <h3>{{ 'customer.login.guest_title' | t }}</h3>
+    <p>{{ 'customer.login.guest_subtext' | t }}</p>
+    {% form 'guest_login' %}
+    <div class=" bottompad clearfix">
+      <button class="btn" type="submit">{{ 'customer.login.guest_continue' | t }}</button>
+    </div>
+    {% endform %}
+    {% else %}
+    <h3>{{ 'customer.register.title' | t }}</h3>
+    <p>{{ 'customer.register.subtext' | t }}</p>
+    <div class=" bottompad clearfix">
+      <a class="btn" title="{{ 'customer.register.subtext' | t }}" href="{{ routes.account_register_url }}">{{ 'customer.register.submit' | t }}</a>
+    </div>
+    {% endif %}
+  </div>
+
+</div>

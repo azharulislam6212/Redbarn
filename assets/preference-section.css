@@ -1,0 +1,140 @@
+.preference-section{
+    position: relative;
+    overflow: hidden;
+    background: #F4EEE8;
+    padding: 100px 0;
+}
+
+.preference__inner-wrap{
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.preference__image-box{
+    flex: 0 0 34.49%;
+}
+
+.preference__content-box{
+    flex: 0 0 58.63%;
+}
+
+.preference__image-wrap{
+    position: relative;
+    height: 400px;
+    margin-bottom: 32px;
+}
+.preference__image-wrap img{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    left: 0;
+    top: 0;
+    margin: 0;
+    border-radius: 20px;
+}
+.preference__icons{
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ display: flex;
+ flex-wrap: wrap;
+ gap: 22px;
+} 
+
+.preference__icons .preference_icon {
+   gap: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+.preference__icons .preference_icon h6{
+    color: #11181F;
+text-align: center;
+font-family: Heebo;
+font-size: 14px;
+font-style: normal;
+font-weight: 700;
+line-height: 18px; /* 128.571% */
+letter-spacing: 1px;
+text-transform: uppercase;
+text-align: center;
+margin: 0 auto;
+max-width: 100px;
+}
+
+.preference__icons .preference_icon img {
+    height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.preference__content-box h3{
+    color: var(--www-redbarn-com-bunker, #11181F);
+    font-family: ChunkFive;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%;
+    letter-spacing: 0.001px;
+    margin-bottom: 16px;
+}
+
+.preference__content-box h3>b{
+    font-weight: 400;
+}
+
+.preference__content-box p{
+    margin-bottom: 16px;
+    color: #232323;
+
+/* Body Text */
+font-family: Heebo;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 160%; /* 25.6px */
+}
+
+.preference__icons-mobile{
+    display: none;
+}
+
+.preference__content-box>p:empty{
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .preference-section{
+       padding: 48px 0;
+    }
+
+    .preference__inner-wrap {
+        flex-direction: column;
+    }
+    .preference__image-box {
+        flex: 1;
+    }
+    .preference__content-box {
+        flex: 1;
+    }
+    .preference__image-wrap {
+        position: relative;
+        height: 345px;
+    }
+    .preference__icons-desktop{
+        display: none;
+    }
+
+    .preference__icons-mobile{
+        display: flex;
+        margin-top: 16px;
+    }
+}

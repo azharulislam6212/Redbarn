@@ -1,0 +1,208 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.settings.use_background_img and section.settings.background_img != blank %}
+{%- assign img_src = section.settings.background_img -%}
+{% include 'image-background-src' %}
+{%- assign img_size = '1x' -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" 
+     data-section-type="home-search"
+     class="{% if full_width and section.settings.include_color != 'color-none' and section.settings.use_background_img == false %}background-colored {{ section.settings.include_color }} {% endif %}{% if full_width %}{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload {% endif %} {% if settings.animation_enable %}animate-section-div {% endif %}clearfix"
+     {% if full_width and section.settings.use_background_img and section.settings.background_img != blank %} 
+     data-bgset="{{ image_data | strip }}"
+     data-sizes="auto"
+     style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+     {% endif %}>
+  {% if full_width and section.settings.use_background_img and section.settings.background_img != blank %}
+  <noscript>
+    <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+  </noscript>
+  {% endif %}
+  <div{% if full_width and section.settings.use_background_img %} class="background-overlay background-overlay-{{ section.id }}"{% endif %}>
+    <div class="container{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+      <div{% unless full_width %}{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %} class="twelve"{% endif %}{% endunless %}>
+        <div class="{% if full_width == false %}{% if section.settings.include_color != 'color-none' and section.settings.use_background_img == false %}twelve background-colored {{ section.settings.include_color }} {% endif %}{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload {% endif %}text-center clearfix"
+             {% if full_width == false and section.settings.use_background_img and section.settings.background_img != blank %} 
+             data-bgset="{{ image_data | strip }}"
+             data-sizes="auto"
+             style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+             {% endif %}>
+          {% if full_width == false and section.settings.use_background_img and section.settings.background_img != blank %}
+          <noscript>
+            <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) center center no-repeat;"></div>
+          </noscript>
+          {% endif %}
+          <div class="table filter-form-{{ section.id }} content-height-{{ section.id }}{% if full_width == false and section.settings.use_background_img %} twelve background-overlay background-overlay-{{ section.id }}{% endif %}">
+            <div class="table-cell bottompad">
+              {% if section.settings.title != blank or section.settings.sub_title != blank %}
+              <div class="twelve animate{% if section.settings.font_color and section.settings.include_color != 'color-none' or section.settings.use_background_img %} white{% endif %}">
+                {% if section.settings.title != blank%}<h2 class="h1">{{ section.settings.title | escape }}</h2>{% endif %}
+                {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+              </div>
+              {% endif %}
+              <div class="table-center tab-body clearfix">
+
+                {%- assign block_width = section.settings.block_width -%}
+                {% case block_width %}
+                {% when '6' %}
+                {%- assign block_width = 'six' -%} 
+                {% when '8' %}
+                {%- assign block_width = 'eight' -%} 
+                {% when '9' %}
+                {%- assign block_width = 'nine' -%} 
+                {% when '10' %}
+                {%- assign block_width = 'ten' -%}
+                {% when '12' %}
+                {%- assign block_width = 'twelve' -%} 
+                {% endcase %}
+
+                <div class="{{ block_width }} animate animate-loop-1 center">
+                  {% assign search_class = 'page text-center' %}
+                  {% include 'search' %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
+
+<style>
+  .content-height-{{ section.id }}{height:{{ section.settings.padding }}vh;min-height:{{ section.settings.padding }}vh}
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Search",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Search"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+        "default": "Search for products, pages, or blog posts"
+      },
+      {
+        "type": "select",
+        "id": "block_width",
+        "label": "Search width",
+        "default": "8",
+        "options": [
+          {
+            "value": "6",
+            "label": "50%"
+          },
+          {
+            "value": "8",
+            "label": "66%"
+          },
+          {
+            "value": "9",
+            "label": "75%"
+          },
+          {
+            "value": "10",
+            "label": "87.5%"
+          },
+          {
+            "value": "12",
+            "label": "100%"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_img",
+        "label": "Image",
+        "info": "1900px recommended"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_background_img",
+        "label": "Show image",
+        "default": true
+      }, 
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": true
+      },
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 5,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 25
+      },
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Search",
+        "category": "General"
+      }
+    ]
+  }
+{% endschema %}

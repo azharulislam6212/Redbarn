@@ -1,0 +1,112 @@
+
+.related-product{
+    position: relative;
+    padding: 100px 0 70px;
+    overflow: hidden;
+}
+
+
+.related-product__list{
+    list-style: none;
+    padding: 0 0 30px;
+}
+
+.related-product__list .related-product__item{
+    padding-bottom: 0;
+    margin: 0 12px;
+}
+.related-product__list .related-product__item{
+   display: inline-block;
+}
+.related-product__list .slick-list{
+    overflow: visible;
+    padding: 40px 0;
+    position: relative;
+}
+
+
+
+.related-product__heading{
+    color: var(--www-redbarn-com-bunker, #11181F);
+text-align: center;
+font-family: ChunkFive;
+font-size: 32px;
+font-style: normal;
+font-weight: 400;
+line-height: 120%; /* 38.4px */
+letter-spacing: 0.001px;
+text-align: center;
+margin-bottom: 0
+}
+
+
+.related-product__slider  .slick-dots{
+    height: 40px;
+    margin: 0;
+}
+
+
+.related-product__slider  .slick-arrow{
+    top: auto;
+    bottom: 30px;
+}
+
+.related-product__slider .slick-next-btn {
+    right: 35%;
+}
+
+.related-product__slider .slick-prev-btn {
+    left: 35%;
+}
+
+
+
+@media screen and (min-width:769px) {
+    .related-product__list .related-product__item:not(.slick-active) {
+      opacity: 0;
+    }
+
+    .related-product__list {
+        padding: 0 38px 30px;
+        margin: 0 -38px 30px;
+        overflow: hidden;
+    }
+}
+
+@media screen and (max-width:768px) {
+
+    .related-product__heading{
+        color: var(--www-redbarn-com-mine-shaft, #232323);
+        text-align: center;
+        
+        /* Heading 3 */
+        font-family: ChunkFive;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 120%; /* 28.8px */
+        letter-spacing: 0.001px;
+    }
+
+    .related-product__list .slick-list {
+        padding: 40px 55px 40px 0;
+    }
+
+    .related-product__list .related-product__item {
+        margin: 0 24px 0 0;
+    }
+    
+    .related-product__slider .slick-next-btn {
+        right: 7%;
+    }
+    
+    .related-product__slider .slick-prev-btn {
+        left: 7%;
+    }
+
+    .related-product {
+        padding: 48px 0 48px;
+    }
+
+
+}

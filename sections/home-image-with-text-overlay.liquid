@@ -1,0 +1,310 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.blocks.size == 0 %}
+{%- assign section_onboarding = true -%}
+{% else %}
+{%- assign section_onboarding = false -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" 
+     data-section-type="home-image-with-text-overlay" 
+     class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} colored-top-bottom {% endif %}{% if section.settings.include_color == 'color-none' %}margins-section {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  <div class="container clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+      <div class="tab-body{% if full_width == false and section.settings.include_color != 'color-none' %} twelve background-colored {{ section.settings.include_color }} colored-top-bottom{% endif %}">
+
+        {% if section_onboarding %}
+        <div class="twelve text-center">
+          <h2>{{ 'homepage.onboarding.no_title' | t }}</h2>
+          <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+        </div>
+        {% endif %} 
+
+        <div class="product-loop center{% if settings.animation_enable %} animate-section load{% endif %}">
+
+          {% for block in section.blocks %} 
+
+          {%- assign block_width = block.settings.block_width | downcase -%}
+          {% case block_width %}
+          {% when '3' %}
+          {%- assign block_width = 'three' -%}      
+          {%- assign size = 300 -%}
+          {% when '4' %}
+          {%- assign block_width = 'four' -%}      
+          {%- assign size = 400 -%}
+          {% when '6' %}
+          {%- assign block_width = 'six' -%}      
+          {%- assign size = 600 -%}
+          {% when '8' %}
+          {%- assign block_width = 'eight' -%}      
+          {%- assign size = 800 -%}
+          {% when '9' %}
+          {%- assign block_width = 'nine' -%}      
+          {%- assign size = 900 -%}
+          {% when '12' %}
+          {%- assign block_width = 'twelve' -%}      
+          {%- assign size = 1200 -%}
+          {% endcase %}
+
+          {% case block.type %}
+
+          {% when 'image' %}
+
+          {% if block.settings.background_img != blank %}
+          {%- assign img_src = block.settings.background_img -%}
+          {% include 'image-background-src' %}
+          {%- assign img_size = '1x' -%}
+          {%- assign size = size | append: 'x' -%}
+          {% endif %}
+
+          <div class="product {{ block_width }} animate animate-loop-{{ forloop.index0 }} {{ section.settings.vertical_content_alignment }}" {{ block.shopify_attributes }}>
+            <div class="table content-height-{{ section.id }} relative{% if block.settings.background_img == blank %} placeholder-svg-background{% endif %} background-cover lazyload"
+                 {% if block.settings.background_img != blank %}
+                 data-bgset="{{ image_data | strip }}"
+                 data-sizes="auto"
+                 style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+                 {% endif %}>
+              {% if block.settings.background_img != blank %}
+              <noscript>
+                <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: size }}) center center no-repeat;"></div>
+              </noscript>
+              {% endif %}
+              {% if block.settings.link != blank and block.settings.button == blank %}<a href="{{ block.settings.link | escape }}" title="{% if block.settings.title != blank %}{{ block.settings.title | escape }}{% else %}{{ 'homepage.onboarding.no_more' | t }}{% endif %}" class="absolute"></a>{% endif %}
+              {% if block.settings.title != blank or block.settings.sub_title != blank or block.settings.body != blank or block.settings.link != blank and block.settings.button != blank %}
+              <div class="table-cell {{ section.settings.vertical_content_alignment }} {{ block.settings.text_alignment }}{% if block.settings.font_color %} white{% endif %}{% if block.settings.background_img != blank %} background-overlay background-overlay-{{ block.id }}{% endif %}">
+                <div class="twelve no-height">
+                  <div class="twelve{% if block.settings.link != blank and block.settings.button != blank %} bottompad{% endif %}">
+                    {% if block.settings.title != blank %}<h2>{{ block.settings.title | escape }}</h2>{% endif %}
+                    {% if block.settings.sub_title != blank %}<h3>{{ block.settings.sub_title | escape }}</h3>{% endif %}
+                    {% if block.settings.body != blank %}{{ block.settings.body }}{% endif %}
+                    {% if block.settings.link != blank and block.settings.button != blank %}<a href="{{ block.settings.link | escape }}" title="{% if block.settings.title != blank %}{{ block.settings.title | escape }}{% else %}{{ 'homepage.onboarding.no_more' | t }}{% endif %}" class="btn-secondary btn{% if block.settings.outline_button %} outline{% endif %}">{% if block.settings.button != blank %}{{ block.settings.button | escape }}{% else %}{{ 'homepage.onboarding.no_more' | t }}{% endif %}</a>{% endif %}
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if block.settings.background_img_overlay != blank %}<style>{%- assign alpha = block.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ block.id }}{background:{{ block.settings.background_img_overlay | color_modify: 'alpha', alpha }};}</style>{% endif %}
+          {% endcase %}
+          {% endfor %}
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .content-height-{{ section.id }}{height:{{ section.settings.padding }}vh;min-height:100%}
+</style>
+
+{% schema %}
+  {
+    "name": "Image with text overlay",
+	"max_blocks": 6,
+    "settings": [
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 5,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 40
+      },
+	  {
+        "type": "select",
+        "id": "vertical_content_alignment",
+        "label": "Vertical positioning",
+        "default": "none",
+        "options": [
+          {
+            "value": "top",
+            "label": "Top"
+          },
+          {
+            "value": "none",
+            "label": "Middle"
+          },
+          {
+            "value": "bottom",
+            "label": "Bottom"
+          }
+        ]
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width background",
+       "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Image with text overlay"
+          },
+          {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Subheading",
+			"default": "Show custom content to provide an overview of the image and heading"
+          },
+          {
+            "type": "richtext",
+            "id": "body",
+            "label": "Text"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          },
+          {
+            "type": "text",
+            "id": "button",
+            "label": "Button"
+          },
+          {
+            "type": "checkbox",
+            "id": "outline_button",
+            "label": "Outline button",
+            "default": false
+          },
+          {
+            "type": "select",
+            "id": "text_alignment",
+            "label": "Alignment",
+            "default": "text-left",
+            "options": [
+              {
+                "value": "text-left",
+                "label": "Left"
+              },
+              {
+                "value": "text-center",
+                "label": "Center"
+              },
+              {
+                "value": "text-right",
+                "label": "Right"
+              }
+            ]
+          },
+          {
+            "type": "header",
+            "content": "Background"
+          },
+          {
+            "type": "image_picker",
+            "id": "background_img",
+            "label": "Image"
+          },
+          {
+            "type": "checkbox",
+            "id": "font_color",
+            "label": "White text",
+            "default": true
+          },
+    	  {
+            "type": "color",
+            "id": "background_img_overlay",
+            "label": "Overlay"
+          },
+          {
+            "type": "range",
+            "id": "background_img_overlay_opacity",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "%",
+            "label": "Opacity",
+            "default": 0
+          },
+          {
+            "type": "select",
+            "id": "block_width",
+            "label": "Container width",
+            "default": "4",
+            "options": [
+              {
+                "value": "3",
+                "label": "25%"
+              },
+              {
+                "value": "4",
+                "label": "33%"
+              },
+              {
+                "value": "6",
+                "label": "50%"
+              },
+              {
+                "value": "8",
+                "label": "66%"
+              },
+              {
+                "value": "9",
+                "label": "75%"
+              },
+              {
+                "value": "12",
+                "label": "100%"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Image with text overlay",
+        "category": "Image",
+        "blocks" : [
+          {
+            "type": "image",
+            "settings": {
+              "block_width": "4"
+            }
+          },
+          {
+            "type": "image",
+            "settings": {
+              "block_width": "8"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

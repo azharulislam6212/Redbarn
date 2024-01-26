@@ -1,0 +1,53 @@
+.shipiping-notification-bar{
+    background: var(--www-redbarn-com-black, #000);
+    padding: 7px 0;
+}
+.notification-text, .notification-text p{
+color: var(--www-redbarn-com-nero, #FFF);
+text-align: center;
+font-family: 'Heebo';
+font-size: 14px;
+font-style: normal;
+font-weight: 700;
+line-height: 18px; /* 128.571% */
+letter-spacing: 1px;
+text-transform: uppercase;
+text-align: center;
+}
+.notification-text p{
+    margin: 0;
+}
+.notification-text a{
+    text-decoration: none;
+}
+.notification-text a:hover{
+    color:  var(--www-redbarn-com-tall-poppy, #B3282D);
+}
+
+.shipiping__inner{
+    position: relative;
+}
+
+.user-link{
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.user-link .account, .user-link .account a{
+    display: flex;
+    align-items: center;
+}
+
+.location_link{
+    display: flex;
+}
+
+@media screen and (max-width: 768px) {
+    .user-link{
+    display: none;
+    }
+}

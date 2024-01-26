@@ -1,0 +1,251 @@
+{%- assign full_width = section.settings.full_width -%} 
+
+{%- assign img_src = section.settings.background_img -%}
+{% include 'image-background-src' %}
+{%- assign img_size = '1x' -%}
+
+<div data-section-id="{{ section.id }}" data-section-type="home-search" class="page clearfix">
+  
+  <div class="{% if full_width %}{% if section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}background-cover lazyload {% endif %}relative-{{ section.id }} clearfix"
+       {% if full_width and section.settings.background_img != blank %} 
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+       {% endif %}>
+    {% if full_width and section.settings.background_img != blank %}
+    <noscript>
+      <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+    </noscript>
+    {% endif %}
+    
+    <div{% if full_width and section.settings.background_img != blank %} class="relative-{{ section.id }} background-overlay-{{ section.id }}"{% endif %}>
+      <div class="container text-center clearfix">
+        <div{% if full_width == false and section.settings.include_color != 'color-none' or section.settings.background_img != blank %} class="twelve"{% endif %}>
+          <div class="{% if full_width == false %}{% if section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}background-cover lazyload relative-{{ section.id }} {% endif %}{% if section.settings.font_color and section.settings.include_color != 'color-none' or section.settings.use_background_img %}white {% endif %}clearfix"
+               {% if full_width == false and section.settings.background_img != blank %} 
+               data-bgset="{{ image_data | strip }}"
+               data-sizes="auto"
+               style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+               {% endif %}>
+            {% if full_width == false and section.settings.background_img != blank %}
+            <noscript>
+              <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) center center no-repeat;"></div>
+            </noscript>
+            {% endif %}
+
+            <div class="{% if full_width == false and section.settings.background_img != blank %}relative-{{ section.id }} background-overlay-{{ section.id }}{% endif %}">
+              <div class="container {% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %}{% if full_width %}remove-pad {% else %}no-pad {% endif %}{% else %}remove-pad {% endif %}clearfix">
+                <div class="table {% if section.settings.background_img != blank %}content-height-{{ section.id }} {% endif %}{% if full_width == false %}{% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %}twelve{% endif %}{% endif %}">
+                  <div class="table-cell">
+                    <div class="twelve text-center">
+                      <h1>{{ 'general.search.title' | t }}</h1>
+                      {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>  
+
+  <div class="container clearfix">
+    <div class="twelve">
+     {% include "breadcrumbs" %}
+    </div>
+    <div{% if full_width == false and section.settings.include_color != 'color-none' or section.settings.background_img != blank %} class="twelve"{% endif %}>
+      <div{% if full_width == false and section.settings.include_color != 'color-none' or section.settings.background_img != blank %} class="twelve"{% endif %}>
+        <div{% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %} class="twelve"{% endif %}>
+          <div class="{% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %}background-white {% endif %}clearfix">
+            <div class="{% if section.settings.include_color != 'color-none' or section.settings.background_img != blank %}twelve {% endif %}clearfix">
+              <div class="twelve bottompad-section">
+                {% paginate search.results by 10 %}
+
+                <div class="search-form">
+                  {% assign search_class = 'page' %}
+                  {% include 'search' %}
+                </div>
+
+                {% if search.performed %}
+                {% if search.results_count == 0 %}  
+                <div class="message bottompad-half clearfix"><p>{{ 'general.search.no_results_html' | t: terms: search.terms }}</p></div>
+                {% else %}  
+                <div class="message bottompad-half clearfix"><p>{{ 'general.search.results_for_html' | t: terms: search.terms }}</p></div>
+                
+                {%- assign search_results = '' -%}
+                {% for line_item in search.results %}
+                {%- capture search_results -%}{% unless search_results == blank  %}{{ search_results }}|{% endunless %}{{ line_item.object_type }}{%- endcapture -%}
+                {% endfor %}
+                {%- assign search_results = search_results | split: '|' | uniq -%}
+               
+                {% for categories in search_results %}      
+                {% for line_item in search.results %}
+
+                {% assign sca_product_id_text = "," | append : line_item.id | append : "," %}{% assign sca_price = line_item.price %}{% assign sca_price_min = line_item.price_min %}{% assign sca_price_max = line_item.price_max %}{% assign sca_compare_at_price = line_item.compare_at_price %}{% assign sca_compare_at_price_min = line_item.compare_at_price_min %}{% assign sca_compare_at_price_max = line_item.compare_at_price_max %}{% assign sca_product_available = line_item.available %}{% assign sca_product_variantCount = line_item.variants.size %}{% assign sca_compare_at_price_varies = line_item.compare_at_price_varies %}{% assign sca_price_varies = line_item.price_varies %}{% assign sca_has_only_default_variant = false %}{% assign sca_product_variants_json = line_item.variants | json %}{% capture sca_product_json %}{ {% if sca_all_gift_products_ids == null or sca_all_gift_products_ids contains sca_product_id_text %}{% assign sca_product_available = false %}{% assign sca_product_variantCount = 0 %}{% assign sca_has_only_default_variant = false %}{% assign sca_is_first_variant = true %}{% capture sca_variants_json%}[{% for variant in line_item.variants %}{% unless variant.metafields.secomapp.freegifts %}{% unless variant.title contains '(Freegifts)' %}{% unless variant.title contains '% off)' %}{% unless variant.metafields.shappify_qb.qb_hide == "1" %}{% unless variant.metafields.shappify_bundle.is_bundle == "true" %}{% unless variant.metafields.brodev_scn.hide == "true" %}{% unless variant.metafields.wholesaler2.wholesale %}{% unless variant.metafields.Wholesaler.level %}{% unless variant.title contains '(Wholesale' %}{% if sca_is_first_variant %}{{ variant | json }}{% assign sca_price = variant.price %} {% assign sca_price_min = variant.price %}{% assign sca_price_max = variant.price %}{% assign sca_compare_at_price = variant.compare_at_price %}{% assign sca_compare_at_price_min = variant.compare_at_price %}{% assign sca_compare_at_price_max = variant.compare_at_price %}{% assign sca_product_available = variant.available %}{% assign sca_product_variantCount = 1 %}{% assign sca_is_first_variant = false %}{% else %},{{variant | json }}{% if sca_price_min >= variant.price %}{% assign sca_price_min = variant.price %}{% assign sca_price = variant.price %}{% endif %}{% if sca_price_max <= variant.price %}{% assign sca_price_max = variant.price %}{% endif %}{% if variant.compare_at_price %}{% if sca_compare_at_price_min == null or sca_compare_at_price_min >= variant.compare_at_price %}{% assign sca_compare_at_price_min = variant.compare_at_price %}{% assign sca_compare_at_price = variant.compare_at_price %}{% endif %}{% if sca_compare_at_price_max == null or sca_compare_at_price_max < variant.compare_at_price %}{% assign sca_compare_at_price_max = variant.compare_at_price %}{% endif %}{% endif %}{% if variant.available == true %}{% assign sca_product_available = true %}{% endif %}{% assign sca_product_variantCount = sca_product_variantCount | plus: 1 %}{% endif %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endfor %}]{% endcapture %}{% if sca_price_min < sca_price_max %}{% assign sca_price_varies = true %}{% else %}{% assign sca_price_varies = false %}{% endif %}{% if sca_compare_at_price_min < sca_compare_at_price_max %}{% assign sca_compare_at_price_varies = true %}{% else %}{% assign sca_compare_at_price_varies = false %}{% endif %}{% if sca_product_variantCount > 1 %}{% assign sca_has_only_default_variant = true %}{% endif %}{% if sca_product_variantCount == line_item.variants.size %}"variants":{{ line_item.variants }},{% else %}{% assign sca_product_variants_json = sca_variants_json %}"variants":{{sca_variants_json }},{% endif %}{% endif %}"id": {{ line_item.id }},"title": {{ line_item.title | json }},"handle": {{ line_item.handle | json }},"description": {{ line_item.description | json }},"published_at": {{ line_item.published_at | json }},"created_at": {{ line_item.created_at | json }},"vendor": {{ line_item.vendor | json }},"type": {{ line_item.type | json }},"tags": {{ line_item.tags | json }},"price": {{ sca_price }},"price_min": {{ sca_price_min }},"price_max": {{ sca_price_max }},"available": {{ line_item.available }},"price_varies": {{sca_price_varies }},"compare_at_price": {{ sca_compare_at_price }},"compare_at_price_min": {{ sca_compare_at_price_min }},"compare_at_price_max": {{ sca_compare_at_price_max }},"compare_at_price_varies": {{ sca_compare_at_price_varies }},"images": {{ line_item.images | json }},"featured_image": {{ line_item.featured_image | json }},"options": {{ line_item.options | json }},"media": {{ line_item.media | json }},"content": {{ line_item.content | json }} }{% endcapture sca_product_json %}
+
+                {% if line_item.object_type == categories %}
+                <div class="row relative half table-center search-result clearfix {% if forloop.last %}last{% endif %} {% if forloop.first %}first{% endif %}">      
+
+                  {% if line_item.image or line_item.featured_media %}
+                  <div class="two product-thumb text-center title-align title-align-left bottompad-half toppad"> 
+                    <div class="relative">  
+
+                      {%- assign product = line_item -%}
+                      {% include 'product-sale-badge' %}
+
+                      <a href="{{ line_item.url }}" title="{{ line_item.title | escape }}" class="img-align">
+                        {%- capture id -%}{{ line_item.featured_media.id }}{%- endcapture -%}
+                        {% if line_item.object_type == 'product' %}
+                        {%- assign img_src = line_item.featured_media -%}
+                        {% else %}
+                        {%- assign img_src = line_item.image -%}
+                        {% endif %}
+                        {%- assign size = 180 -%}
+                        {%- capture alt -%}{{ line_item.title | escape }}{%- endcapture -%}
+                        {% include 'image-load' %}          
+                      </a>
+
+                      <span id="secomapp-fg-image-{{ line_item.id }}" style="display: none;">{{ "icon-freegift.png" | asset_url | img_tag: "FG icon", "sca-fg-img-collect" }}</span>
+                      <span class="sca-fg-cat-list prod-show-list" style="display:none;" id="secomapp-fg-data-{{ line_item.id }}"></span>
+                    </div>
+                  </div>
+                  {% endif %}
+
+                  <div class="{% if line_item.image or line_item.featured_media %}ten{% else %}twelve{% endif %} search-text bottompad-half toppad">
+                    <h5>{{ line_item.title | link_to: line_item.url }}</h5>
+                    {% if line_item.object_type == 'product' %}
+                    <div class="product-price">
+                      {%- assign variant_free = false -%}
+                      {% if line_item.price_min > 0 %} 
+                      {% if line_item.price_varies %}<small>{{ 'products.product.from' | t }}</small>{% endif %}
+                      {%- assign variant = line_item.variants | sort: 'price' | first -%}
+                      <h6>{{ line_item.price | money }}{% if line_item.compare_at_price > line_item.price %} | <del>{{ line_item.compare_at_price | money }}</del>{% endif %}{% include 'product-unit-price' %}</h6>
+                      {% else %}
+                      {% if line_item.price_varies %}    
+                      {%- assign variant = line_item.variants | sort: 'price' | last -%}
+                      <h6>{{ 'products.product.free' | t }} - {{ line_item.price_max | money }}{%- assign variant_free = true -%}{% include 'product-unit-price' %}</h6>
+                      {% else %}
+                      <h6 style="display:none">{{ line_item.price | money }}</h6><h6>{{ 'products.product.free' | t }}</h6>
+                      {% endif %}
+                      {% endif %}
+                    </div>
+                    {% endif %}
+                    {% if line_item.content != blank %}<p>{{ line_item.content | strip_html | truncatewords: 40 | highlight: search.terms }}</p>{% endif %}
+                    <div class="blog-read-more">
+                      <a class="btn auto-width" href="{{ line_item.url }}" title="{{ line_item.title }}">{% if line_item.object_type == 'product' %}{{ 'general.search.buy_now' | t }}{% else %}{{ 'general.search.read_more' | t }}{% endif %}</a>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                {% endif %}
+                {% endif %}
+
+                {% if paginate.pages > 1 %}
+                <div class="pagination">
+                  <div>{% include 'pagination' %}</div>
+                </div>
+                {% endif %}
+
+                {% endpaginate %} 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .content-height-{{ section.id }} {
+    height:100%;
+    {% if section.settings.background_img != blank %}height:{{ section.settings.padding | times: 0.75 }}vh;min-height:{{ section.settings.padding | times: 0.75 }}vh{% else %}height:5vh;min-height:5vh;{% endif %}
+  }
+  .relative-{{ section.id }}{
+    {% if section.settings.background_img != blank %}margin-bottom:-{{ section.settings.padding | divided_by: 4 }}vh;padding-bottom:{{ section.settings.padding | divided_by: 4 }}vh;{% else %}margin-bottom:-5vh;padding-bottom:5vh;{% endif %}
+  }
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Search page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_img",
+        "label": "Image",
+        "info": "1900px recommended"
+      }, 
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": false
+      }, 
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 0,
+        "max": 50,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 25
+      }, 
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-primary",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}

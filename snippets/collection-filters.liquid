@@ -1,0 +1,100 @@
+{% if collection.all_tags.size > 0 %}
+
+{%- assign new_count = count | plus: 0 -%}
+
+{% if new_count > 0 %}
+
+{% if current_tags != blank %}
+<div class="filter none formatted clearfix">
+  <h6>{{ 'collections.sidebar.selected' | t }}</h6>
+  <ul class="advanced-filters unformatted">
+  {% for cat_item in cat_array %}
+    {% for tag in collection.all_tags %}
+    {% if current_tags contains tag %}
+    {%- assign cat = tag | split: '_' | first -%}              
+    {% if cat != tag and cat_item == cat %}
+    <li class="advanced-filter active-filter active hover" data-group="{{ cat_item }}" data-handle="{{ tag | handle }}">{{ tag | replace: '_', ': ' | link_to_remove_tag: tag }}</li>
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+  {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if block.settings.type == false  %} 
+
+{% for cat_item in cat_array %}
+<div class="filter formatted clearfix" {{ block.shopify_attributes }}>
+  <h5 class="mobile-hide">{{ cat_item }}</h5>
+  <div class="open-container open-container-filter">
+    <a href="javascript:void(0)" class="open open-btn open-filter" title="{{ 'collections.general.open' | t }}" aria-controls="{{ cat_item }}-filter" role="button" aria-label="{{ 'collections.general.open' | t }}"><span class="icon icon-plus btn text-center"></span><span class="h5">{{ cat_item }}</span></a>
+    <div id="{{ cat_item }}-filter" class="open-slide open-slide-filter">
+      <ul class="advanced-filters unformatted" id="filter-{{ forloop.index }}">
+        
+        <!-- collection.tags only shows whats on page -->
+        <!-- collection.all_tags only shows ALL -->        
+        
+        {%- for tag in collection.all_tags -%}
+        {%- assign cat = tag | split: '_' | first -%}              
+        {%- assign filtertag = tag | remove_first: cat_item | remove_first: '_' -%}
+        {%- if cat != tag and cat_item == cat -%}
+
+        {%- unless collection.tags contains tag -%}
+        <li class="advanced-filter disabled" data-group="{{ cat_item }}" data-handle="{{ tag | handle }}"><span>{{ filtertag }}</span></li>
+        {%- else -%}        
+        {%- if current_tags contains tag %}
+        <li class="advanced-filter active-filter active" data-group="{{ cat_item }}" data-handle="{{ tag | handle }}">{{ filtertag | link_to_remove_tag: tag }}</li>
+        {%- else -%}
+        <li class="advanced-filter" data-group="{{ cat_item }}" data-handle="{{ tag | handle }}">{{ filtertag | link_to_add_tag: tag }}</li>
+        {%- endif -%}        
+        {%- endunless -%}
+        {%- endif -%}
+        {%- endfor -%}
+        
+      </ul>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% else %}
+
+{% for cat_item in cat_array %}
+<div class="filter form tag-filters clearfix" {{ block.shopify_attributes }}>
+  <span class="form">
+    {% if block.settings.label == 'above'  %}<h5>{{ cat_item }}</h5>{% endif %}
+    <select id="filter-{{ forloop.index }}">
+      <option value="{{ collection.url }}" data-group="{{ cat_item }}">{% if block.settings.label == 'inside'  %}{{ cat_item }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</option>
+
+      <!-- collection.tags only shows whats on page -->
+      <!-- collection.all_tags only shows ALL -->     
+
+      {%- for tag in collection.all_tags -%}
+      {%- assign cat = tag | split: '_' | first -%}              
+      {%- assign filtertag = tag | remove_first: cat_item | remove_first: '_' -%}
+      {%- if cat != tag and cat_item == cat -%}
+      {%- if current_tags -%}
+      {%- endif -%}
+      {%- unless collection.tags contains tag -%}
+      <option value="{{ collection.url }}/{{ tag | handle }}" data-group="{{ cat_item }}" data-handle="{{ tag | handle }}">{{ filtertag }}</option>
+      {%- else -%}
+      {%- if current_tags contains tag -%}
+      <option value="{{ collection.url }}/{{ tag | handle }}" data-group="{{ cat_item }}" data-handle="{{ tag | handle }}"{% if current_tags contains tag %} selected{% endif %}>{{ filtertag }}</option>
+      {%- else -%}
+      <option value="{{ filtertag | link_to_remove_tag: tag | split:'" title' | first | split:'href="' | last }}{% if current_tags != blank %}+{% else %}/{% endif %}{{ tag | handle }}" data-group="{{ cat_item }}" data-handle="{{ tag | handle }}">{{ filtertag }} ({{ 'collections.general.add' | t }})</option>
+      {%- endif -%}
+      {%- endunless -%}
+      {%- endif -%}
+      {%- endfor -%}
+
+    </select>
+  </span>
+</div>
+{% endfor %}
+
+{% endif %}
+
+{% endif %}
+
+{% endif %}

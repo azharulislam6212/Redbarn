@@ -1,0 +1,336 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.settings.menu == blank %}
+{%- assign section_onboarding = true -%}
+{% else %}
+{%- assign section_onboarding = false -%}
+{% endif %}
+
+{% if section.settings.use_background_img and section.settings.background_img != blank %}
+{%- assign img_src = section.settings.background_img -%}
+{% include 'image-background-src' %}
+{%- assign img_size = '1x' -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" 
+     {% unless section_onboarding %}data-section-type="filter-section"{% endunless %}
+     class="{% if full_width and section.settings.include_color != 'color-none' and section.settings.use_background_img == false %}background-colored {{ section.settings.include_color }} {% endif %}{% if full_width %}{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix"
+     {% if full_width and section.settings.use_background_img and section.settings.background_img != blank %} 
+     data-bgset="{{ image_data | strip }}"
+     data-sizes="auto"
+     style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+     {% endif %}>
+  {% if full_width and section.settings.use_background_img and section.settings.background_img != blank %}
+  <noscript>
+    <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+  </noscript>
+  {% endif %}
+  <div{% if full_width and section.settings.use_background_img %} class="background-overlay background-overlay-{{ section.id }}"{% endif %}>
+    <div class="container clearfix">
+      <div{% unless full_width %}{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %} class="twelve"{% endif %}{% endunless %}>
+        <div class="{% if full_width == false %}{% if section.settings.include_color != 'color-none' and section.settings.use_background_img == false %}twelve background-colored {{ section.settings.include_color }} {% endif %}{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload {% endif %}text-center clearfix"
+             {% if full_width == false and section.settings.use_background_img and section.settings.background_img != blank %} 
+             data-bgset="{{ image_data | strip }}"
+             data-sizes="auto"
+             style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+             {% endif %}>
+          {% if full_width == false and section.settings.use_background_img and section.settings.background_img != blank %}
+          <noscript>
+            <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) center center no-repeat;"></div>
+          </noscript>
+          {% endif %}
+          <div class="table filter-form-{{ section.id }} content-height-{{ section.id }}{% if full_width == false and section.settings.use_background_img %} twelve background-overlay background-overlay-{{ section.id }}{% endif %}">
+            <div class="table-cell bottompad">
+              {% if section.settings.title != blank or section.settings.sub_title != blank %}
+              <div class="twelve{% if section.settings.font_color and section.settings.include_color != 'color-none' or section.settings.use_background_img %} white{% endif %}">
+                {% if section.settings.title != blank%}<h2 class="h1">{{ section.settings.title | escape }}</h2>{% endif %}
+                {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+             </div>
+              {% endif %}
+              <div class="filter table-center tab-body {% if section.settings.form_layout %}horizontal{% else %}vertical{% endif %}-form{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+                <div class="center">
+                  {% if section_onboarding %}
+                  <div class="{% if section.settings.form_layout %}three horizontal-form{% else %}twelve vertical-form{% endif %} animate animate-loop-0">
+                    <span class="form mobile">
+                      <span class="select">
+                        <select class="tag-select select no-select tag-filter"> 
+                          <option value="">{% if section.settings.directory_label != blank %}{{ section.settings.directory_label }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</option>
+                          {% for i in (1..3) %}
+                          <option>Option {{ i }}</option>
+                          {% endfor %}
+                        </select>
+                      </span>
+                    </span>
+                  </div>
+                  {% for i in (1..2) %}
+                  <div class="{% if section.settings.form_layout %}three horizontal-form{% else %}twelve vertical-form{% endif %}animate animate-loop-{{ forloop.index }}">
+                    <span class="form mobile">
+                      <span class="select">
+                        <select class="tag-select select no-select tag-filter"> 
+                          <option value="">{% if section.settings.directory_label_select != blank %}{{ section.settings.directory_label_select }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</option>
+                          {% for i in (1..3) %}
+                          <option>Option {{ i }}</option>
+                          {% endfor %}
+                        </select>
+                      </span>
+                    </span>
+                  </div>
+                  {% endfor %}
+                  <div class="{% if section.settings.form_layout %}three horizontal-form{% else %}twelve vertical-form{% endif %} animate animate-loop-4"><span class="form mobile"><input type="button" value="{% if section.settings.button != blank %}{{ section.settings.button }}{% else %}{{ 'general.search.title' | t }}{% endif %}" class="btn auto-full-width" /></span></div>
+                  
+                  {% else %}
+
+                  {%- assign filters = '' -%}
+                  {%- assign filters_title = '' -%}              
+                  {%- assign link_total = false -%}
+                  
+                  {% for link in linklists[section.settings.menu].links %}
+                  {% if link.type == 'collection_link' or link.type == 'catalog_link' %}{%- assign link_total = true -%}{% endif %}
+                  {% endfor %}
+                                    
+                  {%- capture tags1 -%}{%- for link in linklists[section.settings.menu].links -%}{%- if link.links != blank -%}{%- for sub_link in link.links -%}{%- if sub_link.type == 'collection_link' or sub_link.type == 'catalog_link' -%}Filter1_{{ sub_link.title }}~{{ sub_link.url }}^{{ link.url | split:'/' | last }}*{{ sub_link.url | split:'/' | last }}|{%- endif -%}{%- endfor -%}{%- endif -%}{%- endfor -%}{%- endcapture -%}
+                  {%- capture tags2 -%}{%- for link in linklists[section.settings.menu].links -%}{%- if link.links != blank -%}{%- for sub_link in link.links -%}{%- if sub_link.links != blank -%}{%- for sub_sub_link in sub_link.links -%}{%- if sub_sub_link.type == 'collection_link' or sub_sub_link.type == 'catalog_link' -%}Filter2_{{ sub_sub_link.title }}~{{ sub_sub_link.url }}^{{ link.url | split:'/' | last }}*{{ sub_link.url | split:'/' | last }}|{%- endif -%}{%- endfor -%}{%- endif -%}{%- endfor -%}{%- endif -%}{%- endfor -%}{%- endcapture -%}
+                  {%- capture tags -%}{{ tags1 }}Filter1_,{{ tags2 }}{%- endcapture -%}
+                  {%- capture tags_title -%}{{ tags1 | split: '_' | first }}|{{ tags2 | split: '_' | first }}{%- endcapture -%}
+
+                  {%- assign cat_array = tags_title | split: '|' | uniq -%}
+                  
+                  {% if link_total %}
+
+                  <div class="{% if section.settings.form_layout %}three horizontal-form{% else %}twelve vertical-form{% endif %} animate animate-loop-0">
+                    <span class="form mobile">
+                      <span id="select_0" class="new-select text-left">
+                        <span class="directory_label_0 select enabled">
+                          <select id="directory_label_0_{{ section.id }}" class="tag-filter hidden no-select" aria-hidden="true" tabindex="-1"> 
+                            <option value="">{% if section.settings.directory_label != blank %}{{ section.settings.directory_label }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</option>
+                            {% for link in linklists[section.settings.menu].links %}                        
+                            {% if link.type == 'collection_link' or link.type == 'catalog_link' %}
+                            <option value="{{ link.url | append: '/' }}" data-id="{{ link.url | split:'/' | last | replace:'%','-' }}" {{ block.shopify_attributes }}>{{ link.title }}</option>
+                            {% endif %}
+                            {% endfor %}
+                          </select>              
+                          <a href="javascript:void(0)" class="styledSelect">{% if section.settings.directory_label != blank %}{{ section.settings.directory_label }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</a>
+                          <ul class="options unformatted">
+                            {% for link in linklists[section.settings.menu].links %}                        
+                            {% if link.type == 'collection_link' or link.type == 'catalog_link' %}
+                            <li {{ block.shopify_attributes }}><a href="javascript:void(0)" rel="{{ link.url | append: '/' }}" data-id="{{ link.url | split:'/' | last | replace:'%','-' }}">{{ link.title }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                          </ul>
+                          <label class="error" style="display:none">{{ 'general.validation.required' | t }}</label>
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+
+                  {%- assign loop_index = 1 -%}   
+                  {% if cat_array.size > 0 %}
+                  {% for cat_item in cat_array limit: 2 %}
+                  {%- capture var -%}directory_label_{{ loop_index }}{%- endcapture -%}
+                  {%- capture var_sel -%}select_{{ loop_index }}{%- endcapture -%}   
+                  {%- capture loop_index -%}{{ loop_index | plus:1 }}{%- endcapture -%}
+                  
+                  <div class="{% if section.settings.form_layout %}three horizontal-form{% else %}twelve vertical-form{% endif %} animate animate-loop-{{ forloop.index }}">
+                    <span class="form mobile">   
+                      <span id="{{ var_sel }}" class="new-select text-left">
+                        <span class="{{ var }} tag-select select disabled {% if loop_index == '2' %}parent{% elsif loop_index == '3' %}child{% endif %} basic">
+                          <select id="{{ var }}" class="tag-base tag-filter hidden no-select" disabled="disabled" aria-hidden="true" tabindex="-1">
+                            <option class="first" value="" data-select="{% if section.settings.directory_label_select != blank %}{{ section.settings.directory_label_select }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...">{% if section.settings.directory_label_select != blank %}{{ section.settings.directory_label_select }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</option>
+                            {% assign tags_list = tags | split: cat_item %}
+                            {% for tags in tags_list %}
+                            {%- unless tags contains 'Filter1_' or tags contains 'Filter2_' or tags contains 'Filter3_' -%}
+                            <option value="{{ tags | split: '^' | first | split: '~' | last }}" 
+                                    class="item{% if current_tags contains new_tag %} selected{% endif %}" 
+                                    data-id="{{ tags | split: '*' | first | split: '^' | last | replace:'%','-' }}"
+                                    data-id2="{{ tags | split: '|' | first | split: '*' | last | replace:'%','-' }}"
+                                    data-group="{{ tags | split: '*' | first | split: '^' | last | replace:'%','-' }}">{{ tags | split: '~' | first | split: '_' | last }}</option>
+                            {%- endunless -%}
+                            {% endfor %}
+                          </select>              
+                          <a href="javascript:void(0)" class="styledSelect first" data-select="{% if section.settings.directory_label_select != blank %}{{ section.settings.directory_label_select }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...">{% if section.settings.directory_label_select != blank %}{{ section.settings.directory_label_select }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</a>
+                          <ul class="options tag-base tag-filter unformatted">
+                            {% assign tags_list = tags | split: cat_item %}
+                            {% for tags in tags_list %}
+                            {%- unless tags contains 'Filter1_' or tags contains 'Filter2_' or tags contains 'Filter3_' -%}
+                            <li class="item" 
+                                data-id="{{ tags | split: '*' | first | split: '^' | last | replace:'%','-' }}" 
+                                data-id2="{{ tags | split: '|' | first | split: '*' | last | replace:'%','-' }}"
+                                data-collection="{{ tags | split: '*' | first | split: '^' | last | replace:'%','-' }}" 
+                                data-group="{{ tags | split: '*' | first | split: '^' | last | replace:'%','-' }}"
+                                data-handle="{{ tags | split: '^' | first | split: '~' | last }}">
+                              <a href="javascript:void(0)" 
+                                 data-id="{{ tags | split: '*' | first | split: '^' | last | replace:'%','-' }}" 
+                                 rel="{{ tags | split: '^' | first | split: '~' | last }}" 
+                                 value="{{ tags | split: '^' | first | split: '~' | last }}">{{ tags | split: '~' | first | split: '_' | last }}</a></li>
+                            {%- endunless -%}
+                            {% endfor %}
+                          </ul>                           
+                        </span>
+                      </span>
+                    </span>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+
+                  <div class="{% if section.settings.form_layout %}three horizontal-form{% else %}twelve vertical-form{% endif %} animate animate-loop-4"><span class="form mobile"><input type="button" value="{% if section.settings.button != blank %}{{ section.settings.button }}{% else %}{{ 'general.search.title' | t }}{% endif %}" class="{% unless section_onboarding %}basic {% endunless %}btn auto-full-width" /></span></div>
+
+                  {% else %}
+
+                  <div class="errors note form-error">
+                    <p>{{ 'homepage.onboarding.no_collections' | t }}</p>
+                  </div>
+
+                  {% endif %}
+
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
+
+<style>
+  .content-height-{{ section.id }}{height:{{ section.settings.padding }}vh;min-height:{{ section.settings.padding }}vh}
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Basic filter",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Basic filter"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Filter products using menus"
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "type": "link_list",
+        "id": "menu",
+        "label": "Filter menu"
+      }, 
+      {
+        "type": "checkbox",
+        "id": "form_layout",
+        "label": "Horizontal form",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "directory_label",
+        "label": "First dropdown text",
+		"default": "Select"
+      },
+      {
+        "type": "text",
+        "id": "directory_label_select",
+        "label": "Remaining dropdown text",
+		"default": "Select"
+      },
+      {
+        "type": "text", 
+        "id": "button",
+        "label": "Button",
+		"default": "Search"
+      },
+      {
+        "type": "header",
+        "content": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_img",
+        "label": "Image",
+        "info": "1900px recommended"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_background_img",
+        "label": "Show image",
+        "default": true
+      }, 
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": true
+      },
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 5,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 50
+      },
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Basic filter",
+        "category": "General"
+      }
+    ]
+  }
+{% endschema %}

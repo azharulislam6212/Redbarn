@@ -1,0 +1,68 @@
+{
+  "sections": {
+    "product-template": {
+      "type": "product-template",
+      "blocks": {
+        "436ba7b7-c343-4978-b8d7-fbc2b951f1cd": {
+          "type": "accordion",
+          "settings": {
+            "icon": "shopify:\/\/shop_images\/Frame_1017.svg",
+            "title": "Free & Fast Shipping",
+            "body": "<p>Add custom text to promote products, specials or offers<\/p>"
+          }
+        },
+        "fedac69e-6b24-41f3-803c-6b7513bf7c26": {
+          "type": "accordion",
+          "settings": {
+            "icon": "shopify:\/\/shop_images\/Frame_1017_1.svg",
+            "title": "Easy Returns",
+            "body": "<p>Add custom text to promote products, specials or offers<\/p>"
+          }
+        }
+      },
+      "block_order": [
+        "436ba7b7-c343-4978-b8d7-fbc2b951f1cd",
+        "fedac69e-6b24-41f3-803c-6b7513bf7c26"
+      ],
+      "settings": {
+        "reviews_enable": true,
+        "show_dynamic_checkout": false
+      }
+    },
+    "788ea041-b400-45cf-805b-232313ac4979": {
+      "type": "preference-section",
+      "settings": {}
+    },
+    "35d95469-92ba-4aff-8d8e-b6ce39600108": {
+      "type": "related-porducts",
+      "settings": {}
+    },
+    "17034848325ab1d203": {
+      "type": "apps",
+      "blocks": {
+        "43064567-1007-409a-9fce-87e2c51867e6": {
+          "type": "shopify:\/\/apps\/stamped-product-reviews-ugc\/blocks\/main-widget\/a103faaf-2125-4b0e-89fa-de5149736723",
+          "settings": {
+            "animation": true,
+            "tags_exclude": "",
+            "tags_include": "",
+            "search": "",
+            "linkify": true,
+            "use_metafields": false,
+            "sku_tagtype": "sku"
+          }
+        }
+      },
+      "block_order": [
+        "43064567-1007-409a-9fce-87e2c51867e6"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "product-template",
+    "788ea041-b400-45cf-805b-232313ac4979",
+    "35d95469-92ba-4aff-8d8e-b6ce39600108",
+    "17034848325ab1d203"
+  ]
+}

@@ -1,0 +1,50 @@
+<div class="landing-image-with-text-01 custom_page_template">
+  {% if section.settings.image != blank %}
+  <section class="cmn-video-sec inner-page-banner">
+    <div class="container">
+      <div class="main-video">
+        {%- assign id = section.settings.image.id -%}
+        {%- assign img_src = section.settings.image -%}
+        {%- assign size = 2300 -%}
+        {% include 'image-load' custom_class: 'divImg' %}
+        {% if section.settings.title != blank %}
+        <div class="custom_row">
+          <div class="col-12 videoBg-content">
+            <h1>{{ section.settings.title }}</h1>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <div class="container">
+    {% if section.settings.text != blank %}
+    <div class="rte">{{ section.settings.text }}</div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Image with text 01",
+    "settings": [
+	  {
+       "type": "image_picker",
+       "id": "image",
+       "label": "Image"
+      },
+      {
+         "type": "text",
+         "id": "title",
+         "label": "Title"
+      },
+	  {
+         "type": "richtext",
+         "id": "text",
+         "label": "Text"
+      }
+    ]
+  }
+{% endschema %}

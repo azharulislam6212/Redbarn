@@ -1,0 +1,9 @@
+<div class="breadcrumbs breadcrumb_text text-left bottompad-half" aria-label="{{ 'general.breadcrumbs.breadcrumbs' | t }}" role="navigation">
+ <span><a href="{{ shop.url }}" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a></span> 
+ <span class="separator" aria-hidden="true"></span>
+ {% if template contains "article"%}
+  <span><a href="{{ blog.url }}" title="{{ blog.title }}">{{ blog.title }}</a></span> 
+  <span class="separator" aria-hidden="true"></span>
+ {% endif %}
+ <span class="active">{{ page_title }}</span>
+</div>

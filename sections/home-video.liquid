@@ -1,0 +1,234 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.settings.link != blank %}
+{%- assign section_onboarding = false -%}
+{% else %}
+{%- assign section_onboarding = true -%}
+{% endif %}
+
+{% if section.settings.use_background_img and section.settings.background_img != blank %}
+{%- assign img_src = section.settings.background_img -%}
+{% include 'image-background-src' %} 
+{%- assign img_size = '1x' -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" 
+     data-section-type="home-video" 
+     class="{% if full_width %}{% if section.settings.include_color != 'color-none' and section.settings.use_background_img == false  %}background-colored {{ section.settings.include_color }} {% endif %}{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload {% endif %} {% if settings.animation_enable %}animate-section-div {% endif %}clearfix"
+     {% if full_width and section.settings.use_background_img and section.settings.background_img != blank %} 
+     data-bgset="{{ image_data | strip }}"
+     data-sizes="auto"
+     style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+     {% endif %}>
+  <noscript>
+    {% if full_width and section.settings.use_background_img and section.settings.background_img != blank %}
+    <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+    {% endif %}
+  </noscript>
+
+  <div{% if full_width and section.settings.use_background_img %} class="background-overlay background-overlay-{{ section.id }}"{% endif %}>
+    <div class="container clearfix">
+
+      <div{% unless full_width %}{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %} class="twelve"{% endif %}{% endunless %}>
+        <div class="{% if full_width == false %}{% if section.settings.include_color != 'color-none' and section.settings.use_background_img == false %}twelve background-colored {{ section.settings.include_color }} {% endif %}{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}background-cover lazyload {% endif %} clearfix"
+             {% if full_width == false and section.settings.use_background_img and section.settings.background_img != blank %} 
+             data-bgset="{{ image_data | strip }}"
+             data-sizes="auto"
+             style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+             {% endif %}>
+          <noscript>
+            {% if full_width == false and section.settings.use_background_img and section.settings.background_img != blank %}
+            <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) center center no-repeat;"></div>
+            {% endif %}
+          </noscript>
+
+          <div class="table content-height-{{ section.id }}{% if settings.animation_enable %} animate-section load{% endif %}{% if full_width == false and section.settings.use_background_img %} twelve background-overlay background-overlay-{{ section.id }}{% endif %}">
+            <div class="table-cell">
+              <div class="six mobile animate {{ section.settings.text_alignment}} {% if section.settings.font_color and section.settings.include_color != 'color-none' or section.settings.use_background_img %}white {% endif %}{{ section.settings.content_alignment }}">
+                {% if section.settings.title != blank %}<h2>{{ section.settings.title | escape }}</h2>{% endif %}
+                {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+                {% unless section_onboarding %}
+                <p><a data-fancybox href="{{ section.settings.link | escape }}" class="btn{% if section.settings.outline_button %} outline{% endif %}" rel="noopener noreferrer" role="button" aria-label="{% if section.settings.button != blank %}{{ section.settings.button | escape }}{% else %}{{ 'layout.general.play' | t }}{% endif %}">{% if section.settings.button != blank %}{{ section.settings.button | escape }}{% else %}<span class="icon icon-play"></span>{% endif %}</a></p>
+                {% else %}
+                <p><a data-fancybox href="https://youtu.be/_9VUPq3SxOc?rel=0&amp;controls=0&amp;showinfo=0" rel="noopener noreferrer" class="btn{% if section.settings.outline_button %} outline{% endif %}">{% if section.settings.button != blank %}{{ section.settings.button | escape }}{% else %}<span class="icon icon-play"></span>{% endif %}</a></p>
+                {% endunless %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .content-height-{{ section.id }}{height:{{ section.settings.padding }}vh;min-height:{{ section.settings.padding }}vh}
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Video",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Video"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Promo videos will play in a pop-up window"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "content_alignment",
+        "label": "Position",
+        "default": "center",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Video"
+      },
+      {
+        "type": "video_url",
+        "id": "link",
+        "label": "Video link",
+        "accept": ["youtube", "vimeo"],
+		"info": "https://youtu.be/_9VUPq3SxOc"
+      },
+      {
+        "type": "text",
+        "id": "button",
+        "label": "Button"
+      },
+      {
+        "type": "checkbox",
+        "id": "outline_button",
+        "label": "Outline button",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_img",
+        "label": "Image",
+        "info": "1900px recommended"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_background_img",
+        "label": "Show image",
+        "default": true
+      }, 
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": true
+      },
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 5,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 50
+      },
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color", 
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Video",
+        "category": "Video"
+      }
+    ]
+  }
+{% endschema %}

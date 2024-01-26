@@ -1,0 +1,113 @@
+{{ 'shipiping-bar.css' | asset_url | stylesheet_tag }}
+
+<div class="shipiping-notification-bar">
+
+  <div class="container clearfix">
+
+    <div class="shipiping__inner">
+      {% if section.settings.text != blank %}
+        <div class="notification-text">
+          {{ section.settings.text }}
+        </div>
+      {% endif %}
+
+      <div class="user-link">
+
+        {% if shop.customer_accounts_enabled %}
+          <div
+            class="account"
+            {% if customer %}
+            role="menuitem"
+            aria-haspopup="true"
+            aria-expanded="false"
+            {% endif %}>
+            {% if customer %}
+              <ul
+                class="text-right account-dropdown"
+                role="menu"
+                aria-hidden="true"
+                aria-label="{{ 'layout.general.nav_sub' | t }}">
+                <li role="menuitem">
+                  <a href="{{ routes.account_url }}" title="{{ 'layout.customer.account' | t }}">{{ 'layout.customer.greeting' | t }}
+                    {{ customer.first_name }}</a>
+                </li>
+                <li role="menuitem">
+                  <a href="{{ routes.account_logout_url }}" title="{{ 'layout.customer.log_out' | t }}">{{ 'layout.customer.log_out' | t }}</a>
+                </li>
+              </ul>
+            {% else %}
+              <a
+                href="{{ routes.account_login_url }}"
+                title="{{ 'layout.customer.log_in' | t }}"
+                class="location_link"
+                role="button"
+                aria-label="{{ 'layout.customer.log_in' | t }}">
+                <svg
+                  width="16"
+                  height="17"
+                  viewBox="0 0 16 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M8 10.5C10.2091 10.5 12 8.70914 12 6.5C12 4.29086 10.2091 2.5 8 2.5C5.79086 2.5 4 4.29086 4 6.5C4 8.70914 5.79086 10.5 8 10.5Z"
+                    stroke="white"
+                    stroke-width="1.33333"
+                    stroke-miterlimit="10"
+                    stroke-linecap="square" />
+                  <path
+                    d="M1.9375 13.9999C2.55184 12.9357 3.43552 12.0519 4.49972 11.4374C5.56392 10.8229 6.77113 10.4994 8 10.4994C9.22887 10.4994 10.4361 10.8229 11.5003 11.4374C12.5645 12.0519 13.4482 12.9357 14.0625 13.9999"
+                    stroke="white"
+                    stroke-width="1.33333"
+                    stroke-linecap="square" />
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+        {% if section.settings.location_link != blank %}
+          <a href='{{section.settings.location_link}}' class="location_link">
+            <svg
+              width="16"
+              height="17"
+              viewBox="0 0 16 17"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M6.00033 7.83332C6.00033 8.36376 6.21104 8.87246 6.58611 9.24754C6.96118 9.62261 7.46989 9.83332 8.00033 9.83332C8.53076 9.83332 9.03947 9.62261 9.41454 9.24754C9.78961 8.87246 10.0003 8.36376 10.0003 7.83332C10.0003 7.30289 9.78961 6.79418 9.41454 6.41911C9.03947 6.04404 8.53076 5.83332 8.00033 5.83332C7.46989 5.83332 6.96118 6.04404 6.58611 6.41911C6.21104 6.79418 6.00033 7.30289 6.00033 7.83332Z"
+                stroke="white"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path
+                d="M11.7717 11.6047L8.94299 14.4333C8.69298 14.6831 8.35405 14.8234 8.00066 14.8234C7.64727 14.8234 7.30834 14.6831 7.05833 14.4333L4.22899 11.6047C3.48314 10.8588 2.97522 9.90845 2.76945 8.8739C2.56369 7.83934 2.66932 6.767 3.073 5.79247C3.47667 4.81795 4.16026 3.98501 5.03732 3.39899C5.91437 2.81297 6.94551 2.50018 8.00033 2.50018C9.05515 2.50018 10.0863 2.81297 10.9633 3.39899C11.8404 3.98501 12.524 4.81795 12.9277 5.79247C13.3313 6.767 13.437 7.83934 13.2312 8.8739C13.0254 9.90845 12.5175 10.8588 11.7717 11.6047Z"
+                stroke="white"
+                stroke-width="1.33333"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </a>
+        {% endif %}
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Shipiping Bar",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "text",
+        "default": "<p>Free shipping for orders over 49!*</p>",
+        "label": "Text"
+      }, {
+        "type": "url",
+        "id": "location_link",
+        "label": "Location Link"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,156 @@
+{{ 'header-new.css' | asset_url | stylesheet_tag }}
+
+
+<header>
+ <div class="rb-header {% if template == "index" %} rb-header-transparrent {% endif %}">
+
+ <div class="rb-header__wrapper">
+    <div class="inner-header">
+      <div class="nav-bar-wrap">
+               <div class="nav-bar">
+                <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 6.5H20M4 12.5H20M4 18.5H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  
+              </div>
+      </div>
+
+    <div class="logo-wrap">
+      {% if section.settings.logo != blank %}
+        <a href="{{ shop.url }}" title="{{ shop.name }}" class="img-align">
+          {% if section.settings.logo != blank %}
+            {%- capture image_size -%}
+              {{ section.settings.logo_max_width }}x
+            {%- endcapture -%}
+            <img src="{{ section.settings.logo | img_url: image_size }}" srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x" alt="{% if template == '404' %}{{ 'general.404.title' | t }} {% else %}{{ page_title }} {% if current_tags %}{%- capture meta_tags -%}{%- for tag in current_tags -%}{{ tag | split: '_' | last }} {%- endfor -%}{%- endcapture -%}{{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %}| {{ 'general.meta.page' | t: page: current_page }} {% endif %}{% endif %}{% unless page_title contains shop.name or template == 'password' %}| {{ shop.name }}{% endunless %}">
+          {% else %}
+            {{ shop.name }}
+          {% endif %}
+        </a>
+      {% else %}
+        <a href="{{ shop.url }}" title="{{ shop.name }}" class="sticky-text">{{ shop.name }}</a>
+      {% endif %}
+    </div>
+
+    <div class="nav-wrap">
+       <nav aria-label="Main Menu">
+        <ul class="main-menu">
+          {% for link in linklists[section.settings.menu].links %}
+            {%- if link.links != blank -%}
+            {%- assign has_dropdown = true -%}
+            {%- endif -%}  
+
+           {%- if has_dropdown -%}
+            <li class="menu-item menu-label-{{link.levels}} {% if link.active or link.current or link.child_active %}active_link {% endif %}">
+              
+              <a href="{{ link.url }}" class="menu-link">{{ link.title }} </a>
+             {% if  link.links != blank  %}
+              
+        
+              <ul class="menu-dropdown">
+                {%- for childlink in link.links -%}
+                {%- if childlink.links != blank -%}
+                <li>
+                  <a href="{{ childlink.url }}" class="menu-title-link">  {{ childlink.title }}</a>
+                  <ul class="menu-sub-dropdown">
+                    {%- for grandchild in childlink.links -%}
+                    <li><a class="sub-menu-item" href="{{ grandchild.url }}">{{ grandchild.title }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                </li>
+                {%- else -%}
+                <li><a  href="{{ childlink.url }}"><span>{{ childlink.title }}</span></a></li>
+                {%- endif -%}
+                {%- endfor -%}
+                </ul>
+              {% endif %}
+          </li>
+
+            {%- else -%}
+            <li class="menu-item {% if link.active or link.current or link.child_active %}active_link {% endif %}"><a href="{{ link.url }}" class="menu-link">{{ link.title }}</a></li>
+          {%- endif -%}
+        
+          {% endfor %}
+
+        </ul>
+
+       </nav>
+    </div>
+
+    <div class="header-icons">
+
+     <ul class="icon-list">
+        <li><a href="javascript:void(0)" class="search-toggle">
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 21.5L15 15.5M3 10.5C3 11.4193 3.18106 12.3295 3.53284 13.1788C3.88463 14.0281 4.40024 14.7997 5.05025 15.4497C5.70026 16.0998 6.47194 16.6154 7.32122 16.9672C8.1705 17.3189 9.08075 17.5 10 17.5C10.9193 17.5 11.8295 17.3189 12.6788 16.9672C13.5281 16.6154 14.2997 16.0998 14.9497 15.4497C15.5998 14.7997 16.1154 14.0281 16.4672 13.1788C16.8189 12.3295 17 11.4193 17 10.5C17 9.58075 16.8189 8.6705 16.4672 7.82122C16.1154 6.97194 15.5998 6.20026 14.9497 5.55025C14.2997 4.90024 13.5281 4.38463 12.6788 4.03284C11.8295 3.68106 10.9193 3.5 10 3.5C9.08075 3.5 8.1705 3.68106 7.32122 4.03284C6.47194 4.38463 5.70026 4.90024 5.05025 5.55025C4.40024 6.20026 3.88463 6.97194 3.53284 7.82122C3.18106 8.6705 3 9.58075 3 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        </a></li>
+        <li  class="cart-icon cart-count " role="menuitem" aria-haspopup="true" aria-expanded="false">
+        <a href="/cart" title="Cart" class="relative" role="button" aria-label="Cart" aria-expanded="false" aria-haspopup="true">
+        <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16.375 17.75H6.54375L3.92813 3.36875C3.89752 3.19653 3.80768 3.04042 3.67415 2.92743C3.54062 2.81444 3.37179 2.75168 3.19687 2.75H1.5" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+        <path d="M7.5 21.5C8.53553 21.5 9.375 20.6605 9.375 19.625C9.375 18.5895 8.53553 17.75 7.5 17.75C6.46447 17.75 5.625 18.5895 5.625 19.625C5.625 20.6605 6.46447 21.5 7.5 21.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+        <path d="M17.25 21.5C18.2855 21.5 19.125 20.6605 19.125 19.625C19.125 18.5895 18.2855 17.75 17.25 17.75C16.2145 17.75 15.375 18.5895 15.375 19.625C15.375 20.6605 16.2145 21.5 17.25 21.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+        <path d="M6.375 14H17.6344C17.985 14.0011 18.3247 13.8785 18.5939 13.6539C18.8631 13.4293 19.0445 13.117 19.1063 12.7719L20.25 6.5H4.875" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+        </svg>
+        <span class="cartCount">{{ cart.item_count }}</span>
+        </a>
+        </li>
+     </ul>
+
+    </div>
+    </div>
+
+ </div>
+
+ </div>
+</header>
+
+<div class="header-search__bar">
+  <div class="container">
+          <div class="header-search__wrapper">
+            {% include 'search' %}
+          </div>
+  </div>
+
+</div>
+
+
+
+{% render 'mobile-drawer-menu', menu: section.settings.menu %}
+
+{% schema %}
+    {
+      "name": "Header",
+      "settings": [
+        {
+      "type": "header",
+      "content": "Logo"
+    },
+     {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Image"
+    }, {
+      "type": "range",
+      "id": "logo_max_width",
+      "min": 40,
+      "max": 250,
+      "step": 10,
+      "unit": "px",
+      "label": "Max logo width",
+      "default": 130
+    }, 
+    {
+      "type": "header",
+      "content": "Navigation"
+    }, 
+    {
+      "type": "link_list",
+      "label": "Menu",
+      "id": "menu",
+      "default": "main-menu"
+    }
+      ]
+    }
+  {% endschema %}

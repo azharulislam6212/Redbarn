@@ -1,0 +1,404 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.blocks.size == 0 and section.settings.title == blank and section.settings.sub_title == blank %}
+{%- assign section_onboarding = true -%}
+{% else %}
+{%- assign section_onboarding = false -%}
+{% endif %}
+
+{% if section.settings.use_background_img and section.settings.background_img != blank %}
+{%- assign img_src = section.settings.background_img -%}
+{% include 'image-background-src' %}
+{%- assign img_size = '1x' -%}
+{% endif %}
+
+<div id="collection-id-{{ section.id }}" 
+     data-collection-id="{{ section.id }}" 
+     data-section-id="{{ section.id }}" 
+     data-section-type="home-collections-grid"
+     class="collection-id collection-{{ section.id }} {% if full_width and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }} {% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.use_background_img %}{% unless section.blocks.size == 0 %}colored-bottom{% endunless %}{% else %}colored-top-bottom{% endif %}{% endif %}{% if section.settings.include_color == 'color-none' %} {% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.use_background_img %}{% unless section.blocks.size == 0 %}margins-bottom-section{% endunless %}{% else %}margins-section{% endif %}{% endif %} {% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  {% if full_width %}
+  {% if section_onboarding or section.settings.use_background_img or section.settings.title != blank or section.settings.sub_title != blank %}
+  <div class="{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}{% if section.settings.use_background_img %}background-cover lazyload {% endif %}{% if section.blocks.size > 0 %}relative-{{ section.id }} {% endif %}clearfix"
+       {% if section.settings.use_background_img and section.settings.background_img != blank %}
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+       {% endif %}> 
+
+    {% if section.settings.use_background_img and section.settings.background_img != blank %}
+    <noscript>
+      <div class="no-js-bg background-cover {% if section.blocks.size > 0 %}relative-{{ section.id }} {% endif %}content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+    </noscript>
+    {% endif %}
+
+    <div{% if section.settings.use_background_img %} class="{% if section.blocks.size > 0 %}relative-{{ section.id }} {% endif %}background-overlay background-overlay-{{ section.id }}"{% endif %}>
+      <div class="container clearfix">
+        <div class="table content-height-{{ section.id }}">
+          {% if section_onboarding or section.settings.title != blank or section.settings.sub_title != blank %}
+            <div class="table-cell">
+            <div class="twelve {{ section.settings.text_alignment }}{% unless section_onboarding %}{% if section.settings.font_color and section.settings.include_color != 'color-none' or section.settings.use_background_img %} white{% endif %}{% endunless%}">
+              {% if section_onboarding %}
+              <h2 class="h1">{{ 'homepage.onboarding.no_title' | t }}</h2>
+              <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+              {% else %}
+              {% if section.settings.title != blank%}<h2 class="h1">{{ section.settings.title | escape }}</h2>{% endif %}
+              {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+  {% endif %}
+  {% endif %}
+  
+  <div class="container{% if full_width and section.blocks.size > 2 %} grid{% endif %} clearfix">
+    <div{% unless full_width %}{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %} class="twelve"{% endif %}{% endunless %}>
+      <div class="tab-body{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }} {% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.use_background_img %}{% unless section.blocks.size == 0 %}colored-bottom{% endunless %}{% else %}colored-top-bottom{% endif %}{% endif %}">
+        {% if full_width == false %}
+        {% if section_onboarding or section.settings.use_background_img or section.settings.title != blank or section.settings.sub_title != blank %}
+        <div class="{% if section.settings.use_background_img and section.settings.background_img == blank %}placeholder-svg-background {% endif %}{% if section.settings.use_background_img %}background-cover lazyload{% endif %}"
+             {% if section.settings.use_background_img and section.settings.background_img != blank %}
+             data-bgset="{{ image_data | strip }}"
+             data-sizes="auto"
+             style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+             {% endif %}>
+
+          {% if section.settings.use_background_img and section.settings.background_img != blank %}
+          <noscript>
+            <div class="no-js-bg background-cover {% if section.blocks.size > 0 %}relative-{{ section.id }} {% endif %}content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) center center no-repeat;"></div>
+          </noscript>
+          {% endif %}
+
+          <div class="{% if section_onboarding or section.settings.use_background_img or section.settings.title != blank or section.settings.sub_title != blank %}{% if section.blocks.size > 0 %}relative-{{ section.id }} {% endif %}table content-height-{{ section.id }} {% endif %}{% if section.settings.use_background_img %}background-overlay background-overlay-{{ section.id }} {% endif %}clearfix">
+            {% if section_onboarding or section.settings.title != blank or section.settings.sub_title != blank %}
+            <div class="table-cell">
+              <div{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+                <div class="{% if section.settings.use_background_img or section.settings.include_color != 'color-none' or full_width == false %}twelve {% endif %}{{ section.settings.text_alignment }}{% unless section_onboarding %}{% if section.settings.font_color and section.settings.use_background_img or section.settings.include_color != 'color-none' %} white{% endif %}{% endunless%}">
+                  {% if section_onboarding %}
+                  <h2 class="h1">{{ 'homepage.onboarding.no_title' | t }}</h2>
+                  <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+                  {% else %}
+                  {% if section.settings.title != blank%}<h2 class="h1">{{ section.settings.title | escape }}</h2>{% endif %}
+                  {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+        </div>
+        {% endif %}
+        {% endif %}
+        
+        {% if section.blocks.size > 0 %}        
+        <div class="{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %}{% unless full_width %}twelve grid {% endunless %}{% endif %}{% if section.settings.use_background_img or section.settings.title != blank or section.settings.sub_title != blank %}collection-grid-{{ section.id }}{% endif %}{% if settings.animation_enable %} animate-section load{% endif %}">
+          <div{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %} class="twelve{% unless full_width and section.blocks.size < 3 %} grid{% endunless %}"{% endif %}>
+            <div class="tab-body{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %} twelve{% if section.settings.use_background_img or section.settings.include_color != 'color-none' %}{% if section.blocks.size > 2 or full_width == false and section.blocks.size < 3 %} grid{% endif %}{% endif %} background-white{% elsif full_width == false and section.blocks.size > 2 %} plus-grid{% endif %}">
+              <div class="{% if section.blocks.size > 2 %}swiper-container plus-grid {% endif %}table-center"{% if section.blocks.size > 2 %} id="swiper-carousel-{{ section.id }}-grid"{% endif %}>
+                <div{% if section.blocks.size > 2 %} class="swiper-wrapper swiper-wrapper-{{ section.id }} flex-wrap"{% endif %}>
+                  {% for block in section.blocks %}
+                  {%- assign collection = collections[block.settings.collection] -%}          
+                  {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+
+                  {%- assign block_width = section.blocks.size | downcase -%}
+                  {% case block_width %}
+                  {% when '1' %}
+                  {%- assign block_width = 'twelve' -%}      
+                  {%- assign size = 1200 -%}
+                  {% when '2' %}
+                  {%- assign block_width = 'six' -%}      
+                  {%- assign size = 600 -%}
+                  {% when '3' %}
+                  {%- assign block_width = 'four' -%}      
+                  {%- assign size = 400 -%}
+                  {% when '4' %}
+                  {%- assign block_width = 'six' -%}
+                  {%- assign size = 600 -%}
+                  {% when '5' %}
+                  {%- assign size = 600 -%}
+                  {% when '6' %}
+                  {%- assign block_width = 'four' -%}      
+                  {%- assign size = 400 -%}
+                  {% endcase %}
+
+                  <div class="product animate product-{{ section.id }} {% if section.blocks.size == 5 %}{% cycle cycleIndex: 'four', 'four', 'four', 'six', 'six' %}{% else %}{{ block_width }}{% endif %} animate-loop-{{ forloop.index0 }} {% if section.blocks.size > 2 %}mobile {% elsif full_width == false and section.settings.use_background_img or section.settings.include_color != 'color-none' %}grid {% endif %}top swiper-slide" {{ block.shopify_attributes }}>
+                    <div class="product-border">
+                      {% if collection.image != blank or collection.products.first.featured_media != blank or collection == empty %}
+                      <div class="product-thumb">            
+                        {% if collection == empty %}
+                        <a href="{{ routes.all_products_collection_url }}">
+                          {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                        </a>            
+                        {% else %}  
+                        <a href="{{ collection.url  }}" title="{{ collection.title }}">
+                          {% if section.settings.use_product_image %}
+                          {%- assign img_src = collection.products.first.featured_media -%}
+                          {%- capture alt -%}{{ collection.products.first.title }}{%- endcapture -%}
+                          {% else %}
+                          {% if collection.image %}
+                          {%- assign img_src = collection.image -%}
+                          {%- capture alt -%}{{ collection.title }}{%- endcapture -%}
+                          {% else %}
+                          {%- assign img_src = collection.products.first.featured_media -%}
+                          {%- capture alt -%}{{ collection.products.first.title }}{%- endcapture -%}
+                          {% endif %}
+                          {% endif %}
+                          {% if section.settings.image_fit =='cover' %}
+                          {%- assign bg_size = 'cover' -%} 
+                          {%- assign img_size = '1x' -%}
+                          <div class="lazypadding">
+                            {% include 'image-background' %}
+                          </div>                            
+                          {% else %}
+                          {%- assign id = block.id -%}
+                          {% include 'image-load' %}                            
+                          {% endif %}
+                        </a>
+                        {% endif %}
+                      </div>
+                      {% endif %}
+
+                      <div class="{{ section.settings.text_alignment }}">
+                        <h4><a href="{% if collection == empty %}{{ routes.all_products_collection_url }}{% else %}{{ collection.url  }}{% endif %}" title="{% if collection == empty %}{{ 'homepage.onboarding.collection_title' | t }}{% else %}{{ collection.title }}{% endif %}">{% if collection == empty %}{{ 'homepage.onboarding.collection_title' | t }}{% else %}{{ collection.title }}{% endif %}</a></h4>
+                        {% if block.settings.body != blank %}{{ block.settings.body }}{% endif %}
+                        {% if block.settings.button != blank %}<a href="{% if collection == empty %}{{ routes.all_products_collection_url }}{% else %}{{ collection.url  }}{% endif %}" title="{% if collection == empty %}{{ 'homepage.onboarding.collection_title' | t }}{% else %}{{ collection.title }}{% endif %}" class="btn auto-width{% if section.settings.outline_button %} outline{% endif %}">{{ block.settings.button | escape }}</a>{% endif %}
+                      </div>
+
+                    </div>
+                  </div>
+
+                  {% endfor %}
+                </div>
+                {% if section.blocks.size > 2 %}
+                <div id="swiper-pagination-{{ section.id }}" class="swiper-pagination relative{% if section.settings.include_color != 'color-none' %} bottompad-quarter{% endif %} hidden">
+                  <div id="swiper-button-prev-{{ section.id }}" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+                  <div id="swiper-button-next-{{ section.id }}" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        
+      </div>
+    </div>      
+  </div>
+  
+</div>
+
+{% if section.blocks.size > 0 %}
+{%- assign timesby = 0.75 -%}
+{% else %}
+{%- assign timesby = 1 -%}
+{% endif %}
+
+<style> 
+  .content-height-{{ section.id }}{height:{{ section.settings.padding | times: timesby }}vh;min-height:{{ section.settings.padding | times: timesby }}vh}
+  .relative-{{ section.id }}{margin-bottom:-{{ section.settings.padding | divided_by: 4 }}vh;padding-bottom:{{ section.settings.padding | divided_by: 4 }}vh;}
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Collection grid",
+	"max_blocks": 6,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Collection grid"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Group similar collections to share a story about the products"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "image_picker",
+        "id": "background_img",
+        "label": "Image",
+        "info": "1900px recommended"
+      }, 
+      {
+        "type": "checkbox",
+        "id": "use_background_img",
+        "label": "Show image",
+        "default": true
+      }, 
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": true
+      },
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 25
+      },
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_product_image",
+        "label": "Show first product image",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "outline_button",
+        "label": "Outline buttons",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "image_fit",
+        "label": "Image fit",
+        "default": "contain",
+        "options": [
+          {
+            "value": "cover",
+            "label": "Fill space"
+          },
+          {
+            "value": "contain",
+            "label": "Fit to space"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "richtext",
+            "id": "body",
+            "label": "Text",
+			"default": "<p>Use custom text to relate how the collection fits into the story line</p>"
+          },
+          {
+            "type": "text",
+            "id": "button",
+            "label": "Button",
+			"default": "Shop"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection grid",
+        "category": "Collection",
+        "blocks": [
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

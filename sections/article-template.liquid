@@ -1,0 +1,378 @@
+<div data-section-id="{{ section.id }}" data-section-type="blog-page" class="bottompad-section clearfix article-template">
+
+
+
+  <div class='container'>
+    <div class="blog-header">
+
+      <h1 class="blog-title">{{ article.title }}</h1>
+ 
+      {% if section.settings.include_author or section.settings.include_date or blog.comments_enabled? and article.comments.size > 0 %}
+      <h6 class="blog-data">{% if section.settings.include_author %}{{ article.author }}{% endif %}
+        {% if section.settings.include_author and section.settings.include_date %}<span class="separator" aria-hidden="true"></span>{% endif %}
+        {% if section.settings.include_date %}<span class='include_date'>{{ article.published_at | date: settings.month_day_year }}</span>{% endif %}{% if blog.comments_enabled? and article.comments.size > 0 %}{% if section.settings.include_author or section.settings.include_date %}<span class="separator" aria-hidden="true"></span>{% endif %}<a href="#comments" title="Comments">{{ article.comments_count }} {{ article.comments_count | pluralize: 'comment','comments' }}</a>{% endif %}</h6>
+
+      {% if article.tags.size > 0 and section.settings.include_tags %}
+      <div class="bottompad">
+        <p class="blog-tags">
+          {% for tag in article.tags %} 
+          <a href="{{ blog.url }}/tagged/{{ tag | handle }}" title="{{ tag }}">{{ tag }}</a>{% unless forloop.last %}, {% endunless %}
+          {% endfor %}
+        </p>  
+      </div>
+      {% endif %}
+
+      {% endif %}     
+    </div>
+       {% include "breadcrumbs" %}
+  </div>
+  {% if article.image and section.settings.include_image %}
+  {%- assign id = article.image.id -%}
+  {%- assign img_src = article.image -%}
+  {%- assign size = 1200 -%}
+  {%- capture alt -%}{% if article.image.alt %}{{ article.image.alt }}{% else %}{{ article.title | escape }}{% endif %}{%- endcapture -%}
+  <div class="article_image">{% include 'image-load' %}</div>
+  {% endif %}      
+
+
+  <div class="blog-article single-article {% unless article.image %} single-article--no-image{% endunless %}">
+    <div class='container'>
+      <div class="blog-content" >
+        <div class="blog-content-wrapper">
+
+          {% if section.settings.include_social %}
+          <div class="article-social-share">
+            <h6> {{ 'general.social.share' | t }}</h6>
+            {% include 'social-share', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+          </div>
+          {% endif %}
+	
+          {{ article.content }}
+          
+           {% if section.settings.include_social %}
+          <div class="article-social-share bottom-article-social-share">
+            <h6> {{ 'general.social.share' | t }}</h6>
+            {% include 'social-share', share_title: article.title, share_permalink: article.url, share_image: article.image %}
+          </div>
+          {% endif %}
+          
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% if article.metafields.global.collection_handle != blank %}
+    {% assign collection = collections[article.metafields.global.collection_handle] %}
+    <div class="{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+      <div class="container grid{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+        <div class="product-more">
+          <div class="product-page related clearfix">
+            <div id="recommended" class="bottompad clearfix">
+              {% if section.settings.product_recommendations_heading != blank %}
+              <div class="twelve{% unless settings.borders_enable %} bottompad{% endunless %}">
+                <h3 class="text-center">{{ section.settings.product_recommendations_heading }}</h3>
+              </div>
+              {% endif %}
+              <div class="product-recommendations relative row last" data-limit="4" data-type="collection_handle">
+                {% if collection.all_products_count > 0 %}
+                <div{% unless collection.all_products_count > 2 %} class="collection-products"{% endunless %}>
+                  <div data-block-id="recommended-products" class="{% if collection.all_products_count > 2 %}swiper-container plus-grid {% else %}twelve center {% endif %}product-loop product-loop-article-template"{% if collection.all_products_count > 2 %} id="swiper-carousel-recommended-products-grid"{% endif %}>
+                    {% if collection.all_products_count > 2 %}<div class="swiper-wrapper swiper-wrapper-recommended-products{% if collection.all_products_count < 5 %} swiper-center{% endif %}">{% endif %}
+                    {% for product in collection.products %}
+                    {%- assign cycleIndex = 'recommended' -%}
+                    {% if collection.all_products_count > 2 %}{%- assign swiper-slide = ' swiper-slide' -%}{% endif %}
+                    {% include 'product-loop' %}
+                    {% endfor %}
+                    {% if collection.all_products_count > 2 %}</div>{% endif %}
+                    <div id="swiper-pagination-recommended-products" class="swiper-pagination relative bottompad-quarter hidden">
+                      <div id="swiper-button-prev-recommended-products" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+                      <div id="swiper-button-next-recommended-products" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div> 
+
+          </div>
+        </div>
+      </div>
+    </div>
+  {% elsif article.metafields.global.recommended_product_id != blank %}
+    <div class="{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+      <div class="container grid{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+        <div class="product-more">
+          <div class="product-page related clearfix">
+            <div id="recommended" class="bottompad clearfix">
+              {% if section.settings.product_recommendations_heading != blank %}
+              <div class="twelve{% unless settings.borders_enable %} bottompad{% endunless %}">
+                <h3 class="text-center">{{ section.settings.product_recommendations_heading }}</h3>
+              </div>
+              {% endif %}
+              <div class="product-recommendations relative row last" data-product-id="{{ article.metafields.global.recommended_product_id }}" data-limit="4" data-type="product_id">
+                <div class="loading margins-bottom-section margins-top-section twelve"></div>
+                {% if recommendations.products_count > 0 and recommendations.performed %}
+                <div{% unless recommendations.products_count > 2 %} class="collection-products"{% endunless %}>
+                  <div data-block-id="recommended-products" class="123 {% if recommendations.products_count > 2 %}swiper-container plus-grid {% else %}twelve center {% endif %}product-loop product-loop-article-template"{% if recommendations.products_count > 2 %} id="swiper-carousel-recommended-products-grid"{% endif %}>
+                    {% if recommendations.products_count > 2 %}<div class="swiper-wrapper swiper-wrapper-recommended-products{% if recommendations.products_count < 5 %} swiper-center{% endif %}">{% endif %}
+                    {% for product in recommendations.products %}
+                    {%- assign cycleIndex = 'recommended' -%}
+                    {% if recommendations.products_count > 2 %}{%- assign swiper-slide = ' swiper-slide' -%}{% endif %}
+                    {% include 'product-loop' %}
+                    {% endfor %}
+                    {% if recommendations.products_count > 2 %}</div>{% endif %}
+                    <div id="swiper-pagination-recommended-products" class="swiper-pagination relative{% if section.settings.include_color != 'color-none' %} bottompad-quarter{% endif %} hidden">
+                      <div id="swiper-button-prev-recommended-products" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+                      <div id="swiper-button-next-recommended-products" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+              </div>
+            </div> 
+
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+   
+
+    {%- assign current_found = false -%}
+    {%- assign done = false -%}
+    {% for a in blog.articles %}
+    {% if current_found and done == false %}
+    {%- assign next_article = a -%}
+    {%- assign done = true -%}
+    {% endif %}
+    {% unless done %}
+    {% if a.id == article.id %}
+    {%- assign current_found = true -%}
+    {% else %}
+    {%- assign prev_article = a -%}
+    {% endif %}
+  {% endunless %}
+  {% endfor %}
+
+  <div class='container'>
+    {% if section.settings.include_newsletter or section.settings.include_articles or blog.all_tags.size > 0 and section.settings.include_tags %}
+    {% include 'blog-sidebar' %}
+    {% endif %}
+
+
+    {% if blog.comments_enabled? %}
+    <div id="comments" class="clearfix bottompad">
+      {% if article.comments.size > 0 %}
+      <div class="comments cart-table">
+        <h4>{{ 'blogs.comments.comments' | t }} ({{ article.comments_count }})</h4>
+        {% paginate article.comments by 10 %}
+        {% for comment in article.comments %}
+        <div class="comment item{% if forloop.last %} last{% endif %}">
+          <div class="comment-data bottompad-quarter"><small><strong>{{ comment.author }}</strong> on {{ comment.created_at | date: settings.month_day_year }}</small></div>
+          <div class="comment-content">
+            {{ comment.content }}
+          </div>
+        </div>
+        {% endfor %}
+        <div class="pagination">
+          {% if paginate.pages > 1 %}
+          <div>{% include 'pagination' %}</div>
+          {% endif %}
+        </div>
+        {% endpaginate %}
+      </div>
+      {% endif %}
+
+      <div class="comments comments-form">
+        {% form article %}
+
+        {% if form.errors %}
+        <div class="errors">
+          <p>{{ settings.comments_error_message }}</p>
+          {% for field in form.errors %}
+          {% if field == 'form' %}
+          <p>{{ form.errors.messages[field] }}</p>
+          {% else %}
+          <p>{{ form.errors.translated_fields[field] }} - {{ form.errors.messages[field] }}</p>
+          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% if form.posted_successfully? %}
+        <div class="success">
+          <p>
+            {% if blog.moderated? %}
+            {{ 'blogs.comments.success_moderated' | t }}
+            {% else %}
+            {{ 'blogs.comments.success' | t }}
+            {% endif %}
+          </p>
+        </div>
+        {% endif %}
+
+        <h4>{{ 'blogs.comments.title' | t }}</h4>
+
+
+        {% if customer %}
+        <div class="comment-entries">
+          <span class="form">
+            <label for="comment-author">{{ 'blogs.comments.name' | t }}</label>
+            <input required id="commentFormName" {% if form.errors contains "author" %} class="error"{% endif %} type="text" name="comment[author]" placeholder="{{ 'blogs.comments.name_placeholder' | t }}" value="{{ form.author }}" required />
+          </span>
+
+          <span class="form">
+            <label for="comment-email">{{ 'blogs.comments.email' | t }}</label>
+            <input required id="commentFormEmail" {% if form.errors contains "email" %} class="error"{% endif %} type="email" name="comment[email]" placeholder="{{ 'blogs.comments.email_placeholder' | t }}" value="{{ form.email }}" required />
+          </span>
+
+          <span class="form">
+            <label for="comment-body">{{ 'blogs.comments.message' | t }}</label>
+            <textarea required id="commentFormMessage" {% if form.errors contains "body" %} class="error"{% endif %} name="comment[body]" placeholder="{{ 'blogs.comments.message_placeholder' | t }}" required>{{ form.body }}</textarea>
+          </span>
+
+        </div>
+
+        {% if blog.moderated? %}
+        <p>{{ 'blogs.comments.moderated' | t }}</p>
+        {% endif %}
+
+        <input type="submit" value="{{ 'blogs.comments.post' | t }}" class="btn outline auto-width"/> 
+
+        {% else %}
+        <p class='must-log-in'>{{ 'blogs.article.must-log-in_html' | t }}</p>
+        {% endif %}
+
+
+        {% endform %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<script type="application/ld+json">
+{
+ "@context": "http://schema.org",
+ "@graph": [
+  {
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@id": {{ shop.url | json }},
+        "name": {{ shop.name | json }}
+      }
+    },{
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@id": {{ shop.url | append: blog.url | json }},
+        "name": {{ blog.title | json }}
+      }
+    },{
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@id": {{ shop.url | append: article.url | json }},
+        "name": {{ article.title | json }}{% if article.image %},        
+        "image": {%- assign image_size = article.image.width | append: 'x' -%}{{ article.image | img_url: image_size | prepend: 'https:' | json }}{% endif %}
+      }
+    }]
+  },
+  {
+    "@type": "Article",
+    "articleBody": {{ article.content | strip_html | json }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ shop.url | append: article.url | json }}
+    },
+    "headline": {{ article.title | json }},
+    {% if article.excerpt != blank %}"description": {{ article.excerpt | strip_html | json }},{% endif %}
+    {% if article.image %}"image": [{%- assign image_size = article.image.width | append: 'x' -%}{{ article | img_url: image_size | prepend: 'https:' | json }}],{% endif %}
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+  	"dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "author": {
+      "@type": "Person",
+      "name": {{ article.author | json }}
+    },
+    "publisher": {
+    "@type": "Organization",
+    "name": {{ shop.name | json }}{% if settings.social_img != blank %},
+    "logo": {
+      	"@type": "ImageObject",
+      	"url": {{ settings.social_img | img_url: master | prepend:'https:' | json }}
+    	}{% endif %}
+    }
+  }
+  ]
+}
+</script>
+
+{% schema %}
+  {
+    "name": "Blog posts",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "include_image",
+        "label": "Show image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_newsletter",
+        "label": "Show newsletter",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_articles",
+        "label": "Show recent posts",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "number_of_articles",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "label": "Recent posts",
+        "default": 3
+      }, 
+      {
+        "type": "checkbox",
+        "id": "include_tags",
+        "label": "Show tags",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "include_social",
+        "label": "Show social sharing buttons",
+        "default": true
+      },
+	  {
+        "type": "text",
+        "id": "product_recommendations_heading",
+        "label": "Recommendations heading",
+        "default": "Related products"
+      }  
+    ]
+  } 
+{% endschema %}

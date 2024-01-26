@@ -1,0 +1,118 @@
+.video-with-text{
+    position: relative;
+    padding: 100px 0;
+    overflow: hidden;
+}
+
+.video-inner-wrap{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.video-poster-box{
+    flex: 0 0 49.79%;
+}
+
+.video-content-box{
+    flex: 0 0 43.2%;
+}
+
+.video-poster-box .img-wrap{
+    position: relative;
+}
+
+.video-poster-box .play-btn{
+  position: absolute;
+  bottom: 37px;
+  right: 23px;
+ display: flex;
+width: 80px;
+height: 80px;
+padding: 25px 26px;
+justify-content: center;
+align-items: center;
+flex-shrink: 0;
+border-radius: 40px;
+background: var(--www-redbarn-com-nero, #FFF);
+box-shadow: 0px 2px 25px 0px rgba(0, 0, 0, 0.15);
+}
+
+.video-poster-box  img{
+  margin-bottom: 0;
+}
+
+.video-poster-box .img-wrap>img{
+    -moz-transform: scale(1.22);
+    -webkit-transform: scale(1.22);
+    transform: scale(1.22);
+}
+
+.video-content-box__heading{
+    color: var(--www-redbarn-com-bunker, #11181F);
+
+/* Heading 2 */
+font-family: ChunkFive;
+font-size: 48px;
+font-style: normal;
+font-weight: 400;
+line-height: 120%; /* 57.6px */
+letter-spacing: 0.001px;
+text-transform: uppercase;
+margin-bottom: 16px;
+}
+
+.video-content-box__content p{
+    color: var(--www-redbarn-com-bunker, #11181F);
+
+/* Body Text */
+font-family: Heebo;
+font-size: 16px;
+font-style: normal;
+font-weight: 400;
+line-height: 160%; /* 25.6px */
+margin-bottom: 0;
+}
+
+.video-content-box__content{
+    margin-bottom: 40px;
+}
+
+@media screen and (max-width: 768px) {
+    .video-with-text {
+        padding: 48px 0;
+    }
+    .video-inner-wrap {
+        flex-direction: column;
+    }
+
+    .video-content-box {
+        flex: 1;
+        margin-top: 32px;
+    }
+
+    .video-poster-box .img-wrap>img{
+        -moz-transform: scale(1.2);
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+
+    .video-content-box__heading{
+        font-size: 32px;
+        line-height: 120%; /* 38.4px */
+    }
+
+    .video-poster-box .play-btn {
+        bottom: 30px;
+        right: 30px;;
+    }
+
+    .fancybox-close-small {
+        right: -10px;
+        top: -9px;
+    }
+
+    .video-content-box .btn{
+        min-width: 100%;
+    }
+}

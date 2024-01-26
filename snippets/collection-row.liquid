@@ -1,0 +1,142 @@
+<div class="form bottompad-half">
+    <div class="clearfix">
+      <div class="background-white"> 
+        {% for product in collection.products %}
+
+        {% assign sca_product_id_text = "," | append : product.id | append : "," %}{% assign sca_price = product.price %}{% assign sca_price_min = product.price_min %}{% assign sca_price_max = product.price_max %}{% assign sca_compare_at_price = product.compare_at_price %}{% assign sca_compare_at_price_min = product.compare_at_price_min %}{% assign sca_compare_at_price_max = product.compare_at_price_max %}{% assign sca_product_available = product.available %}{% assign sca_product_variantCount = product.variants.size %}{% assign sca_compare_at_price_varies = product.compare_at_price_varies %}{% assign sca_price_varies = product.price_varies %}{% assign sca_has_only_default_variant = false %}{% assign sca_product_variants_json = product.variants | json %}{% capture sca_product_json %}{ {% if sca_all_gift_products_ids == null or sca_all_gift_products_ids contains sca_product_id_text %}{% assign sca_product_available = false %}{% assign sca_product_variantCount = 0 %}{% assign sca_has_only_default_variant = false %}{% assign sca_is_first_variant = true %}{% capture sca_variants_json%}[{% for variant in product.variants %}{% unless variant.metafields.secomapp.freegifts %}{% unless variant.title contains '(Freegifts)' %}{% unless variant.title contains '% off)' %}{% unless variant.metafields.shappify_qb.qb_hide == "1" %}{% unless variant.metafields.shappify_bundle.is_bundle == "true" %}{% unless variant.metafields.brodev_scn.hide == "true" %}{% unless variant.metafields.wholesaler2.wholesale %}{% unless variant.metafields.Wholesaler.level %}{% unless variant.title contains '(Wholesale' %}{% if sca_is_first_variant %}{{ variant | json }}{% assign sca_price = variant.price %} {% assign sca_price_min = variant.price %}{% assign sca_price_max = variant.price %}{% assign sca_compare_at_price = variant.compare_at_price %}{% assign sca_compare_at_price_min = variant.compare_at_price %}{% assign sca_compare_at_price_max = variant.compare_at_price %}{% assign sca_product_available = variant.available %}{% assign sca_product_variantCount = 1 %}{% assign sca_is_first_variant = false %}{% else %},{{variant | json }}{% if sca_price_min >= variant.price %}{% assign sca_price_min = variant.price %}{% assign sca_price = variant.price %}{% endif %}{% if sca_price_max <= variant.price %}{% assign sca_price_max = variant.price %}{% endif %}{% if variant.compare_at_price %}{% if sca_compare_at_price_min == null or sca_compare_at_price_min >= variant.compare_at_price %}{% assign sca_compare_at_price_min = variant.compare_at_price %}{% assign sca_compare_at_price = variant.compare_at_price %}{% endif %}{% if sca_compare_at_price_max == null or sca_compare_at_price_max < variant.compare_at_price %}{% assign sca_compare_at_price_max = variant.compare_at_price %}{% endif %}{% endif %}{% if variant.available == true %}{% assign sca_product_available = true %}{% endif %}{% assign sca_product_variantCount = sca_product_variantCount | plus: 1 %}{% endif %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endfor %}]{% endcapture %}{% if sca_price_min < sca_price_max %}{% assign sca_price_varies = true %}{% else %}{% assign sca_price_varies = false %}{% endif %}{% if sca_compare_at_price_min < sca_compare_at_price_max %}{% assign sca_compare_at_price_varies = true %}{% else %}{% assign sca_compare_at_price_varies = false %}{% endif %}{% if sca_product_variantCount > 1 %}{% assign sca_has_only_default_variant = true %}{% endif %}{% if sca_product_variantCount == product.variants.size %}"variants":{{ product.variants }},{% else %}{% assign sca_product_variants_json = sca_variants_json %}"variants":{{sca_variants_json }},{% endif %}{% endif %}"id": {{ product.id }},"title": {{ product.title | json }},"handle": {{ product.handle | json }},"description": {{ product.description | json }},"published_at": {{ product.published_at | json }},"created_at": {{ product.created_at | json }},"vendor": {{ product.vendor | json }},"type": {{ product.type | json }},"tags": {{ product.tags | json }},"price": {{ sca_price }},"price_min": {{ sca_price_min }},"price_max": {{ sca_price_max }},"available": {{ product.available }},"price_varies": {{sca_price_varies }},"compare_at_price": {{ sca_compare_at_price }},"compare_at_price_min": {{ sca_compare_at_price_min }},"compare_at_price_max": {{ sca_compare_at_price_max }},"compare_at_price_varies": {{ sca_compare_at_price_varies }},"images": {{ product.images | json }},"featured_image": {{ product.featured_image | json }},"options": {{ product.options | json }},"media": {{ product.media | json }},"content": {{product.content | json}} }{% endcapture sca_product_json %}
+
+        <div class="item relative product-id item-row table-center clearfix">
+
+          {% include 'product-sale-badge' %}
+
+          {%- if canon -%}
+          
+          {%- assign prod_opt_1 = product.options[0] | handleize -%}
+          {%- assign prod_opt_2 = product.options[1] | handleize -%}
+          {%- assign prod_opt_3 = product.options[2] | handleize -%}
+
+          {%- for variant in product.variants -%}
+
+          {%- if prod_opt_1 contains var_color and canon contains prod_opt_1 -%}
+          {%- assign var_opt = variant.option1 | handleize -%}
+          {%- elsif prod_opt_2 contains var_color and canon contains prod_opt_2 -%}
+          {%- assign var_opt = variant.option2 | handleize -%}
+          {%- elsif prod_opt_3 contains var_color and canon contains prod_opt_3 -%}
+          {%- assign var_opt = variant.option3 | handleize -%}
+          {%- else -%}
+          {%- assign var_opt = 'Default' -%}
+          {%- endif -%}
+
+          {%- if canon contains var_opt -%}
+          {%- if variant.featured_media -%}
+          {%- assign img_src = variant.featured_media.preview_image -%}
+          {%- else -%}
+          {%- assign img_src = product.featured_media.preview_image -%}
+          {%- endif -%}
+          {%- break -%}
+          {%- else -%}
+          {%- assign img_src = product.featured_media.preview_image -%}
+          {%- endif -%}
+
+          {%- endfor -%}
+
+          {%- else -%}
+          {%- assign img_src = product.featured_media.preview_image -%}
+          {%- endif -%}
+          
+          {% if product.media.size > 0 %}
+          <div class="product-thumb{% if settings.image_hover and product.media.size > 1 and canon == blank %} enable-thumb-hover{% endif %} item-thumb title-align title-align-left two negative-left">
+            <div class="relative">  
+              <a href="{{ product.url | within: collection }}" title="View the {{ product.title }}" class="img-align{% if settings.image_hover and product.media.size > 1 %} product-thumb-load{% endif %}">
+                {%- capture id -%}{{ product.featured_media.id }}{{ section.id }}{%- endcapture -%}
+                {%- assign size = 250 -%}
+                {%- capture alt -%}{{ product.title | escape }}{%- endcapture -%}
+                {% include 'image-load' %}
+              </a>
+              {% if settings.image_hover and product.media.size > 1 and canon == blank %} 
+              <a href="{{ product.url | within: collection }}" title="{{ 'layout.general.buy' | t }} {{ product.title }}" class="img-align product-thumb-hover">
+                {%- capture id -%}{{ product.media[1].id }}{{ section.id }}{{ block.id }}{%- endcapture -%}
+                {%- assign img_src = product.media[1].preview_image -%}
+                {%- assign size = 250 -%}
+                {%- capture alt -%}{{ product.title | escape }}{%- endcapture -%}
+                {% include 'image-load' %}
+              </a>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+          <span class="item-details{% if product.media.size > 0 %} half{% else %} full{% endif %}">
+            <div class="{% if product.media.size > 0 %}four{% else %}six{% endif %}">
+              <div class="item-title"><h5><a href="{{ product.url | within: collection }}" title="{{ product.title }}">{{ product.title }}</a></h5></div>
+              {% if settings.reviews_enable %}
+              <div class="reviews item-reviews">
+                <!-- To add a new review app, install code between the comments -->
+                <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+                <!-- End comments -->
+              </div>
+              {% endif %}
+              
+              <h5 class="offers hidden">
+                <span class="price-preview price price-field">                
+                  {%- assign variant_free = false -%}
+                  {%- assign variant_slash = 'true' -%}
+                  {% if sca_price_min > 0 %} 
+                  {% if sca_price_varies %}{{ 'products.product.from' | t }}{% endif %}
+                  {%- assign variant = product.variants | sort: 'price' | first -%}
+                  {{ sca_price | money }}{% if sca_compare_at_price > sca_price %} | <del>{{ sca_compare_at_price | money }}</del>{% endif %}
+                  {% else %}
+                  {% if sca_price_varies %}    
+                  {%- assign variant = product.variants | sort: 'price' | last -%}
+                  {{ 'products.product.free' | t }} - {{ sca_price_max | money }}{%- assign variant_free = true -%}
+                  {% else %}
+                  <span style="display:none">{{ sca_price | money }}</span>{{ 'products.product.free' | t }}
+                  {% endif %}
+                  {% endif %}
+                </span>
+                {% include 'product-unit-price' %}
+              </h5>
+              {% if settings.vendor_enable %}
+              <p id="product-logistics-{{ product.id }}" class="product-logistics{% unless product.media.size == 0 or settings.quick_collection_hover == false %} no-pad{% endunless %}">
+                <span class="vendors">
+                  {%- assign product_vendor_handle = product.vendor | handle -%}
+                  {% if collections[product_vendor_handle].handle == product_vendor_handle %}
+                  {%- assign vendor_url = collections[product_vendor_handle].url -%}
+                  {% else %}
+                  {%- assign vendor_url = product.vendor | url_for_vendor -%}
+                  {% endif %}
+                  {{ product.vendor | link_to: vendor_url }}
+                </span>
+              </p>
+              {% endif %}
+              {% if settings.product_availability_enable and variant.incoming %}<p class="error-text"><small><span class="icon icon-bell"></span> {% if variant.next_incoming_date != blank %}{{ 'products.product.stock_in' | t }} {{ variant.next_incoming_date | date: '%b %e'  }}{% else %}{{ 'products.product.stock_soon' | t }}{% endif %}</small></p>{% endif %}
+            </div>
+            <div class="three text-center price-preview-hidden">
+              <h5 class="offers">
+                <span class="price-preview price price-field">
+                  {%- assign variant_free = false -%}
+                  {%- assign variant_slash = 'true' -%}
+                  {% if sca_price_min > 0 %} 
+                  {% if sca_price_varies %}<small>{{ 'products.product.from' | t }}<br/></small>{% endif %}
+                  {%- assign variant = product.variants | sort: 'price' | first -%}
+                  {{ sca_price | money }}{% if sca_compare_at_price > sca_price %}<br/><del>{{ sca_compare_at_price | money }}</del>{% endif %}
+                  {% else %}
+                  {% if sca_price_varies %}    
+                  {%- assign variant = product.variants | sort: 'price' | last -%}
+                  {{ 'products.product.free' | t }} - {{ sca_price_max | money }}{%- assign variant_free = true -%}
+                  {% else %}
+                  <span style="display:none">{{ sca_price | money }}</span>{{ 'products.product.free' | t }}
+                  {% endif %}
+                  {% endif %}
+                </span>
+                {% include 'product-unit-price' %}
+              </h5>
+            </div>
+            <div class="three text-center">
+              {% include 'product-loop-buttons'%}
+            </div>
+          </span>
+        </div> 
+        {% endfor %}        
+      </div>
+    </div>    
+</div>

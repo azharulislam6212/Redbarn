@@ -1,0 +1,156 @@
+<div data-section-id="{{ section.id }}" 
+     data-section-type="homepage-pet-need"
+     id="homepage-pet-need-{{ section.id }}"
+     class="homepage-pet-need clearfix">
+  <div class='pet-need'>
+    <div class='container'>
+      <div class='pet-content'>
+        <div class='pet-content-area'>
+          {% if section.settings.title != blank %}
+          <h4 class='h2 pet-content-area-title'> {{ section.settings.title }} </h4>
+          {% endif %}
+          {% if section.settings.button_text != blank %}
+          <a href='{{section.settings.button_link}}' class='btn'>{{ section.settings.button_text}}</a>
+          {% endif %}
+
+        </div>
+        <span class="pet-area Nerves">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/skin.svg?v=1607957429" alt="skin" >
+          </span>
+          <span class="h6">Skin &amp;  Coat</span>
+        </span>
+        <span class="pet-area Functional">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/ingredients.svg?v=1607957429" 
+                 alt="Functional" >
+          </span>
+          <span class="h6">Functional Ingredients</span>
+        </span>
+        <span class="pet-area Healthy">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/bones.svg?v=1607957429" alt="healthy"></span>
+          <span class="h6">Healthy Bones</span>
+        </span>
+        <span class="pet-area joints">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/joints.svg?v=1607957429" alt="Joints">
+          </span>
+          <span class="h6">Joints</span>
+        </span>
+        <span class="pet-area Hydration">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/water.svg?v=1607957429" alt="Hydration" >
+          </span>
+          <span class="h6">Hydration</span>
+        </span>
+        <span class="pet-area Digestive">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/digestive.svg?v=1607957410" alt="Digestive-Health">
+          </span>
+          <span class="h6">Digestive Health</span>
+        </span>
+        <span class="pet-area Muscle">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/weights.svg?v=1607957429" alt="Muscle-Development" >
+          </span>
+          <span class="h6">Muscle Development</span>
+        </span>
+        <span class="pet-area treat">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/treat.svg?v=1607957429" alt="healthy-bones">
+          </span>
+          <span class="h6">Treats</span>
+        </span>
+        <span class="pet-area heart-health">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/heart.svg?v=1607957411" alt="heart-health">
+          </span>
+          <span class="h6">heart health</span>
+        </span>
+        <span class="pet-area Training">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/graduate.svg?v=1607957410" alt="Training-Treats">
+          </span>
+          <span class="h6">Training Treats</span>
+        </span>
+        <span class="pet-area Joints">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/joints.svg?v=1607957429" alt="Healthy-Joints">
+          </span>
+          <span class="h6">Healthy Joints</span>
+        </span>
+        <span class="pet-area DentalHygiene">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/teeth.svg?v=1607957429" alt="DentalHygiene">
+          </span>
+          <span class="h6">Dental Hygiene</span>
+        </span>
+        <span class="pet-area HealthyWeight">
+          <span class="pet-icon">
+            <img class="svg lazyload" 
+                 data-src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/scale.svg?v=1607957429" alt="HealthyWeight">
+          </span>
+          <span class="h6">Healthy Weight</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if section.settings.bg_color != blank %}
+<style>
+  #homepage-pet-need-{{ section.id }}  {
+    background-color: {{ section.settings.bg_color }};
+  }
+</style>
+{% endif %}
+
+
+
+{% schema %}
+  {
+    "name": "Pet need",
+    "settings": [
+	{
+		"type":"color",
+		"id":"bg_color",
+		"label":"Background Color",
+		"default": "#fff"
+		},
+		{
+		"type":"text",
+		"id":"title",
+		"label":"Title"
+		},
+		{
+		"type":"text",
+		"id":"button_text",
+		"label":"Button text"
+		},
+		{
+		"type":"url",
+		"id":"button_link",
+		"label":"Button Link"
+		}
+	],
+    "presets": [
+      {
+        "name": "Pet need",
+        "category": "Custom Section"
+      }
+    ]
+  }
+{% endschema %}

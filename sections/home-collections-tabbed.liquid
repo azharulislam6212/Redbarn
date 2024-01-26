@@ -1,0 +1,284 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.blocks.size == 0 and section.settings.title == blank and section.settings.sub_title == blank %}
+{%- assign section_onboarding = true -%}
+{% else %}
+{%- assign section_onboarding = false -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" 
+     data-section-type="home-collections-tabbed" 
+     class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} colored-top-bottom {% endif %}{% if section.settings.include_color == 'color-none' %}margins-section {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  {% if section_onboarding or section.settings.title != blank or section.settings.sub_title != blank %}
+  <div class="container clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+      <div class="tab-body{% unless full_width or section.settings.include_color == 'color-none' %} twelve{% endunless %}{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }} colored-top{% endif %}">
+
+        <div class="twelve text-center">
+          {% if section_onboarding %}
+          <h2>{{ 'homepage.onboarding.no_title' | t }}</h2>
+          <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+          {% else %}
+          {% if section.settings.title != blank%}<h2>{{ section.settings.title | escape }}</h2>{% endif %}
+          {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+          {% endif %}
+        </div>
+        <div class="twelve"><hr/></div>
+
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if section.blocks.size > 1 %}
+  <div class="container{% if full_width %} no-pad{% endif %} clearfix">
+    <div{% unless full_width %} class="twelve"{% endunless %}>
+      <div class="tab-body text-center{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }}{% unless section_onboarding or section.settings.title != blank or section.settings.sub_title != blank or section.settings.background_img != blank %} colored-top{% endunless %}{% endif %}">
+        <div class="tabs tabs-id-{{ section.id }}" role="tablist">
+          <div class="swiper-container" id="swiper-tabs-{{ section.id }}">
+            <div class="swiper-wrapper swiper-wrapper-{{ section.id }}">
+              {% for block in section.blocks %}
+              {%- assign collection = collections[block.settings.collection] -%}
+              {% if collection == empty %}
+              {%- capture current -%}{% cycle 'tabs': 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+              <a href="#collection_title_{{ current }}_{{ section.id }}" class="swiper-slide title{% if forloop.first %} first active{% endif %}" title="collection_title_{{ current }}_{{ section.id }}" data-swiper-slide-index="{{ forloop.index0 }}" role="tab" aria-controls="collection_title_{{ current }}_{{ section.id }}" tabindex="0" {{ block.shopify_attributes }}>
+                <h5 class="underline">{{ 'homepage.onboarding.collection_title' | t }}</h5>
+              </a>
+              {% else %}
+              <a href="#{{ collection.title | handle }}-{{ block.id }}" class="swiper-slide title{% if forloop.first %} first active{% endif %}" title="{{ collection.title }}" data-swiper-slide-index="{{ forloop.index0 }}" role="tab" aria-controls="{{ collection.title | handle }}-{{ section.id }}" tabindex="0" {{ block.shopify_attributes }}>
+                <h5 class="underline">{{ collection.title }}</h5>
+              </a>          
+              {% endif %}
+              {% endfor %}
+            </div>
+            <div id="swiper-button-next-{{ section.id }}" class="swiper-button-next icon icon-chevron-right"></div>
+            <div id="swiper-button-prev-{{ section.id }}" class="swiper-button-prev icon icon-chevron-left"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% for block in section.blocks %}
+  {%- assign collection = collections[block.settings.collection] -%}
+  {% if collection == empty %}
+  {%- assign section_onboarding = true -%}
+  {% else %}
+  {%- assign section_onboarding = false -%}
+  {% endif %}
+  
+  <div class="container{% if full_width %}{% if section.settings.use_slider and collection.products.size > 3 or section_onboarding %} no-pad{% else %} grid{% endif %}{% endif %}{% if settings.animation_enable %} animate-section animate-section-margin load{% endif %} clearfix">
+    <div{% unless full_width %}{% if section.settings.include_color != 'color-none' %} class="twelve"{% endif %}{% endunless %}>
+      {% if collection == empty %}
+      {%- capture current -%}{% cycle 'products': 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+      <div id="collection_title_{{ current }}_{{ section.id }}" class="tab-body tab-body-id-{{ section.id }}{% unless forloop.first %} hide{% endunless %}{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }}{% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.background_img != blank %} colored-bottom{% else %} colored-top-bottom{% endif %}{% unless section.settings.use_slider %} twelve grid{% endunless %}{% elsif full_width == false %}{% if section.settings.use_slider %} twelve{% else %} plus-grid{% endif %}{% endif %}" role="tabpanel" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+        <div class="tab-body tab-body-content">
+          <div data-block-id="{{ block.id }}" class="swiper-container{% if section.settings.use_slider %} plus-slider{% else %} plus-grid{% endif %} product-loop product-loop-{{ section.id }} {{ section.settings.sub_text_alignment }}" id="swiper-carousel-{{ block.id }}{% unless section.settings.use_slider %}-grid{% endunless %}">
+            <div class="swiper-wrapper swiper-wrapper-{{ section.id }}{% unless section.settings.use_slider %} flex-wrap{% endunless %}">
+              {%- capture number -%}{% if section.settings.use_slider %}5{% else %}{{ section.settings.product_limit }}{% endif %}{%- endcapture -%}
+              {% for i in (1..number) %}
+              {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+              {%- capture current_cycle -%}swiper-carousel-{{ block.id }}{%- endcapture -%}
+              <div class="product animate{% if settings.borders_enable %} borders{% endif %} swiper-slide{% if section.settings.use_slider %} three{% else %} two-half{% cycle current_cycle: ' first', '', '', '', '' %} animate-loop-{{ forloop.index0 }}{% endif %}">
+                <div class="product-border{% if settings.borders_enable and section.settings.include_color != 'color-none' %} product-border-background{% endif %}">
+                  <div class="product-thumb">
+                    {{ 'product-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                  <div class="product-details">
+                    <div class="product-title">        
+                      <h5>
+                        {{ 'homepage.onboarding.product_title' | t }}
+                      </h5>
+                    </div>    
+                    <div class="product-price">
+                      <h6>{{ 1999 | money }} | <del>{{ 2499 | money }}</del></h6>
+                    </div>
+                    {% if settings.quick_view_enable %}<div><span class="btn auto-width">{{ 'products.general.quick' | t }}</span></div>{% endif %}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <div id="swiper-pagination-{{ block.id }}" class="swiper-pagination relative hidden">
+              <div id="swiper-button-prev-{{ block.id }}" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+              <div id="swiper-button-next-{{ block.id }}" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+            </div>  
+          </div>    
+        </div>
+      </div>
+      {% else %}
+      <div id="{{ collection.title | handle }}-{{ block.id }}" class="tab-body tab-body-id-{{ section.id }}{% unless forloop.first %} hide{% endunless %}{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }}{% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.background_img != blank %} colored-bottom{% else %} colored-top-bottom{% endif %}{% unless section.settings.use_slider and collection.products.size > 3 %} twelve{% if collection.products.size > 2 %} grid{% endif %}{% endunless %}{% elsif full_width == false and collection.products.size > 2 %}{% if section.settings.use_slider and collection.products.size > 3 %} twelve{% else %} plus-grid{% endif %}{% elsif full_width and collection.products.size < 3 %} plus-grid{% endif %}" role="tabpanel" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+        <div class="tab-body tab-body-content">
+          <div data-block-id="{{ block.id }}" class="{% if collection.products.size > 2 %}swiper-container {% if section.settings.use_slider and collection.products.size > 3 %}plus-slider {% elsif collection.products.size > 2 %}plus-slider-grid {% endif %}{% endif %}product-loop{% if collection.products.size < 3 %} center twelve swiper-product{% endif %} product-loop-{{ section.id }} {{ section.sub_settings.text_alignment }}"{% if collection.products.size > 2 %} id="swiper-carousel-{{ block.id }}{% unless section.settings.use_slider and collection.products.size > 3 %}-grid{% endunless %}"{% endif %}>
+            {% if collection.products.size > 2 %}<div class="swiper-wrapper swiper-wrapper-{{ section.id }}{% if collection.products.size < 5 %} swiper-center{% endif %}{% unless section.settings.use_slider and collection.products.size > 3 %} flex-wrap{% endunless %}">{% endif %}
+
+            {% if section.settings.use_slider and collection.products.size > 4 %}
+            {%- assign count = section.settings.product_limit -%}
+            {% else %}
+            {%- assign count = section.settings.product_limit | minus: 1 -%}
+            {% endif %}
+
+            {% for product in collection.products limit: count %}
+            {%- assign cycleIndex = collection.handle -%}
+            {% include 'product-loop' %}
+            {% endfor %}        
+
+            {% unless section.settings.use_slider and collection.products.size > 4 %}
+            {% if collection.all_products_count >= section.settings.product_limit %}
+            <div class="product animate additional text-center two-half animate-loop-{{ forloop.index0 }}">
+              <div class="table product-border">
+                <div class="table-cell product-details">
+                  <div class="product-title no-pad">  
+                    <h5>
+                      {%- assign count = collection.all_products_count | minus: section.settings.product_limit | plus: 1 -%}
+                      <a href="{{ collection.url }}" title ="{{ 'products.general.view' | t: count: count }}">
+                        {{ 'products.general.view' | t: count: count }}
+                      </a>
+                    </h5>
+                  </div> 
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            {% endunless %}
+            {% if collection.products.size > 2 %}</div>{% endif %}
+            {% if collection.products.size > 2 %}
+            <div id="swiper-pagination-{{ block.id }}" class="swiper-pagination relative hidden">    
+              <div id="swiper-button-prev-{{ block.id }}" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+              <div id="swiper-button-next-{{ block.id }}" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+            </div>  
+            {% endif %}    
+          </div>
+        </div>
+      </div>
+      {% endif %}  
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+{% schema %}
+  {
+    "name": "Tabbed products",
+    "max_blocks": 10,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Tabbed products"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Group products by similar collections"
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width background",
+       "default": true
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "type": "range",
+        "id": "product_limit",
+        "min": 5,
+        "max": 15,
+        "step": 5,
+        "label": "Products per collection",
+        "default": 10
+      },
+      {
+        "type": "checkbox",
+        "id": "use_slider", 
+        "label": "Use slider for products",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "sub_text_alignment",
+        "label": "Alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+           "label": "Right"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Tabbed products",
+        "category": "Product",
+        "blocks": [
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

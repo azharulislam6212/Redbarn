@@ -1,0 +1,82 @@
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "footer-new": {
+      "type": "footer-new",
+      "blocks": {
+        "7e552ca1-6727-4f7b-ad9b-083fa83e1249": {
+          "type": "menu",
+          "settings": {
+            "title_1": "For Dogs",
+            "menu_1": "for-dogs",
+            "title_2": "For Cats",
+            "menu_2": "for-cats",
+            "title_3": "Product Picker",
+            "menu_3": "product-picker"
+          }
+        },
+        "a039aa8b-2e2c-4401-a73e-05d4dc2e86c6": {
+          "type": "menu",
+          "settings": {
+            "title_1": "Programs",
+            "menu_1": "programs",
+            "title_2": "About Redbarn",
+            "menu_2": "about-redbarn",
+            "title_3": "",
+            "menu_3": ""
+          }
+        },
+        "995b0a0a-fb42-41ab-9fdb-efd0346c09b6": {
+          "type": "menu",
+          "settings": {
+            "title_1": "Resources",
+            "menu_1": "resources",
+            "title_2": "",
+            "menu_2": "",
+            "title_3": "",
+            "menu_3": ""
+          }
+        },
+        "fa2e90b7-a319-466e-af5f-13fcb8129568": {
+          "type": "menu",
+          "settings": {
+            "title_1": "Customer Service",
+            "menu_1": "customer-service",
+            "title_2": "",
+            "menu_2": "",
+            "title_3": "",
+            "menu_3": ""
+          }
+        },
+        "cea613fd-662a-44de-ad10-c8537dfcaa58": {
+          "type": "content",
+          "settings": {
+            "heading": "",
+            "body": "<p><strong>Hours Of Operation: <\/strong>8am-5pm PST Mon-Thur,<\/p><p>7am-4pm PST Monday-Friday<br\/><strong>Phone Number:<\/strong><a href=\"tel:8007753849\" target=\"_blank\" title=\"tel:8007753849\">(800) 775-3849<\/a><\/p>",
+            "text_alignment": "text-left"
+          }
+        }
+      },
+      "block_order": [
+        "7e552ca1-6727-4f7b-ad9b-083fa83e1249",
+        "a039aa8b-2e2c-4401-a73e-05d4dc2e86c6",
+        "995b0a0a-fb42-41ab-9fdb-efd0346c09b6",
+        "fa2e90b7-a319-466e-af5f-13fcb8129568",
+        "cea613fd-662a-44de-ad10-c8537dfcaa58"
+      ],
+      "settings": {
+        "footer_bg": "shopify:\/\/shop_images\/Footer.png",
+        "heading": "Join the Redbarn Family",
+        "body": "<p>Sign up for our newsletter!<\/p>",
+        "include_newsletter": true,
+        "include_social": true,
+        "copyright": "All Rights Reserved.",
+        "footer_bottom_menu": "footer-bottom-menu"
+      }
+    }
+  },
+  "order": [
+    "footer-new"
+  ]
+}

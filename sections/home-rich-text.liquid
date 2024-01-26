@@ -1,0 +1,148 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.body != blank or section.settings.link != blank %}
+{%- assign section_onboarding = false -%}
+{% else %}
+{%- assign section_onboarding = true -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" 
+     data-section-type="home-rich-text"  
+     class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  {% unless section_onboarding == false and full_width and section.settings.title == blank and section.settings.sub_title == blank and section.settings.body == blank and section.settings.link == blank %}
+  <div class="clearfix">
+    <div class="container{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+      <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+        <div class="tab-body{% if full_width == false and section.settings.include_color != 'color-none' %} twelve background-colored {{ section.settings.include_color }}{% endif %}">
+          <div class="clearfix">
+            <div class="table content-height-{{ section.id }}">
+              <div class="table-cell">
+                <div class="six animate {{ section.settings.text_alignment }} {{ section.settings.text_alignment | split:'-' | last }}">
+                  {% unless section_onboarding %}
+                  {% if section.settings.title != blank %}<h2 class="h1">{{ section.settings.title | escape }}</h2>{% endif %}
+                  {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+                  {% if section.settings.body != blank %}{{ section.settings.body }}{% endif %}
+                  {% if section.settings.link != blank %}<p><a href="{{ section.settings.link | escape }}" title="{% if section.settings.title != blank%}{{ section.settings.title | escape }}{% else %}{{ 'homepage.onboarding.no_more' | t }}{% endif %}" class="btn{% if section.settings.outline_button %} outline{% endif %}">{% if section.settings.button != blank %}{{ section.settings.button | escape }}{% else %}{{ 'homepage.onboarding.no_more' | t }}{% endif %}</a></p>{% endif %}
+                  {% else %}
+                  <h2 class="h1">{{ 'homepage.onboarding.no_title' | t }}</h2>
+                  <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+                  {% endunless %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endunless %}
+  
+</div>
+
+<style>
+  .content-height-{{ section.id }}{height:{{ section.settings.padding }}vh;min-height:{{ section.settings.padding }}vh}
+</style>
+
+{% schema %}
+  {
+    "name": "Rich text",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Rich text"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Highlight promotions, certifications, or the latest news"
+      },
+      {
+        "type": "richtext",
+        "id": "body",
+        "label": "Text"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Link"
+      },
+      {
+        "type": "text",
+        "id": "button",
+        "label": "Button"
+      },
+      {
+        "type": "checkbox",
+        "id": "outline_button",
+        "label": "Outline button",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width background",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 5,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Height",
+        "default": 25
+      }
+    ],
+    "presets": [
+      {
+        "name": "Rich text",
+        "category": "Text"
+      }
+    ]
+  }
+{% endschema %}

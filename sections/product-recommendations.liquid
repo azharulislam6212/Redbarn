@@ -1,0 +1,68 @@
+{% if section.settings.show_product_recommendations %}
+<div class="{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+  <div class="container grid{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+    <div class="product-more">
+      <div class="product-page related clearfix">
+        <div id="recommended" class="bottompad clearfix">
+          {% if section.settings.product_recommendations_heading != blank %}
+          <div class="twelve{% unless settings.borders_enable %} bottompad{% endunless %}">
+            <h3 class="text-center">{{ section.settings.product_recommendations_heading }}{% if section.settings.product_recommendations_heading_include %} {{ product.title }}{% endif %}</h3>
+          </div>
+          {% endif %}
+          <div class="product-recommendations relative row last" data-product-id="{{ product.id }}" data-limit="6">
+            <div class="loading margins-bottom-section margins-top-section twelve"></div>
+            {% if recommendations.products_count > 0 and recommendations.performed %}
+            <div{% unless recommendations.products_count > 2 %} class="collection-products"{% endunless %}>
+              <div data-block-id="recommended-products" class="{% if recommendations.products_count > 2 %}swiper-container plus-grid {% else %}twelve center {% endif %}product-loop product-loop-product-template"{% if recommendations.products_count > 2 %} id="swiper-carousel-recommended-products-grid"{% endif %}>
+                {% if recommendations.products_count > 2 %}<div class="swiper-wrapper swiper-wrapper-recommended-products{% if recommendations.products_count < 5 %} swiper-center{% endif %}">{% endif %}
+                {% for product in recommendations.products %}
+                {% unless product.tags contains "SAMPLE" %}
+                {%- assign cycleIndex = 'recommended' -%}
+                {% if recommendations.products_count > 2 %}{%- assign swiper-slide = ' swiper-slide' -%}{% endif %}
+                {% include 'product-loop' %}
+                {% endunless %}
+                {% endfor %}
+                {% if recommendations.products_count > 2 %}</div>{% endif %}
+                <div id="swiper-pagination-recommended-products" class="swiper-pagination relative{% if section.settings.include_color != 'color-none' %} bottompad-quarter{% endif %} hidden">
+                  <div id="swiper-button-prev-recommended-products" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+                  <div id="swiper-button-next-recommended-products" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Product recommendations",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_product_recommendations",
+        "label": "Show dynamic recommendations",
+        "info": "Dynamic recommendations change and improve with time. [Learn more](https://help.shopify.com/en/themes/development/recommended-products)",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "product_recommendations_heading",
+        "label": "Heading",
+        "default": "Recommended for the"
+      },
+      {
+        "type": "checkbox",
+        "id": "product_recommendations_heading_include",
+        "label": "Include product name in heading",
+        "default": true
+      }
+    ]
+  }
+{% endschema %}

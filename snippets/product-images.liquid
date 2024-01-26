@@ -1,0 +1,143 @@
+{%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+  <div class="swiper-container gallery-top-{{ section.id }} gallery-top" id='product-gallery-top-{{ section.id }}'>
+    <div id="main-product-image-{{ section.id }}" 
+         class="featured-image featured-image-div-{{ section.id }} main-image-{{ section.id }} text-center swiper-wrapper"
+         data-product-single-media-group >
+      {% for media in product.media %}
+      {%- capture image_alt -%}{{ product.title }} Background{%- endcapture -%}
+      {%- assign linkCt1 = 0 -%}
+      {%- assign linkCt = 0 -%}
+
+      {% if media.alt == image_alt %}
+      {%- capture linkCt1 -%}{{ linkCt | plus:1 }}{%- endcapture -%}  
+      {% endif %} 
+      {%- assign total_size = product.media.size | minus: linkCt1 -%}  
+
+      {% unless media.alt == image_alt %}  
+      <div id="variant-image-{{ media.id }}" 
+           class="variant-image variant-image-{{ section.id }} relative{% unless media == featured_media %} hidden{% endunless %} swiper-slide"
+           {% unless media == featured_media %} aria-hidden="true"{% endunless %} 
+           data-image-id="{{ media.id }}"
+           {% if media.media_type == 'video' or media.media_type == 'external_video' %} data-product-media-type-video data-enable-video-looping="{{ section.settings.loop_enable }}"{% endif %}
+           {% if media.media_type == 'model' %} data-product-media-type-model{% endif %}
+           {% if media.media_type == 'external_video' %} data-video-id="{{ media.external_id }}"{% endif %}
+           data-product-single-media-wrapper
+           data-media-id="{{ section.id }}-{{ media.id }}"
+           data-media-index="{{forloop.index0}}"
+           tabindex="-1">  
+
+
+
+        {%- assign id = media.id -%}
+        {%- assign img_src = media -%}
+        {%- assign size = 600 -%}
+        {%- capture alt -%}{{ media.alt | escape }}{%- endcapture -%}
+        {% case media.media_type %}
+        {% when 'image' %}
+        <div class="{% if section.settings.zoom_enable or template == 'product.quick' and settings.zoom_enable %}easyzoom easyzoom--overlay is-ready {% endif %}clearfix">
+          {% if section.settings.zoom_enable or template == 'product.quick' and settings.zoom_enable %}<a href="{{ media | img_url: '800x800', scale: 2 }}" rel="noopener noreferrer" title="{{ alt }}">{% endif %}
+          {% include 'image-load', product_gallery: true %}  
+          {% if section.settings.zoom_enable or template == 'product.quick' and settings.zoom_enable %}</a>{% endif %}
+        </div>
+        {% when 'external_video' %}
+        {{ media | external_video_tag }} 
+        {% when 'model' %}
+        <div class="relative media-viewer text-left">
+          {{ media | model_viewer_tag: reveal: 'interaction', toggleable: true, data-model-id: media.id, image_size: '600x600' }}
+        </div>
+        <button class="btn auto-full-width modelthreed hidden"
+                aria-label="{{ 'products.general.media_view' | t }}"
+                data-shopify-xr
+                data-shopify-model3d-id="{{ media.id }}"
+                data-shopify-title="{{ product.title | escape }}"
+                data-shopify-xr-hidden
+                ><span class="icon icon-threed"></span>&nbsp;&nbsp;{{ 'products.general.media_view' | t }}</button>
+        {% when 'video' %}
+        <div class="relative">
+          {% if section.settings.loop_enable %}
+          {% assign loop_enable = true %}
+          {% else %}
+          {% assign loop_enable = false %}
+          {% endif %}      
+          {{ media | video_tag: controls: true, image_size: '600x600' }}
+          {% comment %}{{ media | video_tag: controls: true, hideControls: false, autoplay: true, loop: loop_enable }}{% endcomment %}
+        </div>
+        {% else %}
+        {{ media | media_tag: image_size: '600x600' }}
+        {% endcase %}
+
+        {% comment %}
+        <a class="woocommerce-product-gallery__lightbox"
+           data-fancybox="images"
+
+           href="{{ media | img_url:'2000x'}}"
+           >
+          <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="far" data-icon="image" class="svg-inline--fa fa-image fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 336H54a6 6 0 0 1-6-6V118a6 6 0 0 1 6-6h404a6 6 0 0 1 6 6v276a6 6 0 0 1-6 6zM128 152c-22.091 0-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40-17.909-40-40-40zM96 352h320v-80l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L192 304l-39.515-39.515c-4.686-4.686-12.284-4.686-16.971 0L96 304v48z"/></svg>
+        </a>
+        {% endcomment %}
+
+
+
+
+      </div>
+      {% endunless %}
+      {% endfor %}      
+    </div>
+    <div id="swiper-pagination-gallery-top" class="swiper-pagination">
+      <div id="swiper-button-prev-gallery-{{ section.id }}" class="tabindex swiper-button-prev swiper-button icon" role="button" aria-label="{{ 'products.general.previous' | t }}">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 492 492" style="enable-background:new 0 0 492 492;" xml:space="preserve">
+          <path d="M464.344,207.418l0.768,0.168H135.888l103.496-103.724c5.068-5.064,7.848-11.924,7.848-19.124    c0-7.2-2.78-14.012-7.848-19.088L223.28,49.538c-5.064-5.064-11.812-7.864-19.008-7.864c-7.2,0-13.952,2.78-19.016,7.844    L7.844,226.914C2.76,231.998-0.02,238.77,0,245.974c-0.02,7.244,2.76,14.02,7.844,19.096l177.412,177.412    c5.064,5.06,11.812,7.844,19.016,7.844c7.196,0,13.944-2.788,19.008-7.844l16.104-16.112c5.068-5.056,7.848-11.808,7.848-19.008    c0-7.196-2.78-13.592-7.848-18.652L134.72,284.406h329.992c14.828,0,27.288-12.78,27.288-27.6v-22.788    C492,219.198,479.172,207.418,464.344,207.418z"/>
+        </svg>
+      </div>
+      <div id="swiper-button-next-gallery-{{ section.id }}" class="tabindex swiper-button-next swiper-button icon" role="button" aria-label="{{ 'products.general.next' | t }}">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 492.004 492.004" style="enable-background:new 0 0 492.004 492.004;" xml:space="preserve">
+          <path d="M484.14,226.886L306.46,49.202c-5.072-5.072-11.832-7.856-19.04-7.856c-7.216,0-13.972,2.788-19.044,7.856l-16.132,16.136    c-5.068,5.064-7.86,11.828-7.86,19.04c0,7.208,2.792,14.2,7.86,19.264L355.9,207.526H26.58C11.732,207.526,0,219.15,0,234.002    v22.812c0,14.852,11.732,27.648,26.58,27.648h330.496L252.248,388.926c-5.068,5.072-7.86,11.652-7.86,18.864    c0,7.204,2.792,13.88,7.86,18.948l16.132,16.084c5.072,5.072,11.828,7.836,19.044,7.836c7.208,0,13.968-2.8,19.04-7.872    l177.68-177.68c5.084-5.088,7.88-11.88,7.86-19.1C492.02,238.762,489.228,231.966,484.14,226.886z"/>
+        </svg>
+      </div>
+    </div>
+</div>
+
+{% if total_size > 1 %}
+<div id="thumbnails-{{ section.id }}" class="swiper-container {% if total_size < 5 %}table-center negative-left negative-right {% endif %}thumbnails thumbs">
+  <div class="swiper-wrapper swiper-wrapper-{{ section.id }}">
+    {% for media in product.media %}
+    {%- capture id -%}thumb-{{ media.id }}{%- endcapture -%}
+    {%- capture image_alt -%}{{ product.title }} Background{%- endcapture -%}
+    {% unless media.alt == image_alt %}
+    <div class="swiper-slide thumb-image-{{ section.id }} image" data-image-id="{{ media.id }}">  
+      <div{% if settings.title_align %} class="title-align"{% endif %}>
+        <div class="relative">
+          {%- assign img_src = media.preview_image -%}
+          {%- assign size = 150 -%}
+          {%- capture alt -%}{{ media.alt | escape }}{%- endcapture -%}
+          <a title="{{ alt }}" class="img-align" tabindex="0">
+            {% include 'image-load' %}
+            {% case media.media_type %}
+            {% when 'external_video' %}
+            <span class="icon thumbnail icon-play"></span>
+            {% when 'model' %}
+            <span class="icon thumbnail icon-threed"></span>
+            {% when 'video' %}
+            <span class="icon thumbnail icon-play"></span>
+            {% endcase %}
+          </a>  
+        </div>
+      </div>
+    </div>
+    {% endunless %}
+    {% endfor %}
+  </div>
+
+  <div id="swiper-button-prev-thumbs-{{ section.id }}" class="tabindex swiper-button-prev thumbs icon" role="button" aria-label="{{ 'products.general.previous' | t }}">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 492 492" style="enable-background:new 0 0 492 492;" xml:space="preserve">
+      <path d="M464.344,207.418l0.768,0.168H135.888l103.496-103.724c5.068-5.064,7.848-11.924,7.848-19.124    c0-7.2-2.78-14.012-7.848-19.088L223.28,49.538c-5.064-5.064-11.812-7.864-19.008-7.864c-7.2,0-13.952,2.78-19.016,7.844    L7.844,226.914C2.76,231.998-0.02,238.77,0,245.974c-0.02,7.244,2.76,14.02,7.844,19.096l177.412,177.412    c5.064,5.06,11.812,7.844,19.016,7.844c7.196,0,13.944-2.788,19.008-7.844l16.104-16.112c5.068-5.056,7.848-11.808,7.848-19.008    c0-7.196-2.78-13.592-7.848-18.652L134.72,284.406h329.992c14.828,0,27.288-12.78,27.288-27.6v-22.788    C492,219.198,479.172,207.418,464.344,207.418z"/>
+    </svg>
+  </div>
+  <div id="swiper-button-next-thumbs-{{ section.id }}" class="tabindex swiper-button-next thumbs icon" role="button" aria-label="{{ 'products.general.next' | t }}">
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 492.004 492.004" style="enable-background:new 0 0 492.004 492.004;" xml:space="preserve">
+      <path d="M484.14,226.886L306.46,49.202c-5.072-5.072-11.832-7.856-19.04-7.856c-7.216,0-13.972,2.788-19.044,7.856l-16.132,16.136    c-5.068,5.064-7.86,11.828-7.86,19.04c0,7.208,2.792,14.2,7.86,19.264L355.9,207.526H26.58C11.732,207.526,0,219.15,0,234.002    v22.812c0,14.852,11.732,27.648,26.58,27.648h330.496L252.248,388.926c-5.068,5.072-7.86,11.652-7.86,18.864    c0,7.204,2.792,13.88,7.86,18.948l16.132,16.084c5.072,5.072,11.828,7.836,19.044,7.836c7.208,0,13.968-2.8,19.04-7.872    l177.68-177.68c5.084-5.088,7.88-11.88,7.86-19.1C492.02,238.762,489.228,231.966,484.14,226.886z"/>
+    </svg>
+  </div>
+
+</div>
+{% endif %}

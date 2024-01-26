@@ -1,0 +1,41 @@
+{% if block.settings.type == false %}
+
+<div class="filter clearfix" {{ block.shopify_attributes }}>
+  {% if block.settings.label == 'above' and block.settings.title != blank  %}<h5 class="mobile-hide">{{ block.settings.title | escape }}</h5>{% endif %} 
+  <div class="open-container open-container-filter">
+    <a href="javascript:void(0)" class="open open-btn open-filter" title="{{ 'collections.general.open' | t }}" aria-controls="vendors" role="button" aria-label="{{ 'collections.general.open' | t }}"><span class="icon icon-plus btn text-center"></span><span class="h5">{% if block.settings.title != blank  %}{{ block.settings.title | escape }}{% else %}{{ 'collections.general.vendors' | t }}{% endif %}</span></a>
+    <div id="vendors" class="open-slide open-slide-filter">
+      <ul class="unformatted">
+        {% for product_vendor in collection.all_vendors %}
+        {%- assign vendor_handle = product_vendor | handleize -%}
+        {% if collections[vendor_handle] != blank %}
+        <li><a href="{{ collections[vendor_handle].url }}">{{ collections[vendor_handle].title }}</a></li>
+        {% else %}
+        <li>{{ product_vendor | link_to_vendor }}</li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<div class="filter dropdown clearfix" {{ block.shopify_attributes }}>
+  <span class="form">
+    {% if block.settings.label == 'above' and block.settings.title != blank  %}<h5>{{ block.settings.title | escape }}</h5>{% endif %} 
+    <select>
+      <option value="">{% if block.settings.label == 'inside' and block.settings.title != blank  %}{{ block.settings.title | escape }}{% else %}{{ 'layout.general.please_select' | t }}{% endif %}...</option> 
+      {% for product_vendor in collection.all_vendors %}
+      {%- assign vendor_handle = product_vendor | handleize -%}
+      {% if collections[vendor_handle] != blank %}
+      <option value="{{ collections[vendor_handle].url }}">{{ collections[vendor_handle].title }}</option>
+      {% else %}
+      <option value ="{{ product_vendor | url_for_vendor }}">{{ product_vendor }}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+  </span>
+</div>
+
+{% endif %}

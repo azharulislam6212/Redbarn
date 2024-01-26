@@ -1,0 +1,738 @@
+
+
+<section id="product-id-{{ section.id }}" data-product-id="{{ product.id }}"  data-section-id="{{ section.id }}" data-section-type="product-page" class="main-prouduct product-{{ section.id }} clearfix">
+  <div class="container">
+      <div class="main-prouduct-wrapper">
+
+        <div class="main-prouduct__image-box">
+
+          <div class="main-prouduct__image-wrapper">
+
+            <div class="main-prouduct__image-list product__slider-main">
+              {%- for media in product.media -%}
+
+             
+              <div class="prouduct__image-item" data-media-id="{{ media.id }}">
+                <div class="prouduct__image-wrap">
+                {% case media.media_type %}
+                  {% when "image" %}
+                    <img src="{{ media | img_url: 'master' }}"   alt="{{ media.alt | escape }}"  >
+                   
+                  {% when "video" %}
+                  <div class="video-wrapper">
+      
+                    {{ media | media_tag: image_size: "720x", autoplay: true, loop: loop, controls: true, preload: "none", autoplay: true, height: "100%", width: "100%" }}
+                    
+                    <a href="javascript:void(0)" class="video__play-btn" tabindex="0">
+                   
+                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h24v24h-24z" fill="none"/><path d="m12 2a10 10 0 1 0 10 10 10 10 0 0 0 -10-10zm-2 14.5v-9l6 4.5z"/></svg>
+                     </a>
+            
+                  </div>
+                  {% when "external_video" %}
+                    <div class="frame-wrapper" style="padding:56.25% 0 0 0;position:relative;">
+                      <iframe
+                      src="https://www.youtube.com/embed/{{ media.external_id }}?controls=1&enablejsapi=1&modestbranding=1&origin=https%3A%2F%2Fwww.redbarn.com&playsinline=1&rel=0"
+                      width="100%"
+                      height="100%" style="height:100%;left:0;position:absolute;top:0;width:100%;" allow="autoplay; encrypted-media" allowfullscreen>
+                      </iframe>
+                  
+                  </div>
+    
+                  {% endcase %}
+                </div>
+              </div>
+
+            {%- endfor -%}
+            
+            </div>
+            {% if  product.media.size > 1 %}
+              
+            <div class="main-prouduct__thumbnail-list product__slider-thumb">
+              {%- for media in product.media -%}
+
+                <div class="prouduct__thumbnail-item" data-media-id="{{ media.id }}">
+                  <div class="prouduct__thumbnail-wrap">
+                {% case media.media_type %}
+                  {% when "image" %}
+                    <img src="{{ media | img_url: 'master' }}"   alt="{{ media.alt | escape }}" >
+                    {% when "video" %}
+                      <div class="external-video-wrap">
+                        <img src="{{ media | img_url: 'master' }}"   alt="{{ media.alt | escape }}" >
+  
+                        <span class="play-btn">  
+                        
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h24v24h-24z" fill="none"/><path d="m12 2a10 10 0 1 0 10 10 10 10 0 0 0 -10-10zm-2 14.5v-9l6 4.5z"/></svg>
+                        </span>
+                    
+                      </div>
+                  {% when "external_video" %}
+                    <div class="external-video-wrap">
+                      <img src="{{ media | img_url: 'master' }}"   alt="{{ media.alt | escape }}" >
+
+                      <span class="play-btn">  
+                      
+                       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m0 0h24v24h-24z" fill="none"/><path d="m12 2a10 10 0 1 0 10 10 10 10 0 0 0 -10-10zm-2 14.5v-9l6 4.5z"/></svg>
+                     </span>
+                  
+                    </div>
+                  {% endcase %}
+              </div>
+            </div>
+            {%- endfor -%}
+            
+            </div>
+          {% endif %}
+          </div>
+
+
+
+             <div class="extra-infomation-bottom extra-infomation-desktop">
+              <div class="extra-infomation__header">
+              
+                <span>
+                  <img src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/icon-guarantee.svg?v=1607957429"
+                      alt="REDBARN PROMISE"
+                      class="" />
+                </span>
+                <h5>{{ 'products.general.our_Redbarn_Promise_title' | t }}</h5>
+              </div>
+              
+                <div class="info">
+               
+                  <p> {{ 'products.general.our_Redbarn_Promise_text' | t }}</p>
+                </div>
+              </div>
+
+              {% comment %} extra-infomation-bottom {% endcomment %}
+        
+        </div>
+        <div class="main-prouduct__content-box">
+
+          {% assign netWeight = false %}
+          {% for tag in product.tags %}
+          {% if tag contains 'NetWeight-' %}
+          {% assign netWeight = tag | split:"NetWeight-" | last %}
+          {% break %}
+          {% endif %}
+          {% endfor %}
+
+
+          <div class="main-prouduct__reveiw">
+            <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}" data-product-type="{{ product.type }}" style="display: block;"></span>
+         
+          {% if netWeight != false %}
+          <div class='main-prouduct__netWeight main-prouduct__netWeight-mobile'><span> {{ netWeight }}</span></div>
+          {% endif %}
+           {% comment %} main-prouduct__netWeight {% endcomment %}
+         
+          </div>
+
+        <h1 class="main-prouduct__title">{{ product.title | escape }}</h1>
+
+
+   
+
+
+        {% if netWeight != false %}
+          <div class='main-prouduct__netWeight main-prouduct__netWeight-desktop'><span> {{ netWeight }}</span></div>
+          {% endif %}
+       {% comment %} main-prouduct__netWeight {% endcomment %}
+
+
+        <div class="main-prouduct__support-list">
+          <div class="support-wrapper">
+            <div class="support-collumn">
+
+              <h4 class="support-label">Helps support</h4>
+
+              <ul class="support-list">
+
+                {% for tag in product.tags %}
+                  {% if tag contains 'Focus_' %}
+                  {% assign focus_text = tag | split:"Focus_" | last  | trim %}
+                  {% assign focus_text_handle = focus_text | handle %}
+          
+                  {% if focus_text_handle == 'dental-hygiene' %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/DentalHygiene.svg?v=1607957429' %}
+                  {% elsif focus_text_handle == 'boredom-busting'  %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/boredom-busting.svg?v=1607957429' %}
+                  {% elsif focus_text_handle == 'healthy-weight'  %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/HealthyWeight.svg?v=1608385283' %}
+                  {% elsif focus_text_handle == 'muscle-development'  %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/muscle-development.svg?v=1608385283' %}
+                  {% elsif focus_text_handle == 'rewards_functional-ingredients'  %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/functional-ingredients.svg?v=1608385434' %}
+                  {% elsif focus_text_handle == 'hydration'  %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Water_1.svg?v=1608385434' %}
+                  {% elsif focus_text_handle == 'digestive-health'  %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/digestive-health.svg?v=1609937981' %}
+              {% elsif focus_text_handle == 'functional-ingredients'  %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/functional-ingredients_638e7c96-eb69-46f3-9c46-2ad309ad30d9.svg?v=1609937482' %}
+                  {% elsif focus_text_handle == 'training-treats'  %}
+                  {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/training-treats.svg?v=1611004263' %}
+          
+                  {% endif %}
+
+                <li class="support-item">
+                  <span class="icn-wrap">
+                    <img src='{{focus_text_icon}}' alt='{{focus_text}}' />
+                  </span>
+                  <span>{{focus_text}}</span>
+                </li>
+
+              {% endif %}
+            {% endfor %}
+              </ul>
+
+            </div>
+            <div class="support-collumn">
+              <h4 class="support-label">Recommended for</h4>
+              <ul class="support-list">
+                {% for tag in product.tags %}
+                  {% if tag contains 'Chew Type_' %}
+                  {% assign chew_type_text = tag | split:"Chew Type_" | last  | trim %}
+                  {% assign chew_type_text_handle = chew_type_text | handle %}
+          
+          
+                  {% if chew_type_text_handle == 'light-chewer' %}
+                  {% assign chew_type_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/light.svg?v=1607957429' %}
+                  {% elsif chew_type_text_handle == 'moderate-chewer'  %}
+                  {% assign chew_type_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/moderate.svg?v=1607957429' %}
+                  {% elsif chew_type_text_handle == 'power-chewer'  %}
+                  {% assign chew_type_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/power.svg?v=1607957429' %}
+                  {% endif %}
+          
+                  <li class="support-item">
+                    <span class="icn-wrap">
+                      <img src='{{chew_type_text_icon}}' alt='{{chew_type_text}}' />
+                    </span>
+                    <span>{{chew_type_text}}</span>
+                  </li>
+          
+                  {% endif %}
+                  {% endfor %}
+              </ul>
+            
+            </div>
+          </div>
+        </div>
+        {% comment %} main-prouduct__support-list {% endcomment %}
+
+
+        {%- assign currentProductId = section.id | append: '-' | append: product.id -%}
+        {%- assign product_form_id = 'product-form-' | append: currentProductId -%}
+
+        {% assign current_variant = product.selected_or_first_available_variant %}
+
+        {%- form 'product',
+          product,
+          class: 'main-product-form',
+          id: product_form_id,
+          novalidate: 'novalidate'
+        -%}
+          <input type="hidden" name="id" value="{{current_variant.id }}">
+
+
+          <div class="split-flex-mobile"> 
+          
+          {% unless product.has_only_default_variant %}
+
+              {%- for option in product.options_with_values -%}
+                {%- liquid
+                  assign option_disabled = true
+
+                  for option1_name in variants_option1_arr
+                    case option.position
+                      when 1
+                        if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                          assign option_disabled = false
+                        endif
+                      when 2
+                        if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                          assign option_disabled = false
+                        endif
+                      when 3
+                        if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                          assign option_disabled = false
+                        endif
+                    endcase
+                  endfor
+                -%}
+                <div class="main-prouduct__selector  option-{{ option.name }}">
+                  <span class="selector-label">{{ option.name }}</span>
+                  <select class="main-prouduct__select">
+                    {% assign values = '' %}
+                    {% assign option_index = 0 %}
+                    {% for variant in product.variants %}
+                      {% assign value = variant.options[option_index] %}
+                      {% assign values = values | join: ',' %}
+                      {% assign values = values | append: ',' | append: value %}
+                      {% assign values = values | split: ',' %}
+                      <option
+                        value="{{ value | escape }}"
+                        {% if option.selected_value == value %}
+                          selected="selected"
+                        {% endif %}
+                      >
+                        {{ value | escape }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </div>
+              {% endfor %}
+          {% endunless %}
+
+        {% comment %} main-prouduct__selector {% endcomment %}
+     
+        <div class="main-prouduct__qty-price"> 
+        <div class="main-prouduct__price">
+          {%- if product.compare_at_price > product.price -%}
+            <span class="sale-price">{{ product.compare_at_price | money }}</span>
+          {%- endif -%}
+            <span class="regular-price">{{ product.price | money }}</span>
+        </div>
+        {% comment %} main-prouduct__price {% endcomment %}
+        <div class="main-prouduct__qty-wrap">
+          <div class="main-prouduct__qty">
+            <button type="button" class="minus" onclick="decreaseCount(event, this)">
+              <svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16.5" r="16" fill="#B3282D"/>
+                <path d="M9.77734 16.1667H22.2218" stroke="white" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            <input name="quantity" class="quantity input-num" min="0" type="number" value="01">
+            <button type="button" class="plus" onclick="increaseCount(event, this)">
+              <svg width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="16" cy="16.5" r="16" fill="#B3282D"/>
+                <path d="M15.9996 9.94452V22.389M9.77734 16.1667H22.2218" stroke="white" stroke-width="2.66667" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                
+            </button>
+          </div>
+        
+        </div>
+        
+      </div>
+
+      {% if product.selling_plan_groups.size > 0 %}
+
+        {%- liquid
+          assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+          assign current_selling_plan_allocation = current_variant.selected_selling_plan_allocation
+         
+          if current_selling_plan_allocation == nil and current_variant.requires_selling_plan
+           assign current_selling_plan_allocation = current_variant.selling_plan_allocations | first
+          endif
+
+
+          assign offer = current_selling_plan_allocation | default: current_variant
+          assign offerPrice = offer.price 
+          assign discount = offer.price | times: 0.1
+          assign discountedPrice = offerPrice | minus: discount
+
+          assign perdiscount  = current_variant.price | minus: discountedPrice
+          assign perce  = perdiscount | divided_by: current_variant.price
+          assign percentage  = perce | times:100
+
+         %}
+
+        <div class="main-prouduct__subscription-tab">
+          <ul class="subscription-tabs">
+            <li class="subscription-tab " data-tab="tab-onetime">One Time Purchase</li>
+            <li class="subscription-tab current" data-tab="tab-subscription">Subscription</li>
+          </ul>
+
+          <div class="custom-selling_plan"> 
+          {% assign selling_plan_first = product.selling_plan_groups[0].selling_plans[1] %}
+          <input type="hidden"  name="selling_plan" value="{{ selling_plan_first.id }}">
+          <div id="tab-onetime" class="subscription-tab-content ">
+            <fieldset>
+              <input id="onetime" type="radio"  name="purchase_option" value="onetime" data-ontime-price="{{offerPrice | money }}">
+              <label for="onetime">  <span >One-time purchase   </span>   </label>
+           </fieldset>
+
+          </div>
+          <div id="tab-subscription" class="subscription-tab-content current">
+            <div id="custom-selling_plan-{{ section.id }}"> 
+            <div class="custom-selling_plan_wrap"  data-selling-percentage="{{percentage | round}}">
+                
+                    <fieldset>
+                        <input id="autodeliver" type="radio"  name="purchase_option" value="autodeliver" data-subscription-price="{{ discountedPrice | money }}" checked>
+             
+                        <label for="autodeliver"> <span>Subscribe To Save  {{percentage | round | append: '%' }}  </span>  </label>
+                
+                       {% for group in product.selling_plan_groups %}
+                         <select class="selling-plans" data-variant-id="{{ current_variant.id }}">
+                           {% for selling_plan in group.selling_plans %}
+                           <option value="{{ selling_plan.id }}" {% if forloop.first %}selected{%endif%}>	
+                           {{ selling_plan.name }}
+                         
+                          </option>
+                           {% endfor %}
+                         </select>
+                         
+                       {% endfor %}
+
+                      {% comment %} <script type="application/json" data-selling-json>
+                         {{ product.selling_plan_groups | json }}
+                      </script>  {% endcomment %}
+
+                       <span class="subscrib-text">No commitment, cancel anytime.</span>
+                    
+                    </fieldset>
+  
+            </div>
+  
+              </div>
+
+          </div>
+        </div>
+        </div>
+      {% endif %}
+
+     {% comment %} selling_plan_groups {% endcomment %}
+    </div>
+
+     <button type="buttton" id="add-to-cart-product-template"  name="add" class="main-prouduct__add-to-cart btn btn--custom full-width-btn  {% if section.settings.show_dynamic_checkout %} btn--secondary mb-12 {% else %}   btn--primary    {%- endif -%}" {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}>
+
+      {%- if product.selected_or_first_available_variant.available -%}
+      <span>Add to cart</span>
+      
+      {%- else -%}
+      <span>Sold Out</span>
+      {%- endif -%}
+    </button>
+
+    {%- if section.settings.show_dynamic_checkout -%}
+      <div class="shopify_checkout_btn flex-1 w-100">
+        {{ form | payment_button }}
+      </div>
+      {%- endif -%}
+
+      {% comment %} Add to cart {% endcomment %}
+      <ul class="main-prouduct__payment-list">
+        {%- for type in shop.enabled_payment_types -%}
+          <li >
+            <a href="javascript:void(0)">
+              {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+            </a>
+          </li>
+          {%- endfor -%}
+        </ul>
+
+       {% comment %} payment-list {% endcomment %}
+
+       
+       <div class="extra-infomation-bottom extra-infomation-mobile">
+        <div class="extra-infomation__header">
+        
+          <span>
+            <img src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/icon-guarantee.svg?v=1607957429"
+                alt="REDBARN PROMISE"
+                class="" />
+          </span>
+          <h5>{{ 'products.general.our_Redbarn_Promise_title' | t }}</h5>
+        </div>
+        
+          <div class="info">
+         
+            <p> {{ 'products.general.our_Redbarn_Promise_text' | t }}</p>
+          </div>
+        </div>
+
+        {% comment %} extra-infomation-bottom {% endcomment %}
+       
+        <div class="bundle-mobile bundle-freequently"> 
+<!-- Dynamic Bundle --> 
+<div data-rebuy-id="43811" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+
+</div>
+
+        <div class="main-prouduct__accordion">        
+        
+        {% if product.description.size > 0 %}
+          {%- assign description = product.description -%}
+          {% if product.description contains '<h6>' %}
+            {%- assign chunks = description | strip | split: '<h6>' -%}
+              {% for c in chunks %}
+                {% if c contains '</h6>' %}
+                  {%- assign chunk = c | split: '</h6>' -%}
+                  {%- assign tab_heads = tab_heads | append: ',,' | append: chunk.first -%}
+                  {%- assign tab_texts = tab_texts | append: ',,' | append: chunk.last | split:"<div>" | first -%}
+         
+          
+                  {% if chunk.first != '' and chunk.first != null %}
+                
+              
+     
+                 
+                  <div class="accordion__item">
+
+                <div class="accordion__head">
+
+    
+                  {% if chunk.first  contains "INGREDIENTS" 
+                    or chunk.first  contains "Ingredients & Guaranteed Analysis"
+                    or chunk.first  contains "Ingredients"
+                    or chunk.first  contains "ingredients"
+                    %}
+                    <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                      <g clip-path="url(#clip0_9_7374)">
+                        <path d="M16.4291 4.0715C16.4291 3.31374 16.1281 2.58701 15.5923 2.05119C15.0565 1.51538 14.3297 1.21436 13.572 1.21436C12.8142 1.21436 12.0875 1.51538 11.5517 2.05119C11.0159 2.58701 10.7148 3.31374 10.7148 4.0715C10.718 4.82804 11.0211 5.55243 11.5577 6.08578L5.58627 12.0572C5.05292 11.5207 4.32853 11.2175 3.57199 11.2144C2.81423 11.2144 2.0875 11.5154 1.55168 12.0512C1.01586 12.587 0.714844 13.3137 0.714844 14.0715C0.714844 14.8293 1.01586 15.556 1.55168 16.0918C2.0875 16.6276 2.81423 16.9286 3.57199 16.9286C3.57199 17.6864 3.87301 18.4131 4.40882 18.9489C4.94464 19.4848 5.67137 19.7858 6.42913 19.7858C7.18689 19.7858 7.91362 19.4848 8.44944 18.9489C8.98525 18.4131 9.28627 17.6864 9.28627 16.9286C9.28308 16.1721 8.97997 15.4477 8.44342 14.9144L14.4148 8.94293C14.9482 9.47948 15.6726 9.7826 16.4291 9.78578C17.1869 9.78578 17.9136 9.48477 18.4494 8.94895C18.9853 8.41313 19.2863 7.6864 19.2863 6.92864C19.2863 6.17088 18.9853 5.44415 18.4494 4.90834C17.9136 4.37252 17.1869 4.0715 16.4291 4.0715Z" fill="#B3282D" stroke="#B3282D" stroke-width="1.42857" stroke-linecap="round" stroke-linejoin="round"/>
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_9_7374">
+                          <rect width="20" height="20" fill="white" transform="translate(0 0.5)"/>
+                        </clipPath>
+                      </defs>
+                    </svg>                  
+                  </span>
+                    {%elsif chunk.first  contains "ADDITIONAL DETAILS" 
+                      or chunk.first  contains "PRODUCT DETAILS"
+                      or chunk.first  contains "Product Detail"
+                      or chunk.first  contains "Detail"
+                    %}
+                    <span>
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <g clip-path="url(#clip0_9_7366)">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M10 20.5C12.6522 20.5 15.1957 19.4464 17.0711 17.5711C18.9464 15.6957 20 13.1522 20 10.5C20 7.84784 18.9464 5.3043 17.0711 3.42893C15.1957 1.55357 12.6522 0.5 10 0.5C7.34784 0.5 4.8043 1.55357 2.92893 3.42893C1.05357 5.3043 0 7.84784 0 10.5C0 13.1522 1.05357 15.6957 2.92893 17.5711C4.8043 19.4464 7.34784 20.5 10 20.5ZM6.15875 6.7375C5.8025 7.27375 5.625 7.80375 5.625 8.325C5.625 8.57875 5.7375 8.815 5.9625 9.0325C6.1875 9.25 6.4625 9.3575 6.78875 9.3575C7.3425 9.3575 7.71875 9.0475 7.9175 8.425C8.1275 7.83125 8.38375 7.38125 8.6875 7.075C8.99125 6.77 9.4625 6.6175 10.105 6.6175C10.6537 6.6175 11.1013 6.7675 11.4488 7.07125C11.795 7.37375 11.9688 7.74625 11.9688 8.18625C11.9703 8.40699 11.9115 8.62396 11.7987 8.81375C11.6841 9.00724 11.5427 9.18357 11.3787 9.3375C11.1157 9.578 10.8456 9.8106 10.5688 10.035C10.1438 10.3875 9.805 10.6912 9.55375 10.9475C9.30375 11.2037 9.10125 11.5013 8.95 11.8387C8.5475 13.395 10.6375 13.52 11.12 12.4088C11.1788 12.3013 11.2675 12.1838 11.3863 12.0538C11.5063 11.925 11.665 11.775 11.8638 11.6038C12.3695 11.1825 12.8671 10.7516 13.3563 10.3112C13.6325 10.0562 13.8713 9.75125 14.0725 9.39875C14.28 9.02257 14.3843 8.59824 14.375 8.16875C14.375 7.575 14.1988 7.025 13.845 6.51875C13.4925 6.01125 12.9925 5.61125 12.345 5.31625C11.6975 5.0225 10.9512 4.875 10.105 4.875C9.195 4.875 8.39875 5.05 7.71625 5.40375C7.03375 5.75625 6.515 6.20125 6.15875 6.7375ZM8.83375 15.5875C8.83375 15.919 8.96545 16.237 9.19987 16.4714C9.43429 16.7058 9.75223 16.8375 10.0838 16.8375C10.4153 16.8375 10.7332 16.7058 10.9676 16.4714C11.2021 16.237 11.3338 15.919 11.3338 15.5875C11.3338 15.256 11.2021 14.938 10.9676 14.7036C10.7332 14.4692 10.4153 14.3375 10.0838 14.3375C9.75223 14.3375 9.43429 14.4692 9.19987 14.7036C8.96545 14.938 8.83375 15.256 8.83375 15.5875Z" fill="#B3282D"/>
+                      </g>
+                      <defs>
+                      <clipPath id="clip0_9_7366">
+                      <rect width="20" height="20" fill="white" transform="translate(0 0.5)"/>
+                      </clipPath>
+                      </defs>
+                      </svg>
+                    </span>
+                    {%elsif chunk.first  contains "FEEDING GUIDE" %}
+                    <span>
+                    <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M18.2236 3.34541C17.3941 3.33267 16.3149 3.95181 15.2249 4.72572C13.0579 5.31295 7.5216 5.26459 5.28871 4.72267C3.94746 4.40021 3.28062 3.47049 2.62316 3.47189C2.0775 3.47709 1.42902 3.72763 1.26976 4.24904C1.21793 4.74947 1.36109 4.94467 1.62293 5.29029C1.36848 5.6942 1.10019 6.29213 1.21055 6.72232C1.29164 7.01412 1.50027 7.2258 1.83945 7.34928C2.51781 7.59635 4.34062 7.13123 4.77945 6.42049L15.5406 6.1615C16.578 7.234 18.1109 7.14802 18.7252 6.7542C19.0322 6.55732 19.2136 6.31017 19.223 6.08345C19.2434 5.59373 18.9841 5.45963 18.6497 5.16775C18.9457 4.90193 19.5327 4.39869 19.3417 4.04752C19.0757 3.55845 18.6889 3.35252 18.2236 3.34541ZM10.0004 11.2031C7.95086 11.2031 6.09445 11.3931 4.7748 11.6921C4.11496 11.8416 3.58832 12.0212 3.25578 12.1993C3.08953 12.2884 2.97371 12.3775 2.91367 12.444C2.85363 12.5104 2.85195 12.5383 2.85195 12.5508C2.85195 12.5633 2.85363 12.5912 2.91367 12.6576C2.97371 12.7241 3.08953 12.8132 3.25578 12.9023C3.58832 13.0804 4.11496 13.26 4.7748 13.4095C4.96316 13.4522 5.16359 13.4923 5.37285 13.5303C5.5424 13.3828 6.10212 13.2483 6.95084 13.151C7.79956 13.0538 8.88126 13.0002 10.0004 13C11.1195 13.0001 12.2014 13.0536 13.0505 13.1508C13.8996 13.248 14.4598 13.3825 14.6299 13.53C14.8384 13.4921 15.0382 13.452 15.226 13.4095C15.8858 13.26 16.4125 13.0804 16.745 12.9023C16.9112 12.8132 17.0271 12.7241 17.0871 12.6576C17.1471 12.5912 17.1488 12.5633 17.1488 12.5508C17.1488 12.5383 17.1471 12.5104 17.0871 12.444C17.0271 12.3775 16.9112 12.2884 16.745 12.1993C16.4125 12.0212 15.8858 11.8416 15.226 11.6921C13.9063 11.3931 12.0499 11.2031 10.0004 11.2031ZM2.54027 13.27L0.953241 17.502L0.951757 17.5056C0.905546 17.6212 0.911601 17.6753 0.957265 17.7653C1.00297 17.8554 1.11625 17.9788 1.31258 18.1041C1.70516 18.3547 2.40094 18.5986 3.2782 18.7893C5.03269 19.1707 7.51875 19.3672 10.0004 19.3672C12.4821 19.3672 14.9681 19.1707 16.7226 18.7893C17.5998 18.5986 18.2956 18.3547 18.6882 18.1041C18.8845 17.9788 18.9978 17.8554 19.0435 17.7653C19.0892 17.6753 19.0952 17.6212 19.049 17.5056L19.0475 17.502L17.4605 13.27C17.3493 13.3628 17.2212 13.4449 17.077 13.5221C16.6505 13.7506 16.0788 13.9372 15.3814 14.0952C13.9866 14.4112 12.093 14.6016 10.0004 14.6016C7.90781 14.6016 6.01418 14.4112 4.61937 14.0952C3.92195 13.9372 3.35023 13.7506 2.92375 13.5221C2.77957 13.4449 2.65156 13.3627 2.54027 13.27Z" fill="#B3282D"/>
+                      </svg>
+                    </span>
+             
+
+                  {% endif %}
+               
+                     <p>{{ chunk.first }}</p>  
+                  
+                    <span class="accordion__arrow">
+                        <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 8.09998L12 2.09998L10.8 0.899975L6 5.69998L1.2 0.899975L7.15493e-08 2.09998L6 8.09998Z" fill="black"/>
+                        </svg>
+                  </span>
+                </div>
+        
+
+
+                <div class="accordion__content">
+                  {{ chunk.last }}
+              </div>
+            </div> 
+     
+          {% endif %}
+     
+            {% endif %}
+            {% endfor %}
+              
+          {% endif %}
+        {%- endif -%}
+
+
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'accordion' %}
+              <div class="accordion__item">
+                <div class="accordion__head">
+                  {% if block.settings.icon != blank %}
+                     <span>
+                    <img src="{{block.settings.icon | img_url:"30x"}}" alt="{{block.settings.title}}">
+                    </span>
+                  {% endif %}
+                    <p>{{block.settings.title}}</p>
+                    <span class="accordion__arrow">
+                      <svg width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6 8.09998L12 2.09998L10.8 0.899975L6 5.69998L1.2 0.899975L7.15493e-08 2.09998L6 8.09998Z" fill="black"/>
+                      </svg>
+                    </span>
+                </div>
+                <div class="accordion__content">
+                 {{block.settings.body}}
+                </div>
+            </div>
+          {% endcase %}
+        {% endfor %}
+
+      </div>
+     
+       {% comment %} main-prouduct__accordion {% endcomment %}
+
+
+        {% unless product == empty %}
+          <script type="application/json" data-product-json>
+            {{ product | json }}
+          </script>
+       {% endunless %}
+
+  {%- endform -%}
+
+
+
+
+        </div>
+      </div>
+
+  </div>
+</section>
+
+
+<div class="bundle-desktop bundle-freequently"> 
+<div class="container">
+<!-- Dynamic Bundle --> 
+<div data-rebuy-id="43811" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+
+
+</div>
+</div>
+
+
+
+{% unless product == empty %}
+  <script type="application/json" id="ProductJson-{{ section.id }}">
+      {{ product | json }}
+  </script>
+  <script type="application/json" id="ModelJson-{{ section.id }}">
+      {{ product.media | where: 'media_type', 'model' | json }}
+  </script>
+  {% endunless %}
+  
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "productID": {{ product.id | json }},
+  "@id": {{ shop.url | append: product.url | json }},
+  "url": {{ shop.url | append: product.url | json }},
+  {% if product.featured_media %}{%- assign image_size = product.featured_media.width | append: 'x' -%}"image": [{{ product.featured_media.src | img_url: image_size | prepend: 'https:' | json }}],{% endif %}
+  "description": {{ product.description | strip_html | json }},
+  {% if current_variant.sku != blank %}"sku": {{ current_variant.sku | json }},{% endif %}
+  "brand": {
+    "@type": "Thing",
+    "name": {{ product.vendor | json }}
+  },
+  "offers": [
+  {%- for variant in product.variants -%}
+  {
+    "@type": "Offer",
+    {% if variant.sku != blank %}"sku": {{ variant.sku | json }},{% endif %}
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "price": "{{ variant.price | divided_by: 100.00 }}",
+    "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' | uri_encode | replace:'+','%20' }}",
+    "availability": "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url" : {{ shop.url | append: variant.url | json }},
+    "seller": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }}
+    }
+  }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+  ]
+}
+
+</script>
+
+
+<script type="text/javascript">
+  var _learnq = _learnq || [];
+
+  var item = {
+    Name: {{ product.title|json }},
+    ProductID: {{ product.id|json }},
+    Categories: {{ product.collections|map:'title'|json }},
+    ImageURL: "https:{{ product.featured_image.src|img_url:'grande' }}",
+    URL: "{{ shop.secure_url }}{{ product.url }}",
+    Brand: {{ product.vendor|json }},
+    Price: {{ product.price|money|json }},
+    CompareAtPrice: {{ product.compare_at_price_max|money|json }}
+  };
+
+  _learnq.push(['track', 'Viewed Product', item]);
+  _learnq.push(['trackViewedItem', {
+    Title: item.Name,
+    ItemId: item.ProductID,
+    Categories: item.Categories,
+    ImageUrl: item.ImageURL,
+    Url: item.URL,
+    Metadata: {
+      Brand: item.Brand,
+      Price: item.Price,
+      CompareAtPrice: item.CompareAtPrice
+    }
+  }]);
+</script>
+
+<script type="text/javascript">
+  var _learnq = _learnq || [];
+  var classname = document.getElementsByClassName("btn add-to-cart addtocart auto-full-width");
+  var addToCart = function() {
+  _learnq.push(['track', 'Added to Cart', item]);
+  };   for (var i = 0; i < classname.length; i++) {
+  classname[i].addEventListener('click', addToCart, false);
+  }
+  </script> 
+
+
+{% schema %}
+
+{
+  "name": "Product Template",
+  "settings": [
+     {
+      "type": "checkbox",
+      "id": "reviews_enable",
+      "label": "Show product reviews",
+      "info": "Install the free Shopify [Product Reviews](https:\/\/apps.shopify.com\/product-reviews) app to add product reviews.",
+      "default": false
+    }, 
+     {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout button",
+      "info": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Free & Fast Shipping"
+        }, 
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Text",
+          "default": "<p>Add custom text to promote products, specials or offers</p>"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

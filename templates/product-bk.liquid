@@ -1,0 +1,72 @@
+{% section 'product-template' %}
+{% comment %}{% section 'product-recommendations' %}{% endcomment %}
+<div class="container clearfix">
+<!-- test -->
+{% comment %} <div id="stamped-main-widget" class="stamped-main-widget" data-product-id="{{ product.id }}" data-name="{{ product.title | escape }}" data-url="{{ shop.url }}{{ product.url }}" data-image-url="{{ product.featured_image | product_img_url: "large" |replace: " ? ", " % 3F" | replace: "& "," % 26"}}" data-description="{{ product.description | escape }}" data-product-sku="{{product.handle}}" data-product-type="{{product.type}}" data-offset="100" data-offset-mobile="100" data-take-questions="20"></div> {% endcomment %}
+
+
+ 
+</div>
+
+{% section 'video_with_text' %}
+{% section 'product-custom-gallery' %}
+
+{% comment %}
+{% if collection.previous_product or collection.next_product %}
+<div class="container grid clearfix">
+  <div class="twelve pagination bottompad clearfix">
+    {% if collection.previous_product %}            
+    <div class="{% if collection.next_product %}six{% else %}twelve{% endif %} mobile left negative-left"><span class="prev"></span>{{ collection.previous_product.title | link_to: collection.previous_product }}</div>
+    {% endif %}
+    {% if collection.next_product %}
+    <div class="{% if collection.previous_product %}six{% else %}twelve{% endif %} mobile right negative-right">{{ collection.next_product.title | link_to: collection.next_product }}<span class="next"></span></div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% endcomment %}
+
+<script type="text/javascript">
+  var _learnq = _learnq || [];
+
+  var item = {
+    Name: {{ product.title|json }},
+    ProductID: {{ product.id|json }},
+    Categories: {{ product.collections|map:'title'|json }},
+    ImageURL: "https:{{ product.featured_image.src|img_url:'grande' }}",
+    URL: "{{ shop.secure_url }}{{ product.url }}",
+    Brand: {{ product.vendor|json }},
+    Price: {{ product.price|money|json }},
+    CompareAtPrice: {{ product.compare_at_price_max|money|json }}
+  };
+
+  _learnq.push(['track', 'Viewed Product', item]);
+  _learnq.push(['trackViewedItem', {
+    Title: item.Name,
+    ItemId: item.ProductID,
+    Categories: item.Categories,
+    ImageUrl: item.ImageURL,
+    Url: item.URL,
+    Metadata: {
+      Brand: item.Brand,
+      Price: item.Price,
+      CompareAtPrice: item.CompareAtPrice
+    }
+  }]);
+</script>
+
+<script type="text/javascript">
+  var _learnq = _learnq || [];
+  var classname = document.getElementsByClassName("btn add-to-cart addtocart auto-full-width");
+  var addToCart = function() {
+  _learnq.push(['track', 'Added to Cart', item]);
+  };   for (var i = 0; i < classname.length; i++) {
+  classname[i].addEventListener('click', addToCart, false);
+  }
+  </script> 
+<div data-rebuy-id="43809" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+  
+  <!-- Dynamic Bundle --> 
+  <div data-rebuy-id="43811" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+<div data-rebuy-id="120840" data-rebuy-shopify-product-ids="{{ product.id }}"></div>

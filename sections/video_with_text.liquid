@@ -1,0 +1,71 @@
+{% if section.settings.enable_section %}
+<div class='pets-safe'>
+  <div class='container'>
+    <div class='video_column'>
+      <div class='v-placeholder'>
+
+        {%- capture id -%}'v-placeholder-image'{%- endcapture -%}
+        {%- assign img_src = section.settings.image -%}                             
+        {%- assign size = 180 -%}
+        
+        {% include 'image-load' %}
+        {% if section.settings.video_iframe != blank %}
+        <a href="javascript:void(0);"
+           class="play-btn"
+           data-fancybox
+           data-type="iframe"
+           data-src="{{section.settings.video_iframe }}"
+           data-target="#videoModal">
+          <img src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/play-btn-img.png?v=1607957429" alt="Play Button">
+        </a>
+        {% endif %}
+
+      </div>
+
+    </div>
+    <div class='text_column'>
+      {% if section.settings.title != blank %}
+      <h2> {{ section.settings.title  }}</h2>
+      {% endif %}
+      {% if section.settings.content != blank %}
+      <div class='video_content'>
+      	{{ section.settings.content }}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Video with text",
+    "settings": [
+		{
+		"type":"checkbox",
+		"id":"enable_section",
+		"label":"Enable Section"
+		},
+		{
+		"type":"text",
+		"id":"title",
+		"label":"Title"
+		},
+		{
+		"type":"richtext",
+		"id":"content",
+		"label":"Content"
+		},
+		{
+		"type":"image_picker",
+		"id":"image",
+		"label":"Placeholder Image"
+		},
+		{
+		"type":"text",
+		"id":"video_iframe",
+		"label":"Video url"
+		}
+	]
+  }
+{% endschema %}

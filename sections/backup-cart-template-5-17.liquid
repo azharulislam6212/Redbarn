@@ -1,0 +1,468 @@
+{%- assign full_width = section.settings.full_width -%}
+{% assign freeSamples = collections['free-samples'] %}
+{% assign kibbleDiscount = collections['kibble-discount-product'] %}
+{% assign giftPromoAdded = false %}
+{% assign discountKibbleAdded = false %}
+{% if cart.items_subtotal_price < 4900 %}
+  {% assign discountKibbleAdded = true %}
+{% endif %}
+{% for item in cart.items %}
+  {% for product in freeSamples.products %}
+    {% if product.variants.first.id == item.variant_id %}
+      {% assign giftPromoAdded = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  {% if discountKibbleAdded == false %}
+    {% for product in kibbleDiscount.products %}
+      {% if product.variants.first.id == item.variant_id %}
+        {% assign discountKibbleAdded = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endfor %}
+
+<div data-section-id="{{ section.id }}"
+     data-section-type="cart-page"
+     class="clearfix">
+{% comment %}
+{% if giftPromoAdded == false or discountKibbleAdded == false  %}
+{% if customer.orders_count == 0 or customer == nil %}
+
+  <div id="backgroundOverlay" onclick="closeModal()"></div>
+  <div id="minimized-modal" onclick="closeMinModal()">
+    <p>Don't forget to grab your gifts!</p>
+    <i class="fa-solid fa-gift"></i>
+  </div>
+  <div id="discount-modal" class="discount-modal">
+    <span class="close" onclick="closeModal()"></span>
+    {% if giftPromoAdded == false %}
+      <div class="free-gift promo center ">
+        <p class="gift-title">Pick Your Free Gift:</p>
+        {% for product in freeSamples.products %}
+          <div class="free-sample-product">
+            <img src="{{ product.featured_media | image_url: width: 100 }}" alt="{{ product.title }}" />
+            <p class="product-title">{{ product.title }}</p>
+            <form method="post" action="/cart/add">
+              <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+              <input min="1" type="hidden" name="quantity" value="1"/>
+              <input type="submit" value="Add to cart" class="btn " />
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+
+
+{% comment %}
+    {% if discountKibbleAdded == false %}
+      <div class="promo discount {% if giftPromoAdded == true %} center {% endif %}">
+        <p class="gift-title">Plus, your cart qualifies you for a 4lb bag of Kibble for only $5!</p>
+        <img src="{{ kibbleDiscount.products.first.featured_media | image_url: width: 200 }}"
+             alt="{{ kibbleDiscount.products.first.title }}" id="kibbleImage" />
+        <p class="product-price">Price: $5</p>
+        <form method="post" action="/cart/add">
+          <select name="id" id="kibbleSelect" onchange="changeDiscountImage()" >
+            {% for product in kibbleDiscount.products %}
+              <option value="{{ product.variants.first.id }}">{{ product.title }}</option>
+            {% endfor %}
+          </select>
+          <input min="1" type="hidden" name="quantity" value="1"/>
+          <input type="submit" value="Add to cart" class="btn" />
+        </form>
+      </div>
+    {% for product in kibbleDiscount.products %}
+      <img style="display: none" src="{{ product.featured_media | image_url: width: 200 }}"
+           alt="{{ product.title }}" id="{{ product.variants.first.id }}" />
+    {% endfor %}
+    {%endif%}
+{% endcomment %}
+
+ 
+  </div>
+
+  <script>
+    function closeModal(){
+      document.getElementById('discount-modal').style.display = 'none';
+      document.getElementById('backgroundOverlay').style.display = 'none';
+      document.getElementById('minimized-modal').style.display = 'flex';
+    }
+
+    function changeDiscountImage(){
+      var select = document.getElementById('kibbleSelect');
+      var id = select.options[select.selectedIndex].value;
+      var mainImage = document.getElementById('kibbleImage');
+      var replaceImage = document.getElementById(id);
+      mainImage.src = replaceImage.src;
+      mainImage.alt = replaceImage.alt;
+    }
+
+    function closeMinModal() {
+      document.getElementById('discount-modal').style.display = 'block';
+      document.getElementById('backgroundOverlay').style.display = 'block';
+      document.getElementById('minimized-modal').style.display = 'none';
+    }
+  </script>
+{% endif %}
+{% endif %}
+{% endcomment %}
+
+  <div id="cart-table">
+    <div class="form{% unless cart.item_count > 0 %} hidden{% endunless %}">
+      {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+      <form action="{{ routes.cart_url }}" method="post" class="limoniapps-discountninja-cart-root">
+        <div class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}clearfix">
+
+          <div class="container clearfix">
+            <div class="twelve">
+              <div class="{% if section.settings.include_color != 'color-none' %}{% unless full_width %}twelve {% endunless %}background-colored {{ section.settings.include_color }} {% endif %}clearfix">
+                <div class="{% if section.settings.include_color != 'color-none' %}{% unless full_width %}twelve {% endunless %}{% endif %}toppad text-center">
+                  <h1>{{ 'cart.general.intro_html' | t }}</h1>
+                  {% assign cartTotalPrice = cart.total_price | money_without_currency | times: 1 %}
+                  {% assign cartShippingMessageThreshold = section.settings.cart_shipping_message_threshold %}
+                  {% assign amountUntilThreshold = cartShippingMessageThreshold | minus: cartTotalPrice %}
+
+                  {% if section.settings.cart_show_shipping_message and cartShippingMessageThreshold > 0 %}
+                    <div class="shipping-message">
+                      <span class="shipping-threshold-value" data-shipping-threshold="{{ section.settings.cart_shipping_message_threshold | times: 1 }}"></span>
+                      <div class="under-threshold {% if cartTotalPrice >= cartShippingMessageThreshold %} hide-message{% endif %}">
+                        <p>You are <span class="amount-until-threshold">{{ amountUntilThreshold | times: 100 | money_without_trailing_zeros }}</span> away from qualifying for Free Shipping!</p>
+                      </div>
+                      <div class="threshold-reached {% if cartTotalPrice < cartShippingMessageThreshold %} hide-message{% endif %}">
+                        <p>You qualify for Free Shipping!</p>
+                      </div>
+                    </div>
+                  {% endif %}
+                    {% comment %}
+                  <div class="cart-options text-center">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+                  
+                      <tr><td class="text-right"><h3>{{ 'cart.general.carttotal_html' | t }}</h3></td><td class="text-left price-preview price price-field"><h3><span id="total-cart-top" class="limoniapps-discountninja-cart-subtotal-price">{{ cart.total_price | money }}</span></h3></td></tr>
+                    </table>
+                  </div>
+                    {% endcomment %}
+                </div>
+              </div>
+              {% include "breadcrumbs" %}
+            </div>
+          </div>
+
+          <div class="container clearfix">
+            <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+              <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve background-colored {{ section.settings.include_color }}"{% endif %}>
+                <div{% if section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+                  <div class="cart-table-header{% if section.settings.include_color != 'color-none' %} twelve background-white{% else %} toppad{% endif %} clearfix">
+                    <div class="five">
+                      <h4 class="item">{{ 'cart.general.item' | t }}</h4>
+                    </div>
+                    <div class="two">
+                      <h4>{{ 'cart.general.item_price' | t }}</h4>
+                    </div>
+                    <div class="three text-center">
+                      <h4>{{ 'cart.general.item_quantity' | t }}</h4>
+                    </div>
+                    <div class="two">
+                      <h4>{{ 'cart.general.item_total' | t }}</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="container clearfix">
+          <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+            <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+              <div{% if section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+                <div class="{% if section.settings.include_color != 'color-none' %}twelve background-white {% else %}toppad {% endif %}clearfix">
+                  <div class="cart-table bottompad">
+                    {% for line_item in cart.items %}
+                    {%- assign line_item_id = line_item.key -%}
+                    <div id="product-id-{{ line_item_id }}" class="item relative product-id item-row table-center clearfix" data-product-id="{{ line_item_id }}">
+
+                      {% if settings.badge_enable %}
+                      {% if line_item.line_level_discount_allocations != blank or line_item.compare_at_price > line_item.original_price %}
+                      <div class="badge"><span class="badge-total">
+                        {{ 'products.product.savings' | t }}<br/>
+                        {% if line_item.line_level_discount_allocations != blank %}
+                        {%- if settings.badge_percentage_enable -%}
+                        {{ line_item.original_line_price | minus: line_item.final_line_price | times: 100 | divided_by: line_item.original_line_price | append: '%' }}
+                        {%- else -%}
+                        {{ line_item.original_line_price | minus: line_item.final_line_price | money_without_trailing_zeros }}
+                        {%- endif -%}
+                        {% elsif line_item.compare_at_price > line_item.original_price %}
+                        {%- if settings.badge_percentage_enable -%}
+                        {{ line_item.compare_at_price | minus: line_item.price | times: 100 | divided_by: line_item.compare_at_price | append: '%' }}
+                        {%- else -%}
+                        {{ line_item.compare_at_price | times: line_item.quantity | minus: line_item.original_line_price | money_without_trailing_zeros }}
+                        {%- endif -%}
+                        {% endif %}
+                      </span></div>
+                      {% endif %}
+                      {% endif %}
+
+                      {% if line_item.variant.featured_media %}
+                      {% assign line_item_featured_media = line_item.variant.featured_media %}
+                      {% elsif line_item.product.featured_media %}
+                      {% assign line_item_featured_media = line_item.product.featured_media %}
+                      {% else %}
+                      {% assign line_item_featured_media = false %}
+                      {% endif %}
+
+                      {% if line_item_featured_media %}
+                      <div class="two item-thumb title-align title-align-left">
+                        <div class="relative">
+                          {%- capture id -%}{{ line_item.id }}{%- endcapture -%}
+                          {%- assign img_src = line_item_featured_media -%}
+                          {%- assign size = 260 -%}
+                          {%- capture alt -%}{{ line_item.title | escape }}{%- endcapture -%}
+                          <a href="{% if line_item.variant.metafields.secomapp.freegifts %}{{ line_item.product.url }}{% else %}{{ line_item.variant.url | within: collections.all }}{% endif %}" title="{{ line_item.title }}" class="img-align">
+                            {% include 'image-load' %}
+                          </a>
+                        </div>
+                      </div>
+                      {% endif %}
+                      <span class="item-details{% if line_item_featured_media %} half{% else %} full{% endif %} table-center">
+                        <div class="{% if line_item_featured_media %}three{% else %}five{% endif %}">
+                          <div class="item-title">
+                            <h5>
+                              <a href="{% if line_item.variant.metafields.secomapp.freegifts %}{{ line_item.product.url }}{% else %}{{ line_item.variant.url | within: collections.all }}{% endif %}" title="{{ line_item.title }}">{{ line_item.product.title }}</a>
+                            </h5>
+                          </div>
+                          <h5 class="offers hidden">
+
+                            <span class="price-preview price price-field">
+                              {% if line_item.original_price != line_item.final_price %}
+                              {% if line_item.final_price > 0 %}{{ line_item.final_price | money }}{% else %}{{ 'cart.general.free' | t }}{% endif %} <del>{% if line_item.original_price > 0 %}{{ line_item.original_price | money }}{% else %}{{ 'cart.general.free' | t }}{% endif %}</del>
+                              {% else %}
+                              {% if line_item.original_price > 0 %}{{ line_item.original_price | money }} {% if line_item.compare_at_price > line_item.original_price %}<del>{{ line_item.compare_at_price | money }}</del>{% else %}{{ 'cart.general.each' | t }}{% endif %}{% else %}{{ 'cart.general.free' | t }}{% endif %}
+                              {% endif %}
+                            </span>
+                            {% assign variant_slash = 'true' %}
+                            {% include 'product-unit-price', variant: line_item %}
+                            {% if line_item.line_level_discount_allocations != blank %}
+                            <br/>
+                            <small>{% for discount_allocation in line_item.line_level_discount_allocations %}<span>{{ discount_allocation.discount_application.title }}: </span><span class="discount-amt">{{ discount_allocation.amount | money | prepend: '-' }}</span><br/>{% endfor %}</small>{% endif %}
+                          </h5>
+                          <h5 class="hidden total-item">
+                            {{ 'cart.general.carttotal' | t }}
+                            {% if line_item.original_line_price != line_item.final_line_price %}
+                            <span class="total-item total-discount-item">{{ line_item.final_line_price | money }} <del>{{ line_item.original_line_price | money }}</del></span>
+                            {% else %}
+                            <span class="total-item total{% if line_item.compare_at_price > line_item.original_price %}-sale{% else %}-price{% endif %}-item"{% if line_item.compare_at_price > line_item.original_price %} data-sale="{{ line_item.compare_at_price }}"{% endif %}>{{ line_item.original_line_price | money }}{% if line_item.compare_at_price > line_item.original_price %} <del>{{ line_item.compare_at_price | times: line_item.quantity | money }}</del>{% endif %}</span>
+                            {% endif %}
+                          </h5>
+
+                          {% unless line_item.variant.title == 'Default Title' %}<h6><small>{{ 'cart.general.item_options' | t }}<br/><span class="variants">{{ line_item.variant.title }}</span></small></h6>{% endunless %}
+
+                          {%- assign property_size = line_item.properties | size -%}
+                          {% if property_size > 0 %}
+                          <p><small>
+                            {% for p in line_item.properties %}
+                            {% unless p.last == blank %}{{ p.first }}: {% if p.last contains '/uploads/' %}<a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>{% else %}{{ p.last }}{% endif %}{% endunless %}<br/>
+                            {% endfor %}
+                            </small></p>
+                          {% endif %}
+                        </div>
+                        <div class="two price-preview-hidden">
+                          <h5 class="offers">
+                            {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+                              <div class="limoniapps-discountninja-cart-item-product-comment" data-limoniapps-discountninja-cart-key="{{line_item.key}}"></div>
+                            <span class="price-preview price price-field limoniapps-discountninja-cart-item-product-price" data-limoniapps-discountninja-cart-key="{{line_item.key}}">
+                              {% if line_item.original_price != line_item.final_price %}
+                              {% if line_item.final_price > 0 %}{{ line_item.final_price | money }}{% else %}{{ 'cart.general.free' | t }}{% endif %} <del>{% if line_item.original_price > 0 %}{{ line_item.original_price | money }}{% else %}{{ 'cart.general.free' | t }}{% endif %}</del>
+                              {% else %}
+                              {% if line_item.original_price > 0 %}{{ line_item.original_price | money }} {% if line_item.compare_at_price > line_item.original_price %}<del>{{ line_item.compare_at_price | money }}</del>{% else %}{{ 'cart.general.each' | t }}{% endif %}{% else %}{{ 'cart.general.free' | t }}{% endif %}
+                              {% endif %}
+                            </span>
+                            {% include 'product-unit-price', variant: line_item %}
+                          </h5>
+                          {% if line_item.line_level_discount_allocations != blank %}
+                          <p><small>{% for discount_allocation in line_item.line_level_discount_allocations %}<span>{{ discount_allocation.discount_application.title }}: </span><span class="discount-amt">{{ discount_allocation.amount | money | prepend: '-'  }}</span><br/>{% endfor %}</small></p>
+                          {% endif %}
+                        </div>
+                        <div class="three text-center">
+                          {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+                          <span class="quantity form limoniapps-discountninja-cart-item-quantity" data-limoniapps-discountninja-cart-key="{{line_item.key}}">
+                            <button {% if line_item.variant.metafields.secomapp.freegifts %}style="display: none !important;"{% endif %} type="button" class="icon icon-minus btn qtybtn qtyminus_multi text-center" field="updates_{{ line_item_id }}" aria-label="{{ 'products.general.minus' | t }}"></button>
+
+                            <input {% if item.variant.metafields.secomapp.freegifts %}readonly{% endif %} name="updates[]" type="number" inputmode="numeric" pattern="[0-9]*" value="{{ line_item.quantity }}" min="0" class="quantity item-qty text-center" field="error_{{ line_item_id }}" id="updates_{{ line_item_id }}"{% if line_item.variant.inventory_management and line_item.variant.inventory_policy != 'continue' %} max="{{ line_item.variant.inventory_quantity }}"{% endif %} />
+
+                            <button {% if line_item.variant.metafields.secomapp.freegifts %}style="display: none !important;"{% endif %} type="button" class="icon icon-plus btn qtybtn qtyplus_multi text-center" field="updates_{{ line_item_id }}" aria-label="{{ 'products.general.plus' | t }}"></button>
+                            <label class="stock error hidden" id="error_{{ line_item_id }}"></label>
+                          </span>
+                        </div>
+                        <div class="two total-item-hidden">
+                          <h5>
+                            {% if line_item.original_line_price != line_item.final_line_price %}
+                            <span class="total-item total-discount-item">{{ line_item.final_line_price | money }} <del>{{ line_item.original_line_price | money }}</del></span>
+                            {% else %}
+                            {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+                            <span class="limoniapps-discountninja-cart-item-line-price" data-limoniapps-discountninja-cart-key="{{line_item.key}}">
+                            <span class="total-item total{% if line_item.compare_at_price > line_item.original_price %}-sale{% else %}-price{% endif %}-item"{% if line_item.compare_at_price > line_item.original_price %} data-sale="{{ line_item.compare_at_price }}"{% endif %}>{{ line_item.original_line_price | money }}{% if line_item.compare_at_price > line_item.original_price %} <del>{{ line_item.compare_at_price | times: line_item.quantity | money }}</del>{% endif %}</span>
+                            </span>
+                              {% endif %}
+                          </h5>
+                        </div>
+                      </span>
+                    </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container bottompad clearfix">
+          <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+            <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+              <div{% if section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+                <div class="{% if section.settings.include_color != 'color-none' %}twelve {% endif %}toppad clearfix">
+                  <div class="cart-options text-center">
+                    {% if section.settings.cart_notes_enable %}
+                    <div class="six center clearfix">
+                      <span class="form">
+                        <span>
+                          <textarea name="note" class="input-full" id="CartSpecialInstructions" placeholder="{{ 'cart.general.note' | t }}">{{ cart.note }}</textarea>
+                        </span>
+                      </span>
+                    </div>
+                    {% endif %}
+                    <div class="twelve table-center">
+                      <table border="0" cellspacing="0" cellpadding="0">
+                        {% if cart.cart_level_discount_applications.size > 0 %}
+                        <tr class="table-border-top"><td class="text-right"><p>{{ 'cart.general.subtotal' | t }}</p></td><td class="text-left price-preview price price-field"><p><span id="cart-total">{{ cart.original_total_price | money }}</span></p></td></tr>
+                        <tr class="table-border-bottom"><td class="text-right">{% if cart.cart_level_discount_applications.size > 1 %}{{ 'cart.general.discounts' | t }}{% else %}{{ 'cart.general.discount' | t }}{% endif %}&nbsp;</td><td>&nbsp;</td></tr>
+                        {% for discount_application in cart.cart_level_discount_applications %}
+                        <tr><td class="text-right"><h5>{{ discount_application.title }}:</h5></td><td class="text-left"><h5><span id="discount-cart-{{ discount_application.title | handleize }}" class="discount-cart">-{{ discount_application.total_allocated_amount | money }}</span></h5></td></tr>
+                        {% endfor %}
+                        {% endif %}
+                        {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+                        <tr><td class="text-right"><h3>{{ 'cart.general.carttotal_html' | t }}</h3></td><td class="text-left price-preview price price-field"><h3><span id="total-cart-bottom" class="limoniapps-discountninja-cart-subtotal-price">{{ cart.total_price | money }}</span></h3></td></tr>
+                      </table>
+                      {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+                      <div class="limoniapps-discountninja-cart-promotionsummary"></div>
+                      {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+                      <div class="limoniapps-discountninja-cartdiscountfield-placeholder"></div>
+                      <div class="clearfix bottompad-"><input type="submit" name="checkout" value="{{ 'cart.general.checkout' | t }}" class="btn" stye="margin-top:30px" /></div>
+                      {% comment %}
+                      <div class="clearfix"><p><small>{{ 'cart.general.total_msg' | t }}</small></p></div>
+                      {% endcomment %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="empty-form{% if cart.item_count > 0 %} hidden{% endif %} toppad clearfix">
+      <div class="container clearfix">
+        <div class="twelve text-center">
+          <h1>{{ 'cart.general.empty' | t }}</h1>
+          <h3>{{ 'cart.general.continue_browsing_html' | t }}</h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% if section.settings.recently_viewed %}
+  <div class="container {% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+      <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+        <div{% if section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+          <div class="{% if section.settings.include_color != 'color-none' %}twelve {% endif %}clearfix">
+            <div id="recently-viewed-products" class="product-loop table-center">
+              <div class="twelve text-center toppad"><h2>{{ 'cart.general.recently_viewed' | t }}</h2></div>
+              <div class="row last center{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+                <script id="recently-viewed-product-template" type="text/x-jquery-tmpl">
+                  <div class="product {% if settings.borders_enable %}borders {% endif %}text-left two-half animate brands">
+                    <div id="product-${handle}" class="product-border">
+                      <div class="product-thumb cart{% if settings.title_align %} title-align{% endif %}">
+                        <div class="relative">
+                          <a href="${url}" title="${title}" class="img-align">
+                            <img data-img="${media[0].preview_image.src}" src="${Shopify.Products.resizeImage(media[0].preview_image.src, "280x")}"{% if settings.title_align %} class="img-align"{% endif %} />
+                  	      </a>
+                  	    </div>
+                      </div>
+                    </div>
+                  </div>
+                </script>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+{% schema %}
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "cart_notes_enable",
+        "label": "Show cart notes",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width background",
+       "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "recently_viewed",
+        "label": "Show recently viewed products",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_shipping_message",
+        "label": "Show Shipping Message",
+        "default": false
+      },
+      {
+        "type": "number",
+        "id": "cart_shipping_message_threshold",
+        "label": "Shipping Message Threshold",
+        "default": 0
+      }
+    ]
+  }
+{% endschema %}

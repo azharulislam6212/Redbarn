@@ -1,0 +1,130 @@
+{{ 'section-hero-banner.css' | asset_url | stylesheet_tag }}
+
+<section class="hero-banner">
+  <div class="hero-banner__img-wrap">
+    {% if section.settings.image != blank %}
+      {% render 'smart-image', image: section.settings.image, image_mob: section.settings.image_mobile %}
+    {% else %}
+      {{ 'image' | placeholder_svg_tag: 'placeholder-svg hero-placeholder' }}
+    {% endif %}
+  </div>
+  <div class="absolute-content">
+    <div class="container inner__container">
+      <div class="hero-banner__content">
+        <div class="hero-banner__review">
+          <ul>
+            <li>{% render 'start-icon' %}</li>
+            <li>{% render 'start-icon' %}</li>
+            <li>{% render 'start-icon' %}</li>
+            <li>{% render 'start-icon' %}</li>
+            <li>{% render 'start-icon' %}</li>
+            {% if section.settings.review_text != blank %}
+              <li>
+                <span>{{ section.settings.review_text }}</span>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+
+        {% if section.settings.heading != blank %}
+          <h2 class="hero-banner__title">{{ section.settings.heading }}</h2>
+        {% endif %}
+        {% if section.settings.sub_heading != blank %}
+          <h3 class="hero-banner__sub-title">{{ section.settings.sub_heading }}</h3>
+        {% endif %}
+        <ul class="hero-banner__feature-list">
+          {%- for block in section.blocks -%}
+            {% liquid
+              assign text = block.settings.text
+              assign icon = block.settings.icon
+            %}
+            <li class="hero-banner__feature-item">
+              {% if icon != blank %}
+                <img src="{{ icon | img_url:"master" }}" alt="{{icon.alt}}">
+              {% endif %}
+
+              {% if text != blank %}
+                <span> {{ text }}</span>
+              {% endif %}
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {% if section.settings.button_text != blank %}
+          <a href="{{ section.settings.button_link }}" class="hero-banner__btn btn btn--custom btn--primary">{{ section.settings.button_text }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image Mobile"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "tummy troubles?",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "sub_heading",
+      "default": "Try our NEW Gut Health & Digestion Dog Food",
+      "label": "Sub Title"
+    },
+    {
+      "type": "text",
+      "id": "review_text",
+      "default": "Rated 4.8/5 based on 629 reviews",
+      "label": "Review Text"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "All Natural"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,91 @@
+<div class='custom_page_template'>
+  {{page.content}}
+
+  <section class="contact-info">
+    <div class="container">
+      <div class="custom_row">
+        <div class="col-12 col-md-5 c-details">
+
+          {% if section.settings.details != blank %}
+          {{ section.settings.details }}
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-7 c-form">
+          <div role="form" class="wpcf7" id="wpcf7-f6-o1" lang="en-US" dir="ltr">
+
+            {% form 'contact' %}
+
+            {% if form.posted_successfully? %}
+            <div class="success successForm feedback">
+              <p>{{ 'contact.form.post_success' | t }}</p>
+            </div>
+            {% endif %}
+
+            {% if form.errors %}
+            <div class="errors errorForm feedback">
+              <p>{{ 'contact.form.post_error' | t }} {{ 'contact.form.post_error_msg1' | t }} {{ form.errors | size | pluralize: 'error', 'errors' }} {{ 'contact.form.post_error_msg2' | t }}</p>
+              <ul class="unformatted">
+                {% for field in form.errors %}
+                {% if field == 'form' %}
+                <li>{{ form.errors.messages[field] }}</li>
+                {% else %}
+                <li>{{ form.errors.translated_fields[field] }} - {{ form.errors.messages[field] }}</li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+              <div class="form-label">
+                <span class="wpcf7-form-control-wrap your-name">
+                  <input type="text" required name="contact[name]" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required form-control"
+                         id="cfullname" aria-required="true" aria-invalid="false" data-empty="true"><label for="cfullname">Full Name</label></span></div>
+            </div>
+            <div class="form-group">
+              <div class="form-label"><span class="wpcf7-form-control-wrap your-email">
+                <input type="email" required name="contact[email]" value="" size="40" 
+                       class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email form-control" id="cemail" 
+                       aria-required="true" aria-invalid="false" data-empty="true"><label for="cemail">EMAIL ADDRESS</label></span></div>
+            </div>
+            <div class="form-group">
+              <div class="form-label"><span class="wpcf7-form-control-wrap your-subject">
+                <input type="text" required name="contact[subject]" value="" size="40" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required form-control" 
+                       id="csubject" aria-required="true" aria-invalid="false" data-empty="true"><label for="csubject">SUBJECT</label></span></div>
+            </div>
+            <div class="form-group">
+              <div class="form-label"><span class="wpcf7-form-control-wrap your-message">
+                <textarea name="contact[body]" required cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea wpcf7-validates-as-required form-control"
+                          id="cmessage" aria-required="true" aria-invalid="false" data-empty="true"></textarea><label for="cmessage">MESSAGE</label></span></div>
+            </div>
+            <div class="form-btn ">
+              <input type="submit" id="contactFormSubmit" value="Send" class="wpcf7-form-control wpcf7-submit btn btn-primary btn-block">
+              <span class="ajax-loader"></span>
+            </div>
+
+
+            {% endform %}
+
+          </div>	
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+
+
+
+{% schema %}
+{
+"name": "Contact page",
+"settings": [
+{
+	"type":"html",
+	"id":"details",
+	"label":"Contact Details"
+}
+]
+}
+{% endschema %}

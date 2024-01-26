@@ -1,0 +1,63 @@
+<div data-section-id="{{ section.id }}" data-section-type="blog-page" class="new-blog-template-section clearfix">
+
+  <div class="container">
+      <h1>{{blog.title}}</h1>
+      {% include "breadcrumbs" %}
+  </div>
+
+    <div class="container">
+
+    {% paginate blog.articles by 12 %}
+
+
+    <div class="blogs-list news-blog-list">
+
+
+      {% for article in blog.articles  %}
+
+      <div class='article-item three'>
+
+        {%- capture id -%}'article-{{article.id}}-image'{%- endcapture -%}
+        {%- assign img_src = article.image -%}                             
+        {%- assign size = 180 -%}
+
+      
+      
+       
+        <div class='article_info'>
+          <h4><a href='{{article.url}}'>{{article.title}}</a></h4>
+          <h6> {{ article.published_at | date: settings.month_day_year  }} </h6>
+          <div class='article_excerpt'>
+            {% if article.excerpt != blank %}
+            {{ article.excerpt | strip_html }}
+            {% else %}
+            {{ article.content | strip_html | truncatewords: 20 }}
+            {% endif %} 
+          </div>
+        </div>
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+    {% if paginate.pages > 1 %}
+    <div class="pagination">
+      {% include 'pagination' %}
+    </div>
+    {% endif %}
+
+    {% endpaginate %}
+  </div>
+
+
+
+{% schema %}
+  {
+    "name": "Blog",
+    "settings": [
+
+	]
+  }
+{% endschema %}
+

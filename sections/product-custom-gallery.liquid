@@ -1,0 +1,47 @@
+{% if section.settings.enable %}
+<div class='custom-gallery'>
+
+  <div class='container'>
+    <div class='custom-gallery-wrapper'>
+      {% for block in section.blocks %}
+      <div class='gallery-img'>
+        {%- capture id -%}'custom-gallery-image-{{block.id}}'{%- endcapture -%}
+        {%- assign img_src = block.settings.image -%}                             
+        {%- assign size = 180 -%}
+
+        {% include 'image-load' %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+
+{% schema %}
+  {
+    "name": "Gallery",
+    "settings": [
+{
+		"type":"checkbox",
+		"id":"enable",
+		"label":"Enable Section"
+		}
+	],
+	"blocks": [
+	{
+        "type": "image",
+        "name": "Image",
+        "settings": [
+		{
+		"type":"image_picker",
+		"id":"image",
+		"label":"Image"
+		}
+		]
+		}
+	]
+  }
+{% endschema %}
+

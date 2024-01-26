@@ -1,0 +1,27 @@
+.template-cart .cart-page .shipping-message {
+    background-color: #fff;
+    border: 1px solid #767676;
+    margin-bottom: 2rem;
+    padding: 1rem;
+}
+
+.template-cart .cart-page .shipping-message .hide-message {
+    display: none;
+}
+
+.template-cart .cart-page .shipping-message p {
+    color: #b3282d;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.template-cart .cart-page .shipping-message .shipping-threshold-value {
+    display: none !important;
+}
+
+.template-cart .button__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}

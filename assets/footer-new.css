@@ -1,0 +1,407 @@
+.footer-top {
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding: 76px 0 100px;
+  overflow: hidden;
+}
+
+.newslatter-flex {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.newslatter-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.newslatter-form {
+  flex: 1;
+}
+
+.social-media {
+  text-align: right;
+}
+
+.newslatter-heading {
+  color: var(--www-redbarn-com-nero, #fff);
+  font-family: ChunkFive;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 36px; /* 112.5% */
+  letter-spacing: -0.75px;
+  margin-bottom: 10px;
+}
+
+.newslatter-header p {
+  color: var(--www-redbarn-com-nero, #fff);
+  font-family: Heebo;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 18px; /* 128.571% */
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.newslatter-form .go1085473758.go1085473758.go1085473758:focus {
+  box-shadow: none !important;
+}
+.newslatter-form .go1085473758.go1085473758.go1085473758:hover {
+  border-color: var(--www-redbarn-com-tall-poppy, #b3282d) !important;
+}
+
+.newslatter-form button.go3894874857 {
+  border: 1px solid var(--www-redbarn-com-tall-poppy, #b3282d) !important;
+  background-color: var(--www-redbarn-com-tall-poppy, #b3282d) !important;
+  color: var(--www-redbarn-com-nero, #fff) !important;
+  text-align: center;
+  font-family: Heebo !important;
+  font-size: 16px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px; /* 100% */
+}
+.newslatter-form .go3894874857.go3894874857.go3894874857:focus {
+    box-shadow: 0 0 5px #B3282D !important;
+}
+
+.socials-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.socials-list ul > li {
+  padding: 0;
+  margin: 0;
+}
+
+.socials-list ul > li > a {
+  text-decoration: none;
+  display: flex;
+  width: 42px;
+  height: 42px;
+  color: #fff;
+  padding: 13px 13.02px 13px 12.98px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 21px;
+  border: 2px solid var(--www-redbarn-com-cararra-30, rgba(236, 234, 228, 0.3));
+  transition: all .3s ease;
+}
+
+.socials-list .icon-facebook:before,
+.socials-list .icon-twitter:before,
+.socials-list .icon-pinterest:before,
+.socials-list .icon-instagram:before{
+    color: #fff;
+}
+
+.socials-list ul > li > a:hover{
+    background-color: #b3282d;
+    transition: all .3s ease;
+    border-color: #b3282d;
+}
+
+@media screen and (max-width: 1024px) {
+    .newslatter-heading {
+        font-size: 25px;
+        line-height: 30px;
+    }
+}
+@media screen and (max-width: 991px) {
+
+    .newslatter-flex {
+        gap: 20px;
+        flex-direction: column;
+        width: 100%;
+    }
+    .newslatter-wrapper {
+        gap: 30px;
+        flex-direction: column;
+    }
+
+    .newslatter-header{
+        text-align: center;
+    }
+    .newslatter-form {
+        flex: 1;
+        width: 100%;
+    }
+
+}
+@media screen and (max-width: 768px) {
+    .newslatter-flex {
+        gap: 20px;
+        flex-direction: column;
+    }
+    .newslatter-wrapper {
+        gap: 30px;
+        flex-direction: column;
+    }
+    .newslatter-form {
+        width: 100%;
+    }
+    .newslatter-header{
+        text-align: center;
+    }
+
+    .newslatter-heading{
+        font-size: 25px;
+        line-height: 30px;
+    }
+    .social-media {
+        text-align: center;
+    }
+
+    .newslatter-form button.go3894874857 {
+        border: 1px solid var(--www-redbarn-com-tall-poppy, #0073ba) !important;
+        background-color: var(--www-redbarn-com-tall-poppy, #0073ba) !important;
+
+    }
+
+}
+
+
+/* footer menu */
+
+
+.footer-block__wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: 20px;
+}
+
+.footer-block__column{
+    flex: 0 0 23.7%;
+}
+
+.footer-block__column-full{
+    flex: 0 0 100%;
+}
+
+.footer-block__menu-title, .footer-block__title{
+    color: var(--www-redbarn-com-nero, #FFF);
+    font-family: ChunkFive;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 30px; /* 125% */
+    letter-spacing: -0.75px;
+    text-transform: capitalize;
+    margin-bottom: 6px;
+    }
+
+    .footer-menu{
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer-menu>li{
+     margin: 0;
+     padding: 0;
+    }
+
+    .footer-menu>li>a{
+        color: var(--www-redbarn-com-nero, #FFF);
+        font-family: Heebo;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 28px; /* 233.333% */
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: 0.2s all ease;
+    }
+    .footer-menu>li>a:hover{
+        color: #b3282d;
+        transition: 0.2s all ease;
+    }
+
+    .footer-block__menu{
+        margin-bottom: 26px;
+    }
+
+    .footer-block__text{
+        color: var(--www-redbarn-com-nero, #FFF);
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        font-style: normal;
+        line-height: 40px;
+        letter-spacing: 0.5px;
+        text-transform: capitalize;
+        max-width: 500px;
+        margin: 0 0 0 auto;
+    }
+    .footer-block__text p{
+        font-family: 'Inter', sans-serif;
+        font-size: 15px;
+        margin-bottom: 0;
+    }
+
+    .footer-block__text strong{
+        font-weight: 700;
+    }
+
+
+    .footer-block__text a{
+                color: var(--www-redbarn-com-nero, #FFF);
+                text-decoration: underline;
+    }
+    .footer-block__text a:hover{
+        color: #b3282d;
+    }
+
+
+    @media screen and (max-width:1240px) {
+        .footer-block__column {
+            flex: 0 0 23.7%;
+        }
+    }
+
+    @media screen and (max-width:1166px) {
+        .footer-block__column {
+            flex: 0 0 23.5%;
+        }
+    }
+
+    @media screen and (max-width:1199px) {
+        .footer-block__column {
+            flex: 0 0 23.4%;
+        }
+    }
+
+    @media screen and (max-width:991px) {
+        .footer-block__column {
+            flex: 0 0 48.7%;
+        }
+    }
+
+    @media screen and (max-width:768px) {
+        .footer-block__column {
+            flex: 0 0 46.7%;
+        }
+
+        .footer-block__menu-title, .footer-block__title{
+            font-size: 22px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 27px; /* 122.727% */
+            letter-spacing: -0.75px;
+        }
+        .footer-block__menu {
+            margin-bottom: 30px;
+        }
+        .footer-block__column:first-child{
+            order: 1;
+        }
+        .footer-block__column:nth-child(2){
+            order: 3;
+        }
+        .footer-block__column:nth-child(3){
+            order: 2;
+        }
+        .footer-block__column:nth-child(4){
+            order: 4;
+        }
+        .footer-block__column-full{
+            order: 5;
+        }
+
+        .footer-block__wrapper {
+            gap: 0 20px;
+        }
+    }
+
+
+
+    /* footer-bottom__content */
+
+    .footer-bottom{
+        padding: 15px 0 15px 0;
+        position: relative;
+    }
+
+    .footer-bottom__content{
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .footer-bottom__content p{
+        color: var(--www-redbarn-com-kabul, #52463E);
+        font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 20px; /* 142.857% */
+     margin: 0;
+    }
+
+    .footer-bottom__menu {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .footer-bottom__menu a{
+        color: var(--www-redbarn-com-tall-poppy, #B3282D);
+        font-family: Heebo;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 20px; /* 142.857% */
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-decoration: none;
+        position: relative;
+    }
+
+    .footer-bottom__menu a::before{
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 0;
+        height: 100%;
+        width: 1px;
+        background-color: #52463E;
+        color: var(--www-redbarn-com-kabul, #52463E);
+    }
+
+    .footer-bottom__menu a:first-child::before{
+        display: none;
+    }
+
+
+    @media screen and (max-width:768px) {
+
+        .footer-bottom__content {
+            gap: 20px;
+            flex-direction: column;
+        }
+
+        .footer-bottom__content p{
+            text-align: center;
+        }
+
+        .footer-top{
+            padding: 76px 0 40px;
+        }
+
+
+    }

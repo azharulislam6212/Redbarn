@@ -1,0 +1,92 @@
+<span class="breadcrumbs {% unless section.settings.include_pagination %}negative-left {% endunless %}{% if section.settings.include_pagination and section.settings.layout == 'form' %}negative-left {% endif %}{% unless section.settings.include_sort %}negative-right {% endunless %}{% if section.settings.include_pagination == false and section.settings.include_sort == false %}text-center{% elsif section.settings.include_pagination == false or section.settings.layout == 'form' %}text-left{% elsif section.settings.include_sort == false %}text-right{% else %}text-center{% endif %}" aria-label="{{ 'general.breadcrumbs.breadcrumbs' | t }}" role="navigation">
+  <span class="form">
+    <span class="breadcrumb_text">
+
+      <span><a href="{{ shop.url }}" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a></span> 
+
+      {% if finalCt > 0 %}
+
+      <span class="separator" aria-hidden="true"></span>
+      <span>
+        {% if current_tags %}
+        <a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title }}</a>
+        {% else %}
+        <span class="active">{{ collection.title }}</span>
+        {% endif %}
+      </span>       
+
+      {% else %}
+
+      {%- for link in linklists[settings.menu].links -%}
+      {%- if link.active or link.child_active or sub_link.child_active -%}
+      <span class="separator" aria-hidden="true"></span>
+      <span>
+        {%- if current_tags or link.child_active -%}
+        <a href="{{ link.url }}" title="{{ link.title | escape }}">{{ link.title }}</a>
+        {%- else -%}
+        <span class="active">{{ link.title }}</span>
+        {%- endif -%}
+      </span>
+      {%- if link.links != blank -%}
+      {%- for sub_link in link.links -%}
+      {%- if sub_link.active or sub_link.child_active or sub_sub_link.child_active -%}
+      <span class="separator" aria-hidden="true"></span>
+      <span>
+        {%- if current_tags or sub_link.child_active -%}
+        <a href="{{ sub_link.url }}" title="{{ sub_link.title | escape }}">{{ sub_link.title }}</a>
+        {%- else -%}
+        <span class="active">{{ sub_link.title }}</span>
+        {%- endif -%}
+      </span>
+      {%- if sub_link.links != blank -%}
+      {%- for sub_sub_link in sub_link.links -%}
+      {%- if sub_sub_link.active -%}
+      <span class="separator" aria-hidden="true"></span>              
+      <span >
+        {%- if current_tags -%}
+        <a href="{{ sub_sub_link.url }}" title="{{ sub_sub_link.title | escape }}">{{ sub_sub_link.title }}</a>                        
+        {%- else -%}
+        <span class="active">{{ sub_sub_link.title }}</span>
+        {%- endif -%}
+      </span>       
+      {%- assign current = true -%}
+      {%- endif -%}
+      {%- endfor -%}
+      {%- endif -%}
+      {%- assign current = true -%}
+      {%- endif -%}
+      {%- endfor -%}
+      {%- endif -%}
+      {%- assign current = true -%}
+      {%- endif -%}
+      {%- endfor -%}
+
+      {%- unless current -%}
+      <span class="separator" aria-hidden="true"></span>
+      <span>
+        {%- if current_tags -%}
+        <a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title }}</a>
+        {%- else -%}
+        <span class="active">{{ collection.title }}</span>
+        {%- endif -%}
+      </span>       
+      {%- endunless -%}
+
+      {%- endif -%}
+
+      {%-if current_tags -%}
+      {%- for tag in current_tags -%}
+      <span class="separator" aria-hidden="true"></span>
+      <span>
+      {%- if forloop.last -%}
+      <span class="active">{{ tag | split: '_' | last }}</span>    
+      {%- else -%}
+      <span>{{ tag | split: '_' | last | link_to_tag: tag }}</span>
+      {%- endif -%}  
+      </span>
+      {%- endfor -%}
+      {%- endif -%}
+
+    </span>
+  </span>
+</span>

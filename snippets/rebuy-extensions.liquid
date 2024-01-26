@@ -1,0 +1,8 @@
+<!-- Gift with Purchase --> <div data-rebuy-id="36841"></div>
+{% if product %}
+  <!-- Popup Upsell --> <div data-rebuy-id="43809" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+  <!-- Pdp Carousel --> <div data-rebuy-id="43808" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+  <!-- Cross-sell Popup --> <div data-rebuy-id="59593" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+{% endif %}
+
+<script async src="https://cdn.rebuyengine.com/onsite/js/rebuy.js?shop={{ shop.permanent_domain }}"></script>

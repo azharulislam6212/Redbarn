@@ -1,0 +1,25 @@
+{
+  "name": "Header",
+  "type": "header",
+  "sections": {
+    "shipping-notification": {
+      "type": "shipping-notification",
+      "settings": {
+        "text": "<p>Free shipping for orders over 49!*<\/p>",
+        "location_link": "shopify:\/\/pages\/privacy-policy"
+      }
+    },
+    "header-new": {
+      "type": "header-new",
+      "settings": {
+        "logo": "shopify:\/\/shop_images\/logo_120x_png.png",
+        "logo_max_width": 120,
+        "menu": "main-menu"
+      }
+    }
+  },
+  "order": [
+    "shipping-notification",
+    "header-new"
+  ]
+}

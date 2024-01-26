@@ -1,0 +1,128 @@
+{{ 'section-customer-review.css' | asset_url | stylesheet_tag }}
+
+
+<section class="customer-review">
+    <div class="container">
+        <h2 class="customer-review__section-heading">SEE WHAT OUR CUSTOMERS ARE SAYING</h2>
+    </div>
+
+    <div class="customer-review__list customer-review__slider">
+
+      {% for block in section.blocks %}
+
+        <div class="customer-review__item" {{ block.shopify_attributes }}>
+
+            <div class="customer-review__box">
+        
+                <div class="customer-review__imge-wrap">
+                  {% if block.settings.image %}
+                  <img src="{{block.settings.image | img_url: "master"}}" alt="{{block.settings.image.alt }}">
+                  {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg hero-placeholder' }}
+                {% endif %}
+                </div>
+
+                <div class="customer-review__content-box">
+
+                  {% if block.settings.authore != blank %}
+                    <h3 class="customer-review__author">{{block.settings.authore  }}</h3>
+                  {% endif %}
+
+                  {% if block.settings.varified %}
+
+                    <div class="customer-review__varify">
+                       <span><svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.5 16C12.9183 16 16.5 12.4183 16.5 8C16.5 3.58172 12.9183 0 8.5 0C4.08172 0 0.5 3.58172 0.5 8C0.5 12.4183 4.08172 16 8.5 16Z" fill="#FFB546"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.79038 9.38812L6.59704 11.5561C6.80482 11.8054 7.1171 11.9435 7.44133 11.9292C7.76562 11.9149 8.06462 11.7502 8.24974 11.4835L12.2645 5.70222C12.5918 5.23089 12.4749 4.58255 12.0036 4.25523C11.5323 3.92791 10.8839 4.0448 10.5566 4.51614L7.32047 9.17612L6.38781 8.05689C6.02046 7.61608 5.36431 7.55647 4.92351 7.92382C4.48264 8.29117 4.42303 8.94731 4.79038 9.38812Z" fill="white"/>
+                        </svg>
+                        </span>
+                        <span>Verified buyer</span>
+                    </div>
+                  {% endif %}
+                    {% if block.settings.heading != blank %}
+                      <h2 class="customer-review__heading">{{block.settings.heading  }}</h2>
+                    {% endif %}
+  
+               
+
+                    <div class="customer-review__text">
+
+                      {% if block.settings.text != blank %}
+                          {{block.settings.text }}
+                      {% endif %}
+         
+                    </div>
+
+                    <div class="customer-review__rating">
+                       {% render 'star-ratting-icon' %}
+                    </div>
+
+                    
+                
+                </div>
+            
+            
+            </div>
+        
+        </div>
+      {% endfor %}
+    </div>
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Customer Reveiw",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "SEE WHAT OUR CUSTOMERS ARE SAYING"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "I asked the dogs. They LOVE them!"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>The dogs wait to get one in the  morning. They prefer them to ANY of the treats we’ve collected to reward them.</p>"
+        },
+        {
+            "type": "text",
+            "id": "authore",
+            "label": "Author Name",
+            "default": "- B. Baskets"
+        },
+        {
+          "type": "checkbox",
+          "id": "varified",
+          "label": "Enable Varified",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customer Reveiw"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,37 @@
+{% comment %} Removed since using LQIPs effectively doubles the number of image-based requests and unecessarily inflates both requests and page size:
+{%- assign lazy_size = '1x' -%}
+{% endcomment %}
+{% include 'image-style' with media: img_src, width: size, height: size, small_style: true, img_id: id %}
+<img id="image-{{ id }}"
+     class="{% if product_gallery %} slide_fancybox {% endif %} lazywidth lazyload no-js-hide img-align {% if img_src.aspect_ratio > 1 %}landscape{% elsif img_src.aspect_ratio < 1 %}vertical{% else %}square{% endif %}"
+     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+     height="{{ size | divided_by: img_src.aspect_ratio }}"
+     width="{{ size }}"
+     {% if img_src contains '.jpg' %}
+     data-srcset="{{ img_src | img_url: '2000x2000', format: 'pjpg' }} 2000w,
+                  {{ img_src | img_url: '1800x1800', format: 'pjpg' }} 1800w,
+                  {{ img_src | img_url: '1500x1500', format: 'pjpg' }} 1500w,
+                  {{ img_src | img_url: '1200x1200', format: 'pjpg' }} 1200w,
+                  {{ img_src | img_url: '960x960', format: 'pjpg' }} 960w,
+                  {{ img_src | img_url: '800x800', format: 'pjpg' }} 800w,
+                  {{ img_src | img_url: '600x600', format: 'pjpg' }} 600w,
+                  {{ img_src | img_url: '450x450', format: 'pjpg' }} 450w"
+     {% else %}
+     data-srcset="{{ img_src | img_url: '2000x2000' }} 2000w,
+                  {{ img_src | img_url: '1800x1800' }} 1800w,
+                  {{ img_src | img_url: '1500x1500' }} 1500w,
+                  {{ img_src | img_url: '1200x1200' }} 1200w,
+                  {{ img_src | img_url: '960x960' }} 960w,
+                  {{ img_src | img_url: '800x800' }} 800w,
+                  {{ img_src | img_url: '600x600' }} 600w,
+                  {{ img_src | img_url: '450x450' }} 450w"
+     {% endif %}
+     {% unless img_src == product.featured_image %}data-expand="-22"{% endunless %}
+     data-image
+     {% if product_gallery %}
+     data-fancybox="images"
+     href="{{ media | img_url:'2000x'}}"
+     {% endif %}
+     
+     alt="{{ alt }}">
+<noscript>{%- assign size = size | append: 'x' -%}<img class="lazywidth{% if settings.title_align %} img-align {% if img_src.aspect_ratio > 1 %}landscape{% elsif img_src.aspect_ratio < 1 %}vertical{% else %}square{% endif %}{% endif %} no-js hidden" src="{{ img_src | img_url: size }}" alt="{{ alt }}"></noscript>

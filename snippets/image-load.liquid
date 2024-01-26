@@ -1,0 +1,27 @@
+{% comment %} Removed since using LQIPs effectively doubles the number of image-based requests and unecessarily inflates both requests and page size:
+{%- assign lazy_size = '1x' -%}
+{% endcomment %}
+{% if img_src contains '.jpg' %}
+{%- assign img_url = img_src | img_url: '1x1', format: 'pjpg' | replace: '_1x1.', '_{width}x.' -%}
+{% else %}
+{%- assign img_url = img_src | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+{% endif %}
+{% include 'image-style' with media: img_src, width: size, height: size, small_style: true, img_id: id %}
+<img id="image-{{ id }}"
+     class="{% if product_gallery %} slide_fancybox {% endif %} lazywidth lazyload no-js-hide img-align {% if img_src.aspect_ratio > 1 %}landscape{% elsif img_src.aspect_ratio < 1 %}vertical{% else %}square{% endif %} {{ custom_class }}"
+     src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+     height="{{ size | divided_by: img_src.aspect_ratio }}"
+     width="{{ size }}"
+     data-src="{{ img_url }}"
+     data-widths="[{% if datawidth == false %}{{ size | times: 2 }}{% else %}200, 220, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900{% endif %}]"
+     data-aspectratio="{{ img_src.aspect_ratio }}"
+     data-sizes="auto"
+     data-expand="-22"
+     data-image
+     {% if product_gallery %}
+     data-fancybox="images"
+     href="{{ media | img_url:'2000x'}}"
+     {% endif %}
+     
+     alt="{% if alt != '' %}{{ alt }}{% elsif img_src.alt != '' %}{{ img_src.alt }}{% else %}Redbarn Pet Products{% endif %}">
+<noscript>{%- assign size = size | append: 'x' -%}<img class="lazywidth{% if settings.title_align %} img-align {% if img_src.aspect_ratio > 1 %}landscape{% elsif img_src.aspect_ratio < 1 %}vertical{% else %}square{% endif %}{% endif %} no-js hidden" src="{{ img_src | img_url: size }}" alt=" "></noscript>

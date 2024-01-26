@@ -1,0 +1,18 @@
+{%- capture currency_symbol -%}{% for currency in shop.enabled_currencies %}{% if currency == cart.currency %}{{ currency.symbol }}{% endif %}{% endfor %}{%- endcapture -%}
+{%- capture currencies_symbol - %}{{ currency_symbol }}{{ currency_symbol }}{{ currency_symbol }}{{ currency_symbol }}{%- endcapture - %}
+<div class="table-cell sort right">
+  <span class="drop-down sort form">
+    <select class="sortBy">
+      <option value="manual"{% if collection.default_sort_by == 'manual' and collection.sort_by == '' %} selected{% elsif collection.sort_by == 'manual' %} selected{% endif %}>{{ 'collections.sorting.featured' | t }}</option>
+      <option value="best-selling"{% if collection.default_sort_by == 'best-selling' and collection.sort_by == '' %} selected{% elsif collection.sort_by == 'best-selling' %} selected{% endif %}>{{ 'collections.sorting.best_selling' | t }}</option>
+      {% unless section.settings.layout == 'form' %}
+      <option value="price-ascending"{% if collection.default_sort_by == 'price-ascending' and collection.sort_by == '' %} selected{% elsif collection.sort_by == 'price-ascending' %} selected{% endif %}>{{ 'collections.sorting.price_ascending_html' | t: currency: currency_symbol, currencies: currencies_symbol }}</option>
+      <option value="price-descending"{% if collection.default_sort_by == 'price-descending' and collection.sort_by == '' %} selected{% elsif collection.sort_by == 'price-descending' %} selected{% endif %}>{{ 'collections.sorting.price_descending_html' | t: currency: currency_symbol, currencies: currencies_symbol }}</option>
+      {% endunless %}
+      <option value="title-ascending"{% if collection.default_sort_by == 'title-ascending' and collection.sort_by == '' %} selected{% elsif collection.sort_by == 'title-ascending' %} selected{% endif %}>{{ 'collections.sorting.az' | t }}</option>
+      <option value="title-descending"{% if collection.default_sort_by == 'title-descending' and collection.sort_by == '' %} selected{% elsif collection.sort_by == 'title-descending' %} selected{% endif %}>{{ 'collections.sorting.za' | t }}</option>
+      <option value="created-ascending"{% if collection.default_sort_by == 'created-ascending' and collection.sort_by == '' %} selected{% elsif collection.sort_by == 'created-ascending' %} selected{% endif %}>{{ 'collections.sorting.date_ascending' | t }}</option>
+      <option value="created-descending"{% if collection.default_sort_by == 'created-descending' and collection.sort_by == '' %} selected{% elsif collection.sort_by == 'created-descending' %} selected{% endif %}>{{ 'collections.sorting.date_descending' | t }}</option>
+    </select>
+  </span>
+</div>

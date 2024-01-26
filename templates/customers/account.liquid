@@ -1,0 +1,58 @@
+<div class="container clearfix">
+
+  <div class="twelve">
+    <h1>{{ 'customer.account.title' | t }}</h1>
+    {% include "breadcrumbs" %}
+  </div>
+
+  <div class="five account-user bottompad-section">  
+    <div class="user-name">
+      <h3>{{ customer.name }}</h3>
+      <!-- Begin Recharge code -->
+<p><a href="/tools/recurring/login/">Manage Subscriptions</a></p>
+<!-- End Recharge code -->
+
+
+
+
+      <div class="clearfix">{% form 'recover_customer_password' %}{% include 'form-errors-custom' %}<a href="{{ routes.account_logout_url }}" class="btn auto-width bottompad-half">{{ 'layout.customer.log_out' | t }}</a>&nbsp;&nbsp;<input type="email" name="email" id="recover-email" class="hidden" value="{{ customer.email }}" /><button class="btn outline auto-width bottompad-half" type="submit">{{ 'customer.recover_password.title' | t }}</button>{% endform %}</div>
+      <p>{{ customer.email }}<span class="separator" aria-hidden="true"></span><small class="emailupdate"><a href="mailto:{{ shop.email }}?Subject=E-Mail%20Update" target="_blank">{{ 'customer.account.email_update' | t }}</a></small></p>
+    </div>
+
+    {% if customer.default_address != blank %}
+    <div class="user-name">
+      {{ customer.default_address | format_address }}
+    </div>
+    {% endif %}
+
+    <a class="btn primary outline auto-width" href="{{ routes.account_addresses_url }}" title="{{ 'customer.account.view_addresses' | t }}">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a>
+
+    <a  class="btn secondary outline auto-width"href="/tools/recurring/login">Subscriptions</a>
+
+    
+  </div>
+
+  <div class="six right account-table bottompad-section">
+    <h3>{{ 'customer.orders.title' | t }}</h3>
+    {% if customer.orders.size > 0 %}
+    {% paginate customer.orders by 5 %}
+    {% for order in customer.orders %}
+    <div class="row summary{% if forloop.last %} last{% endif %}">
+      <h4>{{ order.name | link_to: order.customer_url }}{% if order.cancelled %}: {{ 'customer.order.cancelled' | t }}{% endif %}</h4>
+      <p class="capitalize"><small>{{ 'customer.orders.date' | t }}: {{ order.created_at | date: settings.month_day_year }}<span class="separator" aria-hidden="true"></span>{{ 'customer.orders.total' | t }}: {{ order.total_price | money }}<span class="separator" aria-hidden="true"></span>{{ 'customer.orders.payment_status' | t }}: <span><strong>{{ order.financial_status_label }}</strong></span><span class="separator" aria-hidden="true"></span>{{ 'customer.orders.fulfillment_status' | t }}: <span class="captitalize"><strong>{{ order.fulfillment_status_label }}</strong></span></small></p>
+      <a class="btn primary outline auto-width" href="{{ order.customer_url }}" title="{{ 'customer.order.title' | t }} {{ order.name }}">{{ 'customer.orders.review' | t }}</a>
+    </div>
+    {% endfor %}
+    {% if paginate.pages > 1 %}
+    <div class="pagination">
+      <div>{% include 'pagination' %}</div>
+    </div>
+    {% endif %}
+    {% endpaginate %}
+    {% else %}
+    <p>{{ 'customer.orders.none' | t }}</p>
+    {% endif %}
+    
+  </div>    
+
+</div>

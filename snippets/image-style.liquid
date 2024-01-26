@@ -1,0 +1,55 @@
+{%- assign container_aspect_ratio = width | times: 1.0 | divided_by: height -%}
+<style>
+  {% if media.aspect_ratio < 1.0 %}
+  {%- assign maximum_width = height | times: media.aspect_ratio -%}
+  {% if media.height <= height %}
+  {%- assign maximum_height = media.height -%}
+  {%- assign maximum_width = media.width -%}
+  {% else %}
+  {%- assign maximum_height = height -%}
+  {% endif %}
+  {% elsif media.aspect_ratio < container_aspect_ratio %}
+  {%- assign maximum_height = height | divided_by: media.aspect_ratio -%}
+  {% if media.height <= height %}
+  {%- assign maximum_height = media.height -%}
+  {%- assign maximum_width = media.width -%}
+  {% else %}
+  {%- assign maximum_height = height -%}
+  {%- assign maximum_width = height | times: media.aspect_ratio -%}
+  {% endif %}
+  {% else %}
+  {%- assign maximum_height = height | divided_by: media.aspect_ratio -%}
+  {% if media.width <= width %}
+  {%- assign maximum_height = media.height -%}
+  {%- assign maximum_width = media.width -%}
+  {% else %}
+  {%- assign maximum_width = width -%}
+  {%- assign maximum_height = maximum_width | divided_by: media.aspect_ratio -%}
+  {% endif %}
+  {% endif %}
+
+  {% if small_style %}@media screen and (min-width: 600px) { {% endif %}
+    #image-{{ img_id }} {
+      max-width: {{ maximum_width }}px;
+      max-height: {{ maximum_height }}px;
+    }
+    {% if small_style %} } {% endif %}
+
+  {% if small_style %}
+  {% if media.aspect_ratio < 1 %}
+  {%- assign maximum_width = 600 | times: media.aspect_ratio -%}
+  {% else %}
+  {% if media.width < 600 %}
+  {%- assign maximum_width = media.width -%}
+  {% else %}
+  {%- assign maximum_width = 600 -%}
+  {% endif %}
+  {% endif %}
+  @media screen and (max-width: 599px) {
+    #image-{{ img_id }} {
+      max-width: {{ maximum_width }}px;
+      max-height: 600px;
+    }
+  }
+  {% endif %}
+</style>

@@ -1,0 +1,81 @@
+{{ 'section-product-checkout.css' | asset_url | stylesheet_tag }}
+
+<section class="product-checkout-wrapper">
+  <div class="container">
+    <div class="product-checkout__list">
+      {% for block in section.blocks %}
+      <div class="product-checkout__list-item" {{ block.shopify_attributes }}>
+        <div class="product-checkout__flex">
+          {% if block.settings.heading != blank %}
+            <h2 class="product-checkout__heading product-checkout__heading-moblie">{{block.settings.heading}}</h2>
+          {% endif %}
+          <div class="product-checkout__image-wrap">
+            {% if block.settings.image != blank %}
+          
+              <img src="{{block.settings.image | img_url: "master"}}" alt="{{block.settings.image.alt }}">
+            {% else %}
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg hero-placeholder' }}
+            {% endif %}
+          </div>
+          <div class="product-checkout__content-wrap">
+            {% if block.settings.heading != blank %}
+            <h2 class="product-checkout__heading product-checkout__heading-desktop">{{block.settings.heading}}</h2>
+          {% endif %}
+            {% if block.settings.button_text != blank %}
+              <a href="{{ block.settings.button_link }}" class="product-checkout__btn btn btn--custom btn--primary">{{ block.settings.button_text }}</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+  {% endfor %}
+  {% comment %} product-checkout__list-item {% endcomment %}
+    </div>
+
+  </div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "Product Checkout",
+  "settings": [
+  
+  ],
+  "blocks": [
+    {
+      "type": "product_checkout",
+      "name": "Product Checkout",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "check out our New products"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Checkout"
+    }
+  ]
+}
+{% endschema %}

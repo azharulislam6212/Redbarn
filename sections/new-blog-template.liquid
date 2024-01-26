@@ -1,0 +1,311 @@
+<div data-section-id="{{ section.id }}" data-section-type="blog-page" class="new-blog-template-section clearfix">
+
+
+  {% assign show_featured_articles = section.settings.show_featured_articles %}
+  {% assign featured_article_1 = section.settings.featured_article_1 %}
+  {% assign featured_article_2 = section.settings.featured_article_2 %}
+  {% assign featured_article_3 = section.settings.featured_article_3 %}
+
+  
+  <div class="featured-blogs">
+    <div class="container">
+      <h1>{{blog.title}}</h1>
+       {% include "breadcrumbs" %} 
+      <div class='row_block'>
+          {% assign first_article = blog.articles[0] %}
+        
+        {% if show_featured_articles and featured_article_1 != blank %}
+        {% assign first_article = articles[featured_article_1] %}
+        {% endif %}
+        
+          {%- capture id -%}'first_article-image'{%- endcapture -%}
+          {%- assign img_src = first_article.image -%}                             
+          {%- assign size = 180 -%}
+        
+        
+        
+          <div class='featured-blog'>
+            {% if img_src != blank %}
+            <span class="img-box-blog">
+              <a href='{{first_article.url}}'>
+                {% include 'image-load' %}
+              </a>
+            </span>
+            {% endif %}
+            <div class='featured-content'>
+              <h2><a href='{{first_article.url}}'>{{first_article.title}}</a></h2>
+              <h6> {{ first_article.published_at | date: settings.month_day_year  }} </h6>
+            </div>
+          </div>
+      
+        
+        {% if show_featured_articles %}
+        
+        {% if featured_article_2 != blank %}
+        
+        {% assign second_article = articles[featured_article_2] %}
+        <div class='featured-small'>
+
+          {%- capture id -%}'article-{{second_article.id}}-image'{%- endcapture -%}
+          {%- assign img_src = second_article.image -%}                             
+          {%- assign size = 180 -%}
+
+          {% if img_src != blank %}
+          <span class="img-box-blog">
+            <a href='{{second_article.url}}'>
+              {% include 'image-load' %}
+            </a>
+          </span>
+          {% endif %}
+          <div class='article_info'>
+            <h4><a href='{{second_article.url}}'>{{second_article.title}}</a></h4>
+            <h6> {{ second_article.published_at | date: settings.month_day_year  }} </h6>
+            <div class='article_excerpt'>
+              {% if second_article.excerpt != blank %}
+              {{ second_article.excerpt | strip_html }}
+              {% else %}
+              {{ second_article.content | strip_html | truncatewords: 20 }}
+              {% endif %} 
+            </div>
+          </div>
+
+        </div>
+        {% endif %}
+        
+        {% if featured_article_3 != blank %}
+        
+        {% assign third_article = articles[featured_article_3] %}
+        <div class='featured-small'>
+
+          {%- capture id -%}'article-{{third_article.id}}-image'{%- endcapture -%}
+          {%- assign img_src = third_article.image -%}                             
+          {%- assign size = 180 -%}
+
+          {% if img_src != blank %}
+          <span class="img-box-blog">
+            <a href='{{third_article.url}}'>
+              {% include 'image-load' %}
+            </a>
+          </span>
+          {% endif %}
+          <div class='article_info'>
+            <h4><a href='{{third_article.url}}'>{{third_article.title}}</a></h4>
+            <h6> {{ third_article.published_at | date: settings.month_day_year  }} </h6>
+            <div class='article_excerpt'>
+              {% if third_article.excerpt != blank %}
+              {{ third_article.excerpt | strip_html }}
+              {% else %}
+              {{ third_article.content | strip_html | truncatewords: 20 }}
+              {% endif %} 
+            </div>
+          </div>
+
+        </div>
+        {% endif %}
+        
+        {% else %}
+        
+          {% for article in blog.articles limit:3 %}
+          {% if forloop.first %}
+          {% continue %} 
+          {% endif %}
+          <div class='featured-small'>
+
+            {%- capture id -%}'article-{{article.id}}-image'{%- endcapture -%}
+            {%- assign img_src = article.image -%}                             
+            {%- assign size = 180 -%}
+
+            {% if img_src != blank %}
+            <span class="img-box-blog">
+              <a href='{{article.url}}'>
+                {% include 'image-load' %}
+              </a>
+            </span>
+            {% endif %}
+            <div class='article_info'>
+              <h4><a href='{{article.url}}'>{{article.title}}</a></h4>
+              <h6> {{ article.published_at | date: settings.month_day_year  }} </h6>
+              <div class='article_excerpt'>
+                {% if article.excerpt != blank %}
+                {{ article.excerpt | strip_html }}
+                {% else %}
+                {{ article.content | strip_html | truncatewords: 20 }}
+                {% endif %} 
+              </div>
+            </div>
+
+          </div>
+          {% endfor %}
+
+        {% endif %}
+                
+      </div>
+    </div>
+  </div>
+  <div class='page-subscribe'>
+    <div class="container">
+      <div class="row_block">
+        <div class='page-subscribe-content'>
+          <div class='food-icon'>
+          	<img src='https://cdn.shopify.com/s/files/1/0508/4767/8644/files/food-treat.svg?v=1608241618' alt="food and treat icon" />
+          </div>
+          <div class='food-text'>
+            <h3>Want To Learn About {{ blog.title }}?</h3>
+            <p>We'll share with you some of our most important content about what to feed your pet and what important ingredients to look for in pet food.</p>
+          </div>
+        </div>
+        <div class='page-subscribe-form'>
+        {% include 'newsletter' %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='recent-blog'>
+    <div class="container">
+      <div class="row_block">
+        <div class='right-category  '>
+
+          {% if blog.all_tags.size > 0 %}
+          <h6 class="blog-subTitle">
+            <span>Categories</span>
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" class="svg-inline--fa fa-chevron-down fa-w-14" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"/></svg>
+          </h6>
+          <ul id='category-list' class="category-list">
+             {% for link in linklists.blogs.links %}
+                <li>
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                </li>
+      		  {% endfor %}
+          </ul>
+          {% endif %}
+
+        </div>
+        <div class='other_articles '>
+
+
+          {% paginate blog.articles by 11 %}
+
+          {% if paginate.current_page == 1 %}
+          {% assign offset_count = 3 %}
+          {% assign all_offset_count = 4 %}
+          
+          {% assign recent_article = blog.articles[3] %}
+
+          {% if show_featured_articles %}
+          {% if featured_article_1 != blank and featured_article_2 != blank and featured_article_3 != blank %}
+          {% assign offset_count = 0 %}
+          {% assign recent_article = blog.articles[0] %}
+           {% assign all_offset_count = 1 %}
+          {% endif %}
+          {% endif %}
+          {% else %}
+          {% assign offset_count = 0 %}
+          {% assign recent_article = blog.articles[0] %}
+          {% assign all_offset_count = 1 %}
+          {% endif %}
+          
+          {% if show_featured_articles %}
+          {% for article in blog.articles %}
+          {% if article.handle == featured_article_1 and article.handle == featured_article_2 and article.handle == featured_article_3 %}
+          {% assign recent_article = article %}
+          {% break %}
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+
+
+          
+         
+          {%- capture id -%}'recent_article-image'{%- endcapture -%}
+          {%- assign img_src = recent_article.image -%}                             
+          {%- assign size = 180 -%}
+          <div class='featured-blog'>
+           
+            <span class="img-box-blog">
+              <a href='{{recent_article.url}}'>
+                {% include 'image-load' %}
+              </a>
+            </span>
+           
+            {% comment %}
+            <div class='featured-content'>
+              <h2><a href='{{recent_article.url}}'>{{recent_article.title}}</a></h2>
+              <h6> {{ recent_article.published_at | date: settings.month_day_year  }} </h6>
+            </div>
+            {% endcomment %}
+          </div>
+          <div class="blogs-list">
+            <h6 class="blog-subTitle">RECENT</h6>
+
+            {% for article in blog.articles offset:all_offset_count %}
+            
+            {% if show_featured_articles %}
+            {% if article.handle == featured_article_1 or article.handle == featured_article_2 or article.handle == featured_article_3 %}
+            {% continue %}
+            {% endif %}
+            {% endif %}
+            <div class="row_block blog-list-content">
+              <div class="img-box-blog">
+                <a href='{{article.url}}'>
+                  {%- capture id -%}'article-image'{%- endcapture -%}
+                  {%- assign img_src = article.image -%}     
+                  {% include 'image-load' %}
+                </a>
+              </div>
+              <div class='article_info'>
+                <h4><a href='{{article.url}}'>{{article.title}}</a></h4>
+                <h6> {{ article.published_at | date: settings.month_day_year  }} </h6>
+                <div class='article_excerpt'>
+                  {% if article.excerpt != blank %}
+                  {{ article.excerpt | strip_html }}
+                  {% else %}
+                  {{ article.content | strip_html | truncatewords: 20 }}
+                  {% endif %} 
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+          </div>
+           {% if paginate.pages > 1 %}
+          <div class="pagination">
+            {% include 'pagination' %}
+          </div>
+          {% endif %}
+
+          {% endpaginate %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% schema %}
+  {
+    "name": "Blog",
+    "settings": [
+		{
+		"type":"checkbox",
+		"id":"show_featured_articles",
+		"label":"Show Featured Articles"
+		},
+		{
+		"type":"article",
+		"id":"featured_article_1",
+		"label":"Featured Article 1"
+		},
+		{
+		"type":"article",
+		"id":"featured_article_2",
+		"label":"Featured Article 2"
+		},
+		{
+		"type":"article",
+		"id":"featured_article_3",
+		"label":"Featured Article 3"
+		}
+	]
+  }
+{% endschema %}

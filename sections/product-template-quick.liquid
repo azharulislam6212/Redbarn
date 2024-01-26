@@ -1,0 +1,17 @@
+<div id="product-id-{{ section.id }}"
+     data-product-id="{{ product.id }}"
+     data-section-id="{{ section.id }}"
+     data-section-type="quick-view"
+     class="product-id product-{{ section.id }} clearfix">
+  {% if product.media.size > 0 %}
+  <div class="product-images bottompad six">
+    {% include 'product-images' %}
+  </div>
+  {% endif %}
+  <div class="product-details quick-product-details text-center {% if product.media.size > 0 %}six{% else %}twelve{% endif %}">
+    <h2>{{ product.title | escape }}</h2>
+    {% include 'product-form-details' %}
+    {% include 'product-form' %}
+    <p class="additional"><a href="{{ product.url | within: collection }}">{{ 'products.general.full_details' | t }}</a></p>
+  </div>
+</div>

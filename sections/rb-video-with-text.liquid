@@ -1,0 +1,97 @@
+{{ 'video-with-text.css' | asset_url | stylesheet_tag }}
+
+<section class="video-with-text">
+
+    <div class="container">
+    
+        <div class="video-inner-wrap"> 
+         <div class="video-poster-box">
+            <div class="img-wrap">
+            {% if section.settings.image != blank %}
+                <img src="{{section.settings.image | img_url: "master"}}" alt="{{section.settings.image.alt }}">
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg hero-placeholder' }}
+              {% endif %}
+
+              {% if section.settings.video_url != blank %}
+                <a href="javascript:void(0);"
+                   class="play-btn"
+                   data-fancybox
+                   data-type="iframe"
+                   data-src="{{section.settings.video_url }}"
+                   data-target="#videoModal">
+                  <img src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/play-btn-img.png?v=1607957429" alt="Play Button">
+                </a>
+                {% endif %}
+
+
+            </div>
+        </div>
+         <div class="video-content-box">
+            {% if section.settings.heading != blank %}
+                <h2 class="video-content-box__heading">{{section.settings.heading}}</h2>
+              {% endif %}
+
+              {% if section.settings.text != blank %}
+                <div class="video-content-box__content">
+                    {{section.settings.text }}
+                </div>
+                
+              {% endif %}
+
+              {% if section.settings.button_text != blank %}
+                <a href="{{ section.settings.button_link }}" class=" btn btn--custom btn--primary">{{ section.settings.button_text }}</a>
+              {% endif %}
+        </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+{% schema %}
+{
+  "name": "RB Video With Text",
+  "settings": [
+    {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "FAMILY OWNED SINCE 1996"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>For over 25 years, Redbarn has been a family- owned business, and our co-founders, Jeff Baikie and Howie Bloxam, are committed to staying that way.</p>"
+      },
+      {
+        "type": "text",
+        "id": "button_text",
+        "label": "Button text",
+        "default": "OUR STORY"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      },
+      {
+		"type":"text",
+		"id":"video_url",
+		"label":"Video url"
+	}
+  ],
+  "presets": [
+    {
+      "name": "RB Video With Text"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,60 @@
+{% layout none %}
+{%- capture results -%}
+
+{%- assign search_results = '' -%}
+{% for line_item in search.results %}
+{%- capture search_results -%}{% unless search_results == blank  %}{{ search_results }}|{% endunless %}{{ line_item.object_type }}{%- endcapture -%}
+{% endfor %}
+{%- assign search_results = search_results | split: '|' | uniq -%}
+
+{% for categories in search_results %}      
+  {% for line_item in search.results %}
+    {% if line_item.object_type == categories %}
+
+      {% if line_item.object_type == 'product' %}
+      {%- assign product = line_item -%}
+
+      {% assign sca_product_id_text = "," | append : product.id | append : "," %}{% assign sca_price = product.price %}{% assign sca_price_min = product.price_min %}{% assign sca_price_max = product.price_max %}{% assign sca_compare_at_price = product.compare_at_price %}{% assign sca_compare_at_price_min = product.compare_at_price_min %}{% assign sca_compare_at_price_max = product.compare_at_price_max %}{% assign sca_product_available = product.available %}{% assign sca_product_variantCount = product.variants.size %}{% assign sca_compare_at_price_varies = product.compare_at_price_varies %}{% assign sca_price_varies = product.price_varies %}{% assign sca_has_only_default_variant = false %}{% assign sca_product_variants_json = product.variants | json %}{% capture sca_product_json %}{ {% if sca_all_gift_products_ids == null or sca_all_gift_products_ids contains sca_product_id_text %}{% assign sca_product_available = false %}{% assign sca_product_variantCount = 0 %}{% assign sca_has_only_default_variant = false %}{% assign sca_is_first_variant = true %}{% capture sca_variants_json%}[{% for variant in product.variants %}{% unless variant.metafields.secomapp.freegifts %}{% unless variant.title contains '(Freegifts)' %}{% unless variant.title contains '% off)' %}{% unless variant.metafields.shappify_qb.qb_hide == "1" %}{% unless variant.metafields.shappify_bundle.is_bundle == "true" %}{% unless variant.metafields.brodev_scn.hide == "true" %}{% unless variant.metafields.wholesaler2.wholesale %}{% unless variant.metafields.Wholesaler.level %}{% unless variant.title contains '(Wholesale' %}{% if sca_is_first_variant %}{{ variant | json }}{% assign sca_price = variant.price %} {% assign sca_price_min = variant.price %}{% assign sca_price_max = variant.price %}{% assign sca_compare_at_price = variant.compare_at_price %}{% assign sca_compare_at_price_min = variant.compare_at_price %}{% assign sca_compare_at_price_max = variant.compare_at_price %}{% assign sca_product_available = variant.available %}{% assign sca_product_variantCount = 1 %}{% assign sca_is_first_variant = false %}{% else %},{{variant | json }}{% if sca_price_min >= variant.price %}{% assign sca_price_min = variant.price %}{% assign sca_price = variant.price %}{% endif %}{% if sca_price_max <= variant.price %}{% assign sca_price_max = variant.price %}{% endif %}{% if variant.compare_at_price %}{% if sca_compare_at_price_min == null or sca_compare_at_price_min >= variant.compare_at_price %}{% assign sca_compare_at_price_min = variant.compare_at_price %}{% assign sca_compare_at_price = variant.compare_at_price %}{% endif %}{% if sca_compare_at_price_max == null or sca_compare_at_price_max < variant.compare_at_price %}{% assign sca_compare_at_price_max = variant.compare_at_price %}{% endif %}{% endif %}{% if variant.available == true %}{% assign sca_product_available = true %}{% endif %}{% assign sca_product_variantCount = sca_product_variantCount | plus: 1 %}{% endif %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endfor %}]{% endcapture %}{% if sca_price_min < sca_price_max %}{% assign sca_price_varies = true %}{% else %}{% assign sca_price_varies = false %}{% endif %}{% if sca_compare_at_price_min < sca_compare_at_price_max %}{% assign sca_compare_at_price_varies = true %}{% else %}{% assign sca_compare_at_price_varies = false %}{% endif %}{% if sca_product_variantCount > 1 %}{% assign sca_has_only_default_variant = true %}{% endif %}{% if sca_product_variantCount == product.variants.size %}"variants":{{ product.variants }},{% else %}{% assign sca_product_variants_json = sca_variants_json %}"variants":{{sca_variants_json }},{% endif %}{% endif %}"id": {{ product.id }},"title": {{ product.title | json }},"handle": {{ product.handle | json }},"description": {{ product.description | json }},"published_at": {{ product.published_at | json }},"created_at": {{ product.created_at | json }},"vendor": {{ product.vendor | json }},"type": {{ product.type | json }},"tags": {{ product.tags | json }},"price": {{ sca_price }},"price_min": {{ sca_price_min }},"price_max": {{ sca_price_max }},"available": {{ product.available }},"price_varies": {{sca_price_varies }},"compare_at_price": {{ sca_compare_at_price }},"compare_at_price_min": {{ sca_compare_at_price_min }},"compare_at_price_max": {{ sca_compare_at_price_max }},"compare_at_price_varies": {{ sca_compare_at_price_varies }},"images": {{ product.images | json }},"featured_image": {{ product.featured_image | json }},"options": {{ product.options | json }},"media": {{ product.media | json }},"content": {{product.content | json}} }{% endcapture sca_product_json %}
+
+      { 
+      "category" : {{ line_item.object_type | json }},
+      "title"    : {{ product.title | json }},
+      "price"    : {{ sca_price | json }},
+      "url"      : {{ product.url | within: product.collections.last | json }},
+      "thumbnail": {{ product.featured_media | img_url: '200x' | json }}
+      }
+      {% elsif line_item.object_type == 'collection' %}
+      {%- assign collection = line_item -%}
+      { 
+      "category" : {{ line_item.object_type | json }},
+      "title"    : {{ collection.title | json }},
+      "url"      : {{ collection.url | json }},
+      "thumbnail": {{ collection.image.src | img_url: '200x' | json }}
+      }
+      {% elsif line_item.object_type == 'page' %}
+      {%- assign page = line_item -%}
+      { 
+      "category" : {{ line_item.object_type | json }},
+      "title"    : {{ page.title | json }},
+      "url"      : {{ page.url | json }},
+      "thumbnail": {{ page.image.src | img_url: '200x' | json }}
+      }
+      {% elsif line_item.object_type == 'article' %}
+      {%- assign article = line_item -%}
+      { 
+      "category" : {{ line_item.object_type | json }},
+      "title"    : {{ article.title | json }},
+      "url"      : {{ article.url | json }},
+      "thumbnail": {{ article.image.src | img_url: '200x' | json }}
+      }
+      {% endif %}
+
+    {% unless forloop.last %},{% endunless %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+{%- endcapture -%}
+{
+  "results_count": {{ search.results_count }},
+  "results": [{{ results }}]
+}

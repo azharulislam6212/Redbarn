@@ -1,0 +1,22 @@
+<div class="twelve breadcrumbs breadcrumb_text bottompad" aria-label="{{ 'general.breadcrumbs.breadcrumbs' | t }}" role="navigation">
+  <span><a href="{{ shop.url }}" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a></span> 
+  <span class="separator" aria-hidden="true"></span>
+  <span><a href="{{ blog.url }}" title="{{ blog.title | escape }}">{{ blog.title }}</a></span>       
+  {% if current_tags %}
+  {% for tag in current_tags %}
+  <span class="separator" aria-hidden="true"></span>
+  <span><a href="/blogs/{{ blog.handle }}/tagged/{{ tag | handleize }}" title="{{ tag | escape }}">{{ tag }}</a></span>
+  {% endfor %}
+  {% endif %}
+  {% if paginate.pages != 0 and blog.articles.size > 0 %}      
+  <span class="separator" aria-hidden="true"></span><span class="active">{{ 'general.breadcrumbs.page' | t: current_page: paginate.current_page, pages: paginate.pages }}</span>
+  {% endif %}
+</div>
+
+<div class="twelve">
+  {% if current_tags %}
+  <h1>{{ blog.title | link_to: blog.url }} &raquo; {{ current_tags.first }}{% if section.settings.include_rss %} <a href="{{ blog.url}}.atom" title="{{ blog.title }} RSS Feed" target="_blank"><span class="icon icon-rss"></span></a>{% endif %}</h1>
+  {% else %}
+  <h1>{{ blog.title }}{% if section.settings.include_rss %} <a href="{{ blog.url}}.atom" title="{{ blog.title }} RSS Feed" target="_blank" role="button" aria-label="{{ blog.title }} RSS Feed"><span class="icon icon-rss"></span></a>{% endif %}</h1>
+  {% endif %}
+</div>

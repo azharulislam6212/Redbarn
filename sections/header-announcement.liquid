@@ -1,0 +1,96 @@
+{% if section.settings.include_promo %}
+<div data-section-id="{{ section.id }}">
+  <div class="header banner header-announcement{% if section.settings.include_bar_border %} include-border{% endif %} announcement_color_scheme {{ section.settings.text_alignment }}">  
+    <div class="container full clearfix">
+      <span>
+        {% if section.settings.promo_link != blank %}
+        <a href="{{ section.settings.promo_link }}" title="{% if section.settings.promo_text != blank %}{{ section.settings.promo_text }}{% else %}{{ 'homepage.onboarding.no_title' | t }}{% endif %}">{% if section.settings.promo_text != blank %}{{ section.settings.promo_text }}{% else %}{{ 'homepage.onboarding.no_title' | t }}{% endif %}</a>
+        {% else %}
+        {% if section.settings.promo_text != blank %}{{ section.settings.promo_text }}{% else %}{{ 'homepage.onboarding.no_title' | t }}{% endif %}
+        {% endif %}
+      </span>
+    </div>
+  </div>  
+</div>
+
+<style>  
+  .announcement_color_scheme {
+    background: {{ section.settings.announcement_background_color }};
+    color: {{ section.settings.announcement_font_color }};
+  }
+  .announcement_color_scheme a {
+    color: {{ section.settings.announcement_font_color }};
+  }
+  .announcement_color_scheme a:hover {
+    color: {{ section.settings.announcement_hover_font_color }};
+  }
+</style>
+
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Announcement",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "include_promo",
+        "label": "Show announcement bar",
+        "default": false
+      },
+      {
+        "type": "text", 
+        "id": "promo_text",
+        "label": "Text",
+        "default": "Display an announcement, sale or event"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "url",
+        "id": "promo_link",
+        "label": "Link"
+      },
+      
+      {
+        "type": "color",
+        "id": "announcement_background_color",
+        "label": "Background color"
+      },
+      {
+        "type": "color",
+        "id": "announcement_font_color",
+        "label": "Text color"
+      },
+      {
+        "type": "color",
+        "id": "announcement_hover_font_color",
+        "label": "Text hover"
+      },
+      {
+        "type": "checkbox",
+        "id": "include_bar_border",
+        "label": "Show border",
+        "default": false
+      }
+    ]
+  }
+{% endschema %}

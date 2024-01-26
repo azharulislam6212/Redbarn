@@ -1,0 +1,89 @@
+{%- assign current = false -%}
+{%- assign link_handle = link.url | split:'/' | last -%}
+{% if link_handle == collection.handle %}
+{%- assign current = true -%}
+{% endif %}
+
+{% if current %}
+
+{%- assign sub_linksCt = 0 -%}
+{%- for link in link.links -%}{%- if link.type == 'collection_link' or link.type == 'catalog_link' -%}{%- capture sub_links -%}{%- increment sub_linksCt -%}{%- endcapture -%}{%- endif -%}{%- endfor -%}
+{%- assign sub_links = sub_links | plus:1 -%}
+
+{% if sub_links > 1 %}
+
+{%- assign block_width_sub = sub_links | downcase -%}
+{% case block_width_sub %}
+{% when '2','3','4' %}
+{%- assign block_width_sub = 'three' -%}
+{%- assign size = 300 -%}
+{% else %}
+{%- assign block_width_sub = 'swiper-slide three' -%}
+{%- assign size = 300 -%}
+{% endcase %}
+
+<div class="{% if section.settings.text_over and section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %}twelve {% if sub_links > 2 %}grid {% endif %}{% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+  <div class="sub-collections{% if sub_links > 4 %} twelve{% endif %}{% if sub_links > 2 %} grid{% endif %} {% if settings.animation_enable %}animate-section load {% endif %}clearfix">
+    <div class="swiper-container{% if sub_links > 4 %} plus-slider{% elsif sub_links > 2 %} plus-grid{% endif %} table-center product-loop{% if sub_links < 3 %} twelve swiper-product{% endif %} text-center"{% if sub_links > 2 %} id="swiper-carousel-{{ section.id }}{% unless sub_links > 4 %}-grid{% endunless %}{% endif %}">
+      <div class="tab-body{% if sub_links > 2 %} swiper-wrapper swiper-wrapper-{{ section.id }}{% if sub_links < 4 %} swiper-center{% endif %}{% endif %}">
+        {% for link in link.links %}
+        {% if link.type == 'collection_link' or link.type == 'catalog_link' %}
+        <div class="product {{ block_width_sub }} animate animate-loop-{{ forloop.index0 }} mobile top swiper-slide">
+          {%- assign link_url = link.url | split:'/' | last -%}
+          {%- assign current = false -%}
+          {% if current_tags contains link_url %}
+          {%- assign current = true -%}
+          {% endif %}
+
+          {%- assign sub_collection_url = link.url | split: '/' | last -%}
+          {%- assign sub_collection = collections[sub_collection_url] -%}
+          {%- assign images_enable = false -%}
+
+          {% if section.settings.use_product_image == false %}
+          {% if sub_collection.image.size > 0 %}
+          {%- assign img_src = sub_collection.image -%}
+          {%- assign bg_size = 'cover' -%}
+          {%- assign images_enable = true -%}
+          {% elsif sub_collection.products.first.featured_media.size > 0 %}
+          {%- assign img_src = sub_collection.products.first.featured_media.preview_image -%}
+          {%- assign bg_size = 'contain' -%}
+          {%- assign images_enable = true -%}
+          {% endif %}
+          {% elsif sub_collection.products.first.featured_media.size > 0 %}
+          {%- assign img_src = sub_collection.products.first.featured_media.preview_image -%}
+          {%- assign bg_size = 'contain' -%}
+          {%- assign images_enable = true -%}
+          {% endif %}
+
+          {% if images_enable %}
+          <div class="product-thumb">
+            <a href="{{ link.url }}" title="{{ link.title }}">
+              <div class="lazypadding">
+                {%- assign img_size = '1' -%}
+                {% include 'image-background' %}
+              </div>
+            </a>
+          </div>
+          {% endif %}
+
+          <div class="product-details{% if images_enable == false %} toppad{% endif %}">
+            <div class="product-title collection">
+              <h5>{{ link.title | link_to: link.url, link.title }}</h5>
+            </div>
+          </div>
+
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      <div id="swiper-pagination-{{ section.id }}" class="swiper-pagination relative bottompad-quarter hidden">
+        <div id="swiper-button-prev-{{ section.id }}" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+        <div id="swiper-button-next-{{ section.id }}" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+{% endif %}

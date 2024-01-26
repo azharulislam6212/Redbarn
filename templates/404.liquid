@@ -1,0 +1,13 @@
+{%- comment -%}
+
+<h1>{{% section '404-template' %}}</h1>
+{%- endcomment -%}
+<div class="error-page-container">
+  <div>
+    <h1>{{'general.404.heading' | t | upcase}}</h1>
+    <p>{{'general.404.text' | t}}</p>
+    <a href="/">{{'general.404.take_me_home' | t | upcase}}</a>
+  </div>
+  <img class="error-page-img" src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/404_Dog.gif?v=1614323070" />
+</div>
+{%- comment -%}smartseo_integration_begin{%- endcomment -%}{{ 'smart-seo-broken-link-detection.js' | asset_url | script_tag }}{%- comment -%}smartseo_integration_end{%- endcomment -%}

@@ -1,0 +1,159 @@
+<div class="form bottompad-half"> 
+  <form id="add-item-form" class="collection-form" action="{{ routes.cart_url }}" method="post">
+
+    <div class="clearfix">
+      <div class="cart-table-header clearfix">
+        <div class="six">
+          <h4>{{ 'cart.general.item' | t }}</h4>
+        </div>
+        <div class="three text-center">
+          <h4>{{ 'cart.general.item_price' | t }}</h4>
+        </div>
+        <div class="three text-center">
+          <h4>{{ 'cart.general.item_quantity' | t }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="clearfix">
+      <div class="background-white"> 
+        
+        {%- for product in collection.products -%}
+        
+        {%- assign prod_opt_1 = product.options[0] | handleize -%}
+        {%- assign prod_opt_2 = product.options[1] | handleize -%}
+        {%- assign prod_opt_3 = product.options[2] | handleize -%}
+
+        {%- for variant in product.variants -%}        
+
+        {%- if prod_opt_1 contains var_color and canon contains prod_opt_1 -%}
+        {%- assign var_opt_group = variant.option1 | handleize -%}
+        {%- elsif prod_opt_2 contains var_color and canon contains prod_opt_2 -%}
+        {%- assign var_opt_group = variant.option2 | handleize -%}
+        {%- elsif prod_opt_3 contains var_color and canon contains prod_opt_3 -%}
+        {%- assign var_opt_group = variant.option3 | handleize -%}
+        {%- else -%}
+        {%- assign var_opt = canon_last -%}
+        {%- endif -%}
+        
+        {%- if canon contains var_opt_group or var_opt == canon_last -%}
+        {%- if variant.featured_media or product.featured_media -%}
+        {%- assign images_enable = true -%}
+        {%- else -%}
+        {%- assign images_enable = false -%}
+        {%- endif -%}
+        <div id="variant_{{ variant.id }}" class="item relative product-id item-row table-center clearfix" data-product-id="{{ variant.id }}" field="{{ variant.id }}">
+          
+          {%- assign product = variant -%}
+          {% include 'product-sale-badge' %}
+
+          {% if images_enable %}
+          <div class="product-thumb item-thumb two title-align title-align-left"> 
+            <div class="relative">  
+              <a href="{{ variant.url | within: collection }}" title="View the {{ product.title }}" class="img-align">
+                {%- capture id -%}{{ variant.id }}{%- endcapture -%}
+                {% if variant.featured_media %}
+                {%- assign img_src = variant.featured_media.preview_image -%}
+                {% else %}
+                {%- assign img_src = product.featured_media.preview_image -%}
+                {% endif %} 
+                {%- assign size = 250 -%}
+                {%- capture alt -%}{{ product.title | escape }}{%- endcapture -%}
+                {% include 'image-load' %}
+              </a>
+            </div>
+          </div>
+          {% endif %} 
+          <span class="item-details{% if images_enable %} half{% else %} full{% endif %}">
+            <div class="{% if images_enable %}four{% else %}six{% endif %}">
+              <div class="item-title"><h5><a href="{{ variant.url | within: collection }}" title="{{ product.title }}">{{ product.title }}</a></h5></div>
+
+              {% if settings.reviews_enable %}
+              <div class="reviews item-reviews">
+                <!-- To add a new review app, install code between the comments -->
+                <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+                <!-- End comments -->
+              </div>
+              {% endif %}
+
+              <h5 class="offers hidden">
+                <span class="price-preview price price-field">
+                  {% if variant.price > 0 %}{{ variant.price | money }}{% else %}<span style="display:none">{{ variant.price | money }}</span><span>{{ 'products.product.free' | t }}</span>{% endif %}{% if variant.compare_at_price > variant.price %} <del>{{ variant.compare_at_price | money }}</del>{% endif %}
+                </span>
+                {%- assign variant_slash = 'true' -%}
+                {% include 'product-unit-price' %} 
+              </h5>
+              {% if settings.vendor_enable %}
+              <p id="product-logistics-{{ product.id }}" class="product-logistics{% unless product.media.size == 0 or settings.quick_collection_hover == false %} no-pad{% endunless %}">
+                <span class="vendors">
+                  {%- assign product_vendor_handle = product.vendor | handle -%}
+                  {% if collections[product_vendor_handle].handle == product_vendor_handle %}
+                  {%- assign vendor_url = collections[product_vendor_handle].url -%}
+                  {% else %}
+                  {%- assign vendor_url = product.vendor | url_for_vendor -%}
+                  {% endif %}
+                  {{ product.vendor | link_to: vendor_url }}
+                </span>
+              </p>
+              {% endif %}
+              
+              {% if settings.product_availability_enable and variant.inventory_quantity > 0 or variant.incoming %}<p class="error-text"><small>{% if variant.inventory_quantity > 0 %}<span class="upper">{{ variant.inventory_quantity }} {{ 'products.product.stock' | t }}</span>{% if variant.incoming %}: {% endif %}{% endif %}{% if variant.incoming %}{% unless variant.inventory_quantity > 0 %}<span class="icon icon-bell"></span> {% endunless %}{% if variant.next_incoming_date != blank %}{% if variant.available %}{{ 'products.product.stock_more' | t }}{% else %}{{ 'products.product.stock_in' | t }}{% endif %} {{ variant.next_incoming_date | date: '%b %e' }}{% else %}{{ 'products.product.stock_soon' | t }}{% endif %}{% endif %}</small></p>{% endif %}
+              
+              {% if variant.title contains 'Default' %}
+              {%- assign variant_title = true -%}
+              {% else %}
+              {%- assign variant_title = false -%}
+              {% endif %}
+              {% if variant_title == false or variant.sku != blank and settings.sku_enable %}
+              <div class="item-logistics">
+                <h6>
+                  {% if variant.sku != blank and settings.sku_enable %}
+                  <small>{{ 'products.product.sku' | t }} {{ variant.sku }}</small>
+                  {% endif %}
+                  {% unless variant.title contains 'Default' %}
+                  <span class="variants">{{ variant.title }}</span>
+                  {% endunless %}
+                </h6>
+              </div>
+              {% endif %}
+            </div>
+            
+            <div class="three text-center price-preview-hidden">
+              <h5 class="offers">
+                <span class="price-preview price price-field">
+                  {% if variant.price > 0 %}{{ variant.price | money }}{% else %}<span style="display:none">{{ variant.price | money }}</span><span>{{ 'products.product.free' | t }}</span>{% endif %}{% if variant.compare_at_price > variant.price %}<br/><del>{{ variant.compare_at_price | money }}</del>{% endif %}
+                </span>
+                {%- assign variant_slash = 'true' -%}
+                {% include 'product-unit-price' %}          
+              </h5>
+            </div>
+            
+            <div class="three text-center">
+              {% if variant.available %}
+              <span class="quantity form">
+                <button type="button" class="icon icon-minus btn qtybtn qtyminus_multi text-center" field="updates_{{ variant.id }}" price-field="price_{{ variant.id }}" aria-label="{{ 'products.general.minus' | t }}"></button>
+                <input name="updates[{{ variant.id }}]" onfocus="this.select()" tabindex="1" type="number" inputmode="numeric" pattern="[0-9]*" value="0" min="0" class="quantity field item-qty text-center" field="error_{{ variant.id }}" id="updates_{{ variant.id }}"{% if variant.inventory_management and variant.inventory_policy != 'continue' %} max="{% if variant.inventory_quantity > 0 %}{{ variant.inventory_quantity }}{% else %}0{% endif %}"{% endif %} />                   
+                <input type="hidden" id="price_{{ variant.id }}" class="price-totals" price="{{ variant.price }}" value="0" aria-hidden="true" tabindex="-1" />  
+                <button type="button" class="icon icon-plus btn qtybtn qtyplus_multi text-center" field="updates_{{ variant.id }}" price-field="price_{{ variant.id }}" aria-label="{{ 'products.general.plus' | t }}"></button>
+                <label class="stock error hidden" id="error_{{ variant.id }}"></label>
+              </span>
+              {% else %}
+              <h5 class="offers">
+                <span class="price-preview price price-field">
+                  {{ 'products.product.sold_out' | t }}
+                </span>
+              </h5>
+              {% endif %}
+            </div>
+          </span>
+          <input type="hidden" name="id" value="{{ variant.id }}" aria-hidden="true" tabindex="-1">
+        </div>
+        {%- endif -%}
+        
+        {%- endfor -%}
+        {%- endfor -%}         
+      </div>
+    </div>
+
+  </form>
+</div>

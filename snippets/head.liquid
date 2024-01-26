@@ -1,0 +1,196 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=3">
+<meta name="theme-color" content="{{ settings.button_color }}">
+<title>{% if template == '404' %}{{ 'general.404.title' | t }}{% elsif template == 'password' %}{{ shop.name }}{% if shop.password_message != blank %} {{ shop.password_message }}{% endif %}{% elsif template == 'gift_card' %}{{ 'gift_cards.issued.title' | t: value: formatted_initial_value_stripped, shop: shop.name }}{% else %}{{ page_title | escape }}{% if current_tags %}{%- capture meta_tags -%}{%- for tag in current_tags -%}{{ tag | split: '_' | last | prepend: ' ' }}{%- endfor -%}{%- endcapture -%}{{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} | {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% endif %}{% unless page_title contains shop.name or template == 'password' %} | {{ shop.name }}{% endunless %}</title>
+{% if template contains 'collection' and current_tags %}
+<meta name="robots" content="noindex" />
+<link rel="canonical" href="{{ shop.url }}{{ collection.url }}" />
+{% else %}
+<link rel="canonical" href="{{ canonical_url }}" />
+{% endif %}
+{% if template == 'gift_card' %}<meta name="description" content="{{ 'gift_cards.issued.subtext' | t }}">{% endif %}
+{% if page_description %}<meta name="description" content="{{ page_description | escape }}" />{% endif %}
+
+{% if settings.favicon != blank %}
+<link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+{% endif %}
+
+{% if settings.enable_Heebo %}
+<link href="https://fonts.googleapis.com/css?family=Heebo:100,300,400,500,700,800,900&display=swap);" rel="stylesheet" type="text/css">
+{% endif %}
+
+<!-- https://stackoverflow.com/questions/32759272/how-to-load-css-asynchronously -->
+<link href="{{ 'theme-initial.scss.css' | asset_url }}" rel="stylesheet" type="text/css" media="print" onload="this.media='all';this.onload=null">
+<link rel="preload" href="{{ 'jquery.mCustomScrollbar.css' | asset_url }}" as="style">
+<link rel="preload" href="{{ 'theme.scss.css' | asset_url }}" as="style">
+<link rel="preload" href="{{ 'theme-cart.css' | asset_url }}" as="style">
+<link rel="preload" href="{{ 'vendor.css' | asset_url }}" as="style">
+<link rel="preload" href="{{ 'base.css' | asset_url }}" as="style">
+
+{% if template contains 'product' %}
+    <link rel="preload" as="image"
+        {% if product.featured_image contains '.jpg' %}
+        href="{{ product.featured_image | img_url, format: 'pjpg' }}"
+        imagesrcset="{{ product.featured_image | img_url: '450x450', format: 'pjpg' }} 450w,
+                    {{ product.featured_image | img_url: '600x600', format: 'pjpg' }} 600w,
+                    {{ product.featured_image | img_url: '800x800', format: 'pjpg' }} 800w,
+                    {{ product.featured_image | img_url: '960x960', format: 'pjpg' }} 960w,
+                    {{ product.featured_image | img_url: '1200x1200', format: 'pjpg' }} 1200w,
+                    {{ product.featured_image | img_url: '1500x1500', format: 'pjpg' }} 1500w,
+                    {{ product.featured_image | img_url: '1800x1800', format: 'pjpg' }} 1800w,
+                    {{ product.featured_image | img_url: '2000x2000', format: 'pjpg' }} 2000w"
+        {% else %}
+        href="{{ product.featured_image | img_url }}"
+        imagesrcset="{{ product.featured_image | img_url: '450x450' }} 450w,
+                    {{ product.featured_image | img_url: '600x600' }} 600w,
+                    {{ product.featured_image | img_url: '800x800' }} 800w,
+                    {{ product.featured_image | img_url: '960x960' }} 960w,
+                    {{ product.featured_image | img_url: '1200x1200' }} 1200w,
+                    {{ product.featured_image | img_url: '1500x1500' }} 1500w,
+                    {{ product.featured_image | img_url: '1800x1800' }} 1800w,
+                    {{ product.featured_image | img_url: '2000x2000' }} 2000w"
+        {% endif %}
+        >
+{% endif %}
+
+<link rel="stylesheet" href="{{ 'jquery.mCustomScrollbar.css' | asset_url }}" media="print" onload="this.media='all'; this.onload=null">
+<link rel="stylesheet" href="{{ 'theme.scss.css' | asset_url }}" media="print" onload="this.media='all'; this.onload=null">
+<link rel="stylesheet" href="{{ 'theme-cart.css' | asset_url }}" media="print" onload="this.media='all'; this.onload=null">
+<link rel="stylesheet" href="{{ 'vendor.css' | asset_url }}" media="print" onload="this.media='all'; this.onload=null">
+<link rel="stylesheet" href="{{ 'base.css' | asset_url }}" media="print" onload="this.media='all'; this.onload=null">
+<noscript><link href="{{ 'jquery.mCustomScrollbar.css' | asset_url }}" rel="stylesheet" type="text/css" media="screen"></noscript>
+<noscript><link href="{{ 'theme.scss.css' | asset_url }}" rel="stylesheet" type="text/css" media="screen"></noscript>
+<noscript><link href="{{ 'theme-cart.css' | asset_url }}" rel="stylesheet" type="text/css" media="screen"></noscript>
+<noscript><link href="{{ 'vendor.css' | asset_url }}" rel="stylesheet" type="text/css" media="screen"></noscript>
+<noscript><link href="{{ 'base.css' | asset_url }}" rel="stylesheet" type="text/css" media="screen"></noscript>
+{{ 'section-main-prouduct.css' | asset_url | stylesheet_tag }}
+{{ 'related-product-section.css' | asset_url | stylesheet_tag }}
+
+<link rel="preload" as="script" href="{{ 'script-initial.js' | asset_url }}">
+<link rel="preload" as="script" href="{{ 'script-jquery.js' | asset_url }}">
+<link rel="preload" as="script" href="{{ 'script-min.js' | asset_url }}">
+
+<script>
+var pReady = [], $ = function(f) {pReady.push(f)}, theme = {};
+window.themeInfo = {name: "Avenue"};
+window.theme = window.theme || {};
+theme.moneyFormat = {{ shop.money_format | json }};
+theme.routes_cart_url = {{ routes.cart_url | json }};
+theme.routes_all_products_collection_url = {{ routes.all_products_collection_url | json }};
+theme.routes_search_url = {{ routes.search_url | json }};
+theme.routes_product_recommendations_url = {{ routes.product_recommendations_url | json }};
+theme.language = {collections_general_update_cart: {{ 'collections.general.update_cart' | t | json }},collections_general_update_cart_message: {{ 'collections.general.update_cart_message' | t | json }},collections_general_update_cart_label_message: {{ 'collections.general.update_cart_label_message' | t | json }},collections_general_open: {{ 'collections.general.open' | t | json }},collections_sidebar_less: {{ 'collections.sidebar.less' | t | json }},collections_sidebar_more: {{ 'collections.sidebar.more' | t | json }},contact_form_send: {{ 'contact.form.send' | t | json }},layout_general_next: {{ 'layout.general.next' | t | json }},layout_general_unavailable: {{ 'layout.general.unavailable' | t | json }},products_general_inv_msg_1: {{ 'products.general.inv_msg_1' | t | json }},products_general_inv_msg_2: {{ 'products.general.inv_msg_2' | t | json }},products_general_per: {{ 'products.general.per' | t | json }},products_product_add_to_cart: {{ 'products.product.add_to_cart' | t | json }},products_product_ajax_adding: {{ 'products.product.ajax_adding' | t | json  }},products_product_ajax_added: {{ 'products.product.ajax_added' | t | json }},products_product_ajax_thanks: {{ 'products.product.ajax_thanks' | t | json  }},products_product_ajax_updated: {{ 'products.product.ajax_updated' | t | json }},products_product_ajax_view: {{ 'products.product.ajax_view' | t | json }},products_product_available: {{ 'products.product.available' | t | json }},products_product_disabled_add_to_cart: {{ 'products.product.disabled_add_to_cart' | t | json }},products_product_free: {{ 'products.product.free' | t | json }},products_product_sku: {{ 'products.product.sku' | t | json }},products_product_sold_out: {{ 'products.product.sold_out' | t | json }},products_product_savings: {{ 'products.product.savings' | t | json }},general_search_see_results: {{ 'general.search.see_results' | t | json }},general_validation_loading: {{ 'general.validation.loading' | t | json }},general_validation_error: {{ 'general.validation.error' | t | json }},general_validation_required: {{ 'general.validation.required' | t | json }},general_validation_fix_field: {{ 'general.validation.fix_field' | t | json }},general_validation_valid_email: {{ 'general.validation.valid_email' | t | json }},general_validation_valid_url: {{ 'general.validation.valid_url' | t | json }},general_validation_valid_date: {{ 'general.validation.valid_date' | t | json }},general_validation_valid_iso: {{ 'general.validation.valid_iso' | t | json }},general_validation_valid_number: {{ 'general.validation.valid_number' | t | json }},general_validation_only_digits: {{ 'general.validation.only_digits' | t | json }},general_validation_same_value: {{ 'general.validation.same_value' | t | json }},general_validation_characters_exceed: {{ 'general.validation.characters_exceed' | t | json }},general_validation_characters_min: {{ 'general.validation.characters_min' | t | json }},general_validation_characters_range: {{ 'general.validation.characters_range' | t | json }},general_validation_value_less: {{ 'general.validation.value_less' | t | json }},general_validation_value_greater: {{ 'general.validation.value_greater' | t | json }},general_validation_value_range: {{ 'general.validation.value_range' | t | json }},general_validation_multiple: {{ 'general.validation.multiple' | t | json }}};
+</script>
+
+<script async src="{{ 'script-initial.js' | asset_url }}"></script>
+<script defer src="{{ 'script-jquery.js' | asset_url }}"></script>
+<script defer src="{{ 'vendor.js' | asset_url }}"></script>
+<script defer src="{{ 'jquery.mCustomScrollbar.concat.min.js' | asset_url }}"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" media="print" onload="this.media='all';this.onload=null" />
+
+<script defer src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+
+<script defer src="{{ 'script-min.js' | asset_url }}"></script>
+<script defer src="{{ 'custom.js' | asset_url }}"></script>
+
+{% if template contains 'customers' %}
+<script defer src="{{ 'shopify_common.js' | shopify_asset_url }}"></script>
+   
+<script defer src="{{ 'customer_area.js' | shopify_asset_url }}"></script>
+{% endif %}
+
+{% if settings.addthis != blank %}
+<script>
+    window.addEventListener('load', function() {
+        const script = document.createElement('script');
+        script.src = "//s7.addthis.com/js/300/addthis_widget.js#pubid={{ settings.addthis }}";
+        document.body.appendChild(script);
+    })
+</script>
+{% endif %}
+
+{% if template contains 'cart' %}
+<script defer src="//ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+{% endif %}
+
+{%- assign og_title = page_title | escape -%}
+{%- assign og_url = canonical_url -%}
+{%- assign og_type = 'website' -%}
+{%- assign og_description = page_description | default: shop.description | default: shop.name | escape -%}
+
+{% if settings.social_img %}
+{%- capture og_image_tags -%}
+<meta property="og:image" content="http:{{ settings.social_img | img_url: '1200x1200' }}">
+<meta property="og:image:width" content="{{ settings.social_img.width }}">
+<meta property="og:image:height" content="{{ settings.social_img.height }}">
+{%- endcapture -%}
+{%- capture og_image_secure_url_tags -%}<meta property="og:image:secure_url" content="https:{{ settings.social_img | img_url: '1200x1200' }}">{%- endcapture -%}
+{% endif %}
+
+{% if template.name == 'product' %}
+{%- assign og_title = product.title | strip_html -%}
+{%- assign og_type = 'product' -%}
+{% if product.media.size > 0 %}
+{%- capture og_image_tags -%}
+{% for media in product.media limit:3 %}
+<meta property="og:image" content="http:{{ media | img_url: '1200x1200' }}">
+<meta property="og:image:width" content="{{ media.width }}">
+<meta property="og:image:height" content="{{ media.height }}">
+{% endfor %}{%- endcapture -%}
+{%- capture og_image_secure_url_tags -%}{% for media in product.media limit:3 %}<meta property="og:image:secure_url" content="https:{{ media | img_url: '1200x1200' }}">{% endfor %}{%- endcapture -%}
+{% endif %}
+
+{% elsif template.name == 'article' %}
+{%- assign og_title = article.title | strip_html -%}
+{%- assign og_type = 'article' -%}
+{%- assign og_description = article.excerpt_or_content | strip_html -%}
+{% if article.image %}
+{%- capture og_image_tags -%}
+<meta property="og:image" content="http:{{ article.image | img_url: '1200x1200' }}">
+<meta property="og:image:width" content="{{ article.image.width }}">
+<meta property="og:image:height" content="{{ article.image.height }}">
+{%- endcapture -%}
+{%- capture og_image_secure_url_tags -%}<meta property="og:image:secure_url" content="https:{{ article.image | img_url: '1200x1200' }}">{%- endcapture -%}
+{% endif %}
+
+{% elsif template.name == 'collection' %}
+{%- assign og_title = collection.title | strip_html -%}
+{%- assign og_type = 'product.group' -%}
+{% if collection.image %}
+{%- capture og_image_tags -%}
+<meta property="og:image" content="http:{{ collection.image | img_url: '1200x1200' }}">
+<meta property="og:image:width" content="{{ collection.image.width }}">
+<meta property="og:image:height" content="{{ collection.image.height }}">
+{%- endcapture -%}
+{%- capture og_image_secure_url_tags -%}<meta property="og:image:secure_url" content="https:{{ collection.image | img_url: '1200x1200' }}">{%- endcapture -%}
+{% endif %}
+
+{% elsif template.name == 'password' %}
+{%- assign og_title = shop.name -%}
+{%- assign og_url = shop.url -%}
+{%- assign og_description = shop.description | default: shop.name -%}
+{% endif %}
+
+<meta property="og:site_name" content="{{ shop.name }}">
+<meta property="og:url" content="{{ og_url }}">
+<meta property="og:title" content="{{ og_title }}">
+<meta property="og:type" content="{{ og_type }}">
+<meta property="og:description" content="{{ og_description }}">
+{% if template.name == 'product' %}
+<meta property="og:price:amount" content="{{ product.price | money_without_currency | strip_html }}">
+<meta property="og:price:currency" content="{{ cart.currency.iso_code }}">
+{% endif %}
+{{ og_image_tags }}
+{{ og_image_secure_url_tags }}
+
+{% unless settings.social_twitter_link == blank %}
+<meta name="twitter:site" content="{{ settings.social_twitter_link | split: 'twitter.com/' | last | prepend: '@' }}">
+{% endunless %}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ og_title }}">
+<meta name="twitter:description" content="{{ og_description }}">
+
+<noscript><style>body{margin-bottom:50px;}.container,.background-cover,.background-overlay,.featured-image{position:relative;}.header{opacity:1;filter:alpha(opacity=100);}.responsiveMenu li:hover > ul{left:0!important}.no-js-hide{display:none!important}.no-js.hidden{display:block!important}.no-js-bg{left:0;position:absolute;top:0;width:100%;}img.lazywidth{width:auto;}</style></noscript>

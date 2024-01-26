@@ -1,0 +1,118 @@
+{%    assign current_variant = product.selected_or_first_available_variant  %}
+
+<div class="prduct-card">
+    <div class="prduct-card__img-wrap">
+      {%- assign img_src = product.featured_image -%}
+
+      {% if img_src != blank %}
+        <a href="{{ product.url | within: collection }}" title="{{ product.title }}">
+          <img src="{{img_src | img_url: "master"}}" alt="{{img_src.alt }}">
+        </a>
+      {% endif %}
+    </div>
+    <div class="prduct-card__info">
+      {% if settings.reviews_enable %}
+        <div class="prduct-card__reviews">
+          <!-- To add a new review app, install code between the comments -->
+          <span
+            class=" stamped-product-reviews-badge"
+            data-product-sku="{{ product.handle }}"
+            data-id="{{ product.id }}"
+            data-product-type="{{product.type}}"
+            data-product-title="{{product.title}}"
+            style="display:block;"
+          ></span>
+          <!-- End comments -->
+        </div>
+      {% endif %}
+
+      <div class="product-card__title">
+        <h5>
+          <a href="{{ product.url | within: collection }}" title="{{ product.title }}">{{ product.title | truncatewords: 3 , ""}}</a>
+        </h5>
+      </div>
+      <div class="product-card__price">
+        {%- if product.compare_at_price > product.price -%}
+        <span class="sale-price">{{ product.compare_at_price | money }}</span>
+      {%- endif -%}
+        <span class="regular-price">{{ product.price | money }}</span>
+      </div>
+
+      {%- assign currentProductId = section.id | append: '-' | append: product.id -%}
+      {%- assign product_form_id = 'product-form-' | append: currentProductId -%}
+                          
+      {%- form 'product',
+        product,
+        class: 'card-product-form',
+        id: product_form_id,
+        novalidate: 'novalidate'
+      -%}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        {% assign current_variant = product.selected_or_first_available_variant %}
+
+        {% unless product.has_only_default_variant %}
+
+            {%- for option in product.options_with_values -%}
+              {%- liquid
+                assign option_disabled = true
+
+                for option1_name in variants_option1_arr
+                  case option.position
+                    when 1
+                      if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                        assign option_disabled = false
+                      endif
+                    when 2
+                      if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                        assign option_disabled = false
+                      endif
+                    when 3
+                      if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+                        assign option_disabled = false
+                      endif
+                  endcase
+                endfor
+              -%}
+
+              <div class="selector-wrapper product-card-selector option-{{ option.name }}">
+                <span class="selector-label">{{ option.name }}</span>
+                <select class="select-btn">
+                  {% assign values = '' %}
+                  {% assign option_index = 0 %}
+                  {% for variant in product.variants %}
+                    {% assign value = variant.options[option_index] %}
+                    {% assign values = values | join: ',' %}
+                    {% assign values = values | append: ',' | append: value %}
+                    {% assign values = values | split: ',' %}
+                    <option
+                      value="{{ value | escape }}"
+                      {% if option.selected_value == value %}
+                        selected="selected"
+                      {% endif %}
+                    >
+                      {{ value | escape }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            {% endfor %}
+      
+        {% endunless %}
+
+        <button type="submit"  name="add"  class="product-card__add-btn btn btn--custom">
+          <span class="btn--text">Add to cart</span>
+          <span><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 12.5H23M23 12.5L19 16.5M23 12.5L19 8.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              </span>
+        </button>
+
+        {% unless product == empty %}
+          <script type="application/json" data-product-json>
+            {{ product | json }}
+          </script>
+      {% endunless %}
+
+      {%- endform -%}
+    </div>
+  </div>

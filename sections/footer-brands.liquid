@@ -1,0 +1,164 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.blocks.size == 0 and section.settings.title == blank and section.settings.sub_title == blank %}
+{%- assign section_onboarding = true -%}
+{% else %}
+{%- assign section_onboarding = false -%}
+{% endif %}
+
+{% if section.settings.logo_list_enable %}
+<div data-section-id="{{ section.id }}" 
+     data-section-type="footer-brands" 
+     class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} colored-top-bottom {% endif %}{% unless section.settings.include_color != 'color-none' %}margins-section {% endunless %}{{ footer_class }} {% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  <div class="container clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+      <div class="tab-body{% if full_width == false and section.settings.include_color != 'color-none' %} twelve background-colored {{ section.settings.include_color }} colored-top-bottom{% endif %}">
+        
+        {% if section_onboarding or section.settings.title != blank or section.settings.sub_title != blank %}                
+        <div class="twelve {{ section.settings.text_alignment }}">
+          {% if section_onboarding %}
+          <h2>{{ 'homepage.onboarding.no_title' | t }}</h2>
+          <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+          {% else %}
+          {% if section.settings.title != blank%}<h2>{{ section.settings.title | escape }}</h2>{% endif %}
+          {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+          {% endif %} 
+        </div>
+        {% endif %} 
+        
+        <div class="table-center{% if settings.animation_enable %} animate-section load{% endif %}">
+          <div class="tab-body {{ section.settings.text_alignment }}">
+
+            {% for block in section.blocks %} 
+            
+            {%- assign block_width = section.blocks.size | downcase -%}
+            {% case block_width -%}
+            {% when '1','3','5' %}
+            {%- assign block_width = 'two-half' -%}      
+            {%- assign size = 280 -%}
+            {% when '2','4','6' %}
+            {%- assign block_width = 'two' -%}      
+            {%- assign size = 280 -%}
+            {% endcase %}
+
+            <div class="{{ block_width }} animate animate-loop-{{ forloop.index0 }}{% unless section.settings.vertical_content_alignment %} top{% endunless %} brands bottompad-quarter" {{ block.shopify_attributes }}>
+              {% if block.settings.link != blank %}<a href="{{ block.settings.link | escape }}" title="{% if block.settings.block_img.alt != blank %}{{ block.settings.block_img.alt }}{% else %}{{ block.settings.block_img | split: '/' | last | replace: '-', ' ' | replace: '_', ' ' | split: '.' | first | capitalize }}{% endif %}">{% endif %}
+              {% if block.settings.block_img != blank %}
+              {%- capture id -%}{{ block.id }}{{ section.id }}{{ block.id }}{%- endcapture -%}
+              {%- assign img_src = block.settings.block_img -%}
+              {%- capture alt -%}{% if block.settings.block_img.alt != blank %}{{ block.settings.block_img.alt }}{% else %}{{ block.settings.block_img | split: '/' | last | replace: '-', ' ' | replace: '_', ' ' | split: '.' | first | capitalize }}{% endif %}{%- endcapture -%}
+              {% assign datawidth = false %}
+              {% include 'image-load' %}
+              {% else %}
+              {{ 'logo' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+              {% if block.settings.link != blank %}</a>{% endif %}
+            </div>
+            {% endfor %}
+
+          </div>
+      </div>
+    
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Logo list",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "logo_list_enable",
+        "label": "Enable logo list",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Logo list"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Highlight brands, certifications or sponsors"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+           "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "vertical_content_alignment",
+        "label": "Vertical centering",
+        "default": true
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width background",
+       "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image",
+		"limit": 6,
+        "settings": [	  
+          {
+            "type": "image_picker",
+            "id": "block_img",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

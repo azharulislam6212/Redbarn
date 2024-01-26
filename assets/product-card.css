@@ -1,0 +1,140 @@
+/* product-card */
+
+.prduct-card{
+    border-radius: 20px;
+    background: var(--White, #FFF);
+    box-shadow: 0px 0px 64px 0px rgba(0, 0, 0, 0.12);
+}
+.prduct-card .btn--custom{
+    min-width: 100%;
+}
+
+.prduct-card__info{
+    padding: 24px 16px;
+    text-align: left;
+    border-top: 1px solid rgba(179, 40, 45, 0.20);
+}
+
+.prduct-card__reviews{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+    color: var(--www-redbarn-com-emperor, #535353);
+text-align: center;
+
+/* Body Text Small */
+font-family: Heebo;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: 160%; /* 19.2px */
+}
+
+.product-card__title h5{
+    color: #000;
+
+/* Heading 3 */
+font-family: ChunkFive;
+font-size: 24px;
+font-style: normal;
+font-weight: 400;
+line-height: 120%; /* 28.8px */
+letter-spacing: 0.001px;
+margin-bottom: 8px;
+opacity: 0.8;
+}
+
+.product-card__price{
+    color: var(--www-redbarn-com-dusty-gray, #9A9A9A);
+    text-align: right;
+    
+    /* Heading 3 */
+    font-family: ChunkFive;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 120%; /* 28.8px */
+    letter-spacing: 0.001px; 
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.product-card__price .sale-price{
+    color: var(--www-redbarn-com-tall-poppy, #B3282D);
+}
+
+.prduct-card .btn--custom{
+    padding: 4px 24px;
+    justify-content: space-between;
+    color: var(--White, #FFF);
+height: 40px;
+/* Button Text */
+font-family: Heebo;
+font-size: 16px;
+font-style: normal;
+font-weight: 900;
+line-height: 140%; /* 22.4px */
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+
+.prduct-card .btn-custom span{
+    display: flex;
+}
+
+.light-bg{
+    background: #b3282d1a;
+}
+
+.prduct-card svg{
+    border-radius:20px 20px 0 0 ;
+}
+
+.selector-label{
+    display: none;
+}
+
+.prduct-card .selector-wrapper{
+    margin: 0 0 16px;
+    box-shadow: none !important;
+}
+
+.select-btn{
+    border: 1px solid #9A9A9A;
+    border-radius: 26px;
+}
+
+.prduct-card__img-wrap{
+    position: relative;
+    padding-bottom: 88.5%;
+}
+.prduct-card__img-wrap img{
+    margin-bottom: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+    border-radius: 20px 20px 0 0;
+}
+
+.product-card__add-btn[disabled]{
+    opacity: 0.5;
+}
+
+
+.product-card-selector .select-btn{
+    color: var(--www-redbarn-com-mine-shaft, #232323);
+    /* Body Text Small */
+    font-family: Heebo;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 160%; /* 19.2px */
+}
+

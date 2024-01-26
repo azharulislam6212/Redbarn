@@ -1,0 +1,83 @@
+.featured-collection-wrapper{
+    position: relative;
+    overflow: hidden;
+    padding: 100px 0;
+    background-color: #fff;
+}
+
+.featured-collection__heading{
+    color: var(--www-redbarn-com-mine-shaft, #232323);
+text-align: center;
+
+/* Heading 2 */
+font-family: ChunkFive;
+font-size: 48px;
+font-style: normal;
+font-weight: 400;
+line-height: 120%; /* 57.6px */
+letter-spacing: 0.001px;
+text-transform: uppercase;
+margin-bottom: 40px;
+}
+
+.featured-collection__list{
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.featured-collection__item {
+    flex: 0 0 23.4%;
+}
+
+
+
+@media screen and (max-width: 768px) {
+    .featured-collection__item {
+        flex: 1;
+    }
+
+    .featured-collection__heading{
+        margin-bottom: 0;
+    }
+
+    .featured-collection__list {
+        padding-top: 40px;
+    }
+
+    .featured-collection__slider {
+        display: block;
+        overflow: hidden;
+     }
+
+     .featured-collection__slider .slick-list{
+       overflow: visible;
+       padding-right: 75px;
+       margin-left: 12px;
+     }
+    
+     .featured-collection__slider   .featured-collection__item {
+       margin: 0 12px;
+     }
+     .featured-collection__enable .featured-collection__heading{
+        padding: 0 24px;
+        font-size: 32px;
+        line-height: 120%; /* 38.4px */
+        letter-spacing: 0.001px;
+
+     }
+     .featured-collection__enable .container{
+       padding: 0;
+     }
+
+     .featured-collection__slider  .slick-dots{
+        margin-top: 40px;
+     }
+
+     .featured-collection-wrapper {
+        padding: 48px 0;
+     }
+}
+
+

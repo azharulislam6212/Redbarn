@@ -1,0 +1,98 @@
+<div class="container page bottompad-section clearfix">
+  <div class="twelve">
+  <p>Hi <span id="user-name"></span>, Here are your recommendations.</p>
+  {% include "breadcrumbs" %}  
+  {{ page.content }}
+  <div id="products"></div>
+  </div>
+</div>
+
+<script>
+  // Parsing the url paramaters and data and store them in global variable "params"
+  var params = window.location.search.substr(1).split('&').reduce(function (q, query) {
+    var chunks = query.split('=')
+    var key = chunks[0]
+    var value = chunks[1]
+    return (q[key] = value, q)
+  }, {})
+
+  // Storing product recommendations in another global variable
+  var product_handles = (params['products'] || "").split(',')
+
+  // Calling Shopify api to retrieve the products data
+  Promise.all(product_handles.map(function (product) {
+    return new Promise(function (resolve, reject) {
+      fetch('/products/' + product + '.json')
+      .then(function(result) { 
+        // Making sure that the product actually exists
+        if (result.status !== 404) {
+          return result.json()
+        } else {
+          return { product: null }
+        }
+      })
+      .then(function(data) { 
+        resolve(data.product)
+      })
+      .catch(reject)
+    })
+  }))
+  .then(function (products) {
+    // Filtering out the products list if it had any removed products
+    products = products.filter(function (product) { return !!product })
+
+    // The product grid template    
+    var product_template = function(product, index) {
+      return `
+<div class="product" itemprop="itemListElement" itemscope
+    itemtype="http://schema.org/Product">
+    <a href="/products/${product.handle}" itemprop="url">
+        ${product.images.length ? `
+        <div class="product_image">
+            <img src="${product.images[0].src}" alt="${product.title}" />
+        </div>` : ""}
+        <div class="info">
+            <span class="title" itemprop="name">${product.title}</span>
+            <span class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                <meta itemprop="price" content="${product.variants[0].price}" />
+                <meta itemprop="priceCurrency" content="USD" />
+                <link itemprop="availability" href="http://schema.org/InStock">
+                <span class="money">$${product.variants[0].price}</span>
+            </span>
+        </div>
+    </a>
+</div>`
+    }
+
+    // Fill the resulted products grid in the #products element
+    document.getElementById("products").innerHTML = products.map(product_template).join('')
+  })
+</script>
+
+{% style %}
+  #products {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .product {
+    width: 24%;
+      margin: 1%;
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .product a {
+    text-decoration: none;
+  }
+
+  .product .info {
+    text-align: center;
+  }
+{% endstyle %}

@@ -1,0 +1,633 @@
+
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+{{ 'product-collection.css' | asset_url | stylesheet_tag }}
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.settings.include_image and collection.image %}
+{%- assign img_src = collection.image -%}
+{% include 'image-background-src' %}
+{%- assign img_size = '1x' -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" data-section-type="collection-page" class="collection bottompad-section clearfix">
+
+  {% if section.settings.text_over == false and full_width and section.settings.include_image and collection.image %}
+  <div class="background-image content-height-{{ section.id }} background-cover lazyload bottompad-half"
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;">
+    <noscript>
+      <div class="no-js-bg background-cover content-height-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+    </noscript>
+  </div>
+  {% endif %}
+
+  <div class="{% if section.settings.text_over and full_width %}{% if section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}background-cover lazyload {% endif %}{% if section.settings.text_over %}relative-{{ section.id }} {% endif %}clearfix"
+       {% if section.settings.text_over and full_width and section.settings.include_image and collection.image %}
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+       {% endif %}>
+    {% if section.settings.text_over and full_width and section.settings.include_image and collection.image %}
+    <noscript>
+      <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+    </noscript>
+    {% endif %}
+
+    <div{% if section.settings.text_over and full_width and section.settings.include_image and collection.image %} class="relative-{{ section.id }} background-overlay-{{ section.id }}"{% endif %}>
+      <div class="container text-center clearfix">
+        <div{% if section.settings.text_over and full_width == false and section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %} class="twelve"{% endif %}>
+          <div class="{% if section.settings.text_over and full_width == false %}{% if section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}background-cover lazyload relative-{{ section.id }} {% endif %}{% if section.settings.text_over %}{% if section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %}{% if section.settings.font_color %}white {% endif %}{% endif %}{% endif %}clearfix"
+               {% if section.settings.text_over and full_width == false and section.settings.include_image and collection.image %}
+               data-bgset="{{ image_data | strip }}"
+               data-sizes="auto"
+               style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+               {% endif %}>
+            {% if section.settings.text_over and full_width == false and section.settings.include_image and collection.image %}
+            <noscript>
+              <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) center center no-repeat;"></div>
+            </noscript>
+            {% endif %}
+
+            {% if section.settings.text_over == false and full_width == false and section.settings.include_image and collection.image %}
+            <div class="twelve">
+              {%- capture id -%}{{ collection.image.id }}{{ section.id }}{{ block.id }}{%- endcapture -%}
+              {%- assign img_src = collection.image -%}
+              {%- assign size = 1200 -%}
+              {%- capture alt -%}{% if collection.image.alt %}{{ collection.image.alt }}{% else %}{{ collection.title }}{% endif %}{%- endcapture -%}
+              {% include 'image-load' %}
+            </div>
+            {% endif %}
+
+            {% if section.settings.text_over %}
+            {%- assign text_over = true -%}
+            {% elsif section.settings.text_over == false and section.settings.include_image and collection.image == blank %}
+            {%- assign text_over = true -%}
+            {% elsif section.settings.text_over == false and section.settings.include_image == false %}
+            {%- assign text_over = true -%}
+            {% else %}
+            {%- assign text_over = false -%}
+            {% endif %}
+
+            {% if text_over %}
+            <div class="{% if section.settings.text_over and full_width == false and section.settings.include_image and collection.image %}relative-{{ section.id }} background-overlay-{{ section.id }}{% endif %}">
+              <div class="container {% if section.settings.include_color != 'color-none' or section.settings.text_over and section.settings.include_image and collection.image or section.settings.include_color != 'color-none' %}{% if full_width %}remove-pad {% else %}no-pad {% endif %}{% else %}remove-pad {% endif %}clearfix">
+                <div class="table {% if section.settings.text_over and section.settings.include_image and collection.image %}content-height-{{ section.id }} {% endif %}{% if section.settings.text_over and full_width == false %}{% if section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %}twelve{% endif %}{% endif %}">
+                  <div class="table-cell">
+                    <div class="twelve text-center {% if section.settings.text_over == false and section.settings.include_image and collection.image %} no-pad{% endif %}">
+                      <h1 role="text">{{ collection.title }}</h1>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {%- assign linkCt = 0 -%}
+  {%- assign linkCt1 = 0 -%}
+  {%- assign linkCt2 = 0 -%}
+  {%- assign linkCt3 = 0 -%}
+
+  {%- if settings.menu != blank -%}
+  {%- for link in linklists[settings.menu].links -%}
+  {%- if link.active or link.type == 'catalog_link' and current_tags != blank -%}{%- capture linkCt1 -%}{%- increment linkCt -%}{%- endcapture -%}{%- endif -%}
+  {%- if link.links != blank -%}
+  {%- for sub_link in link.links -%}
+  {%- if sub_link.active or sub_link.type == 'catalog_link' and current_tags != blank -%}{%- capture linkCt2 -%}{%- increment linkCt -%}{%- endcapture -%}{%- endif -%}
+  {%- if sub_link.links != blank -%}
+  {%- for sub_sub_link in sub_link.links -%}
+  {%- if sub_sub_link.active or sub_sub_link.type == 'catalog_link' and current_tags != blank -%}{%- capture linkCt3 -%}{%- increment linkCt -%}{%- endcapture -%}{%- endif -%}
+  {%- endfor -%}
+  {%- endif -%}
+  {%- endfor -%}
+  {%- endif -%}
+  {%- endfor -%}
+  {%- assign finalCt = linkCt1 | plus:linkCt2 | plus:linkCt3 -%}
+  {%- endif- %}
+
+  <div class="container{% if section.settings.include_sub_collection and finalCt < 5 %} grid{% endif %} clearfix">
+    <div{% if section.settings.text_over and full_width == false and section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %} class="twelve"{% endif %}>
+      <div{% if section.settings.text_over and full_width == false and section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %} class="twelve"{% endif %}>
+        <div{% if section.settings.text_over and section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %} class="twelve{% if section.settings.include_sub_collection and finalCt < 5 %} grid{% endif %} collection-grid-{{ section.id }}"{% endif %}>
+          <div class="{% if section.settings.text_over and section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %}background-white {% endif %}clearfix">
+
+            {% if section.settings.include_sub_collection and finalCt < 1 %}
+            {% for link in linklists[settings.menu].links %}
+            {% include 'collection-sub-categories' %}
+            {% if link.links != blank %}
+            {% for link in link.links %}
+            {% include 'collection-sub-categories' %}
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+            <div class="{% if section.settings.text_over and section.settings.include_color != 'color-none' or section.settings.include_image and collection.image %}twelve {% elsif section.settings.include_sub_collection and finalCt < 5 %}twelve negative-left negative-right positive {% endif %}clearfix">
+
+              {% if section.settings.text_over == false or collection.description.size > 0 and section.settings.include_description %}
+              <div class="hidden collection-desc twelve grid text-center bottompad-half">
+                {% if section.settings.text_over == false and section.settings.include_image and collection.image %}<div class="twelve"><h2 class="h1">{{ collection.title }}</h2></div>{% endif %}
+                {% if collection.description.size > 0 and section.settings.include_description %}
+                <div class="eight center">
+                  {{ collection.description }}
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+
+              {%- assign filter_count = 0 -%}
+              {%- assign menu_count = 0 -%}
+              {%- assign vendor_count = false -%}
+
+              {% for block in section.blocks %}
+              {% case block.type %}
+
+              {% when 'sub-menu' %}
+              {%- assign sub_menu = 'sub-menu' -%}
+              {% if settings.menu != blank and finalCt < 1 %}
+              {% for link in linklists[settings.menu].links %}
+              {% if link.active %}{% if link.levels > 0 %}{%- assign menu_count = 1 -%}{% endif %}{% endif %}
+              {% if link.links != blank %}
+              {% for sub_link in link.links %}
+              {% if sub_link.active %}{% if sub_link.levels > 0 %}{%- assign menu_count = 1 -%}{% endif %}{% endif %}
+              {% endfor %}
+              {% endif %}
+              {% endfor %}
+              {% endif %}
+
+              {% when 'filters' %}
+              {%- assign filters = 'filters' -%}
+              {%- assign categories = '' -%}
+              {%- assign count = 0 -%}
+              {% for tag in collection.all_tags %}
+              {% if tag contains '_' %}
+              {%- assign filter_count = 1 -%}
+              {%- capture categories -%}{% unless categories == blank  %}{{ categories }}|{% endunless %}{{ tag | split: '_' | first }}{%- endcapture -%}
+              {%- capture count -%}{{ count | plus: 1 }}{%- endcapture -%}
+              {% endif %}
+              {% endfor %}
+              {%- assign cat_array = categories | split: '|' | uniq -%}
+
+              {% if block.settings.filter_list != blank  %}
+              {%- assign filter_count = 0 -%}
+              {%- assign categories = '' -%}
+              {%- assign count = 0 -%}
+              {%- assign tags = block.settings.filter_list | split:',' -%}
+              {% for tag in tags %}
+              {% if cat_array contains tag %}
+              {%- assign filter_count = 1 -%}
+              {%- capture categories -%}{% unless categories == blank  %}{{ categories }}|{% endunless %}{{ tag | remove: ',' }}{%- endcapture -%}
+              {%- capture count -%}{{ count | plus: 1 }}{%- endcapture -%}
+              {% endif %}
+              {% endfor %}
+              {%- assign cat_array = categories | split: '|' | uniq -%}
+              {% endif %}
+              {%- if block.settings.var_color != blank -%}
+              {%- assign var_color = block.settings.var_color | handleize -%}
+              {%- else %}
+              {%- assign var_color = 'layout.general.color' | t | handleize -%}
+              {%- endif -%}
+
+              {% when 'vendors' %}
+              {%- assign vendor_count = true -%}
+
+              {% endcase %}
+              {% endfor %}
+
+              <div class="sorting open-container">
+
+                {% if section.settings.include_breadcrumbs or section.settings.include_sort or section.settings.include_pagination and section.settings.layout != 'form' %}
+                  {% if section.settings.include_breadcrumbs and section.settings.include_sort and section.settings.include_pagination and section.settings.layout != 'form' %}<div class="twelve tablet-only">{% include 'collection-breadcrumbs' %}</div>{% endif %}
+                  <div class="table sortby twelve  short-mobile-wrapper">
+                    {% if section.settings.include_pagination and section.settings.layout != 'form' %}{% include 'collection-paginate' %}{% endif %}
+                    {% if section.settings.include_breadcrumbs %}<span class="table-cell{% if section.settings.include_sort and section.settings.include_pagination and section.settings.layout != 'form' %} desk-only{% endif %}">{% include 'collection-breadcrumbs' %}</span>{% endif %}
+                    {% if section.settings.include_sort %}{% include 'collection-sort' %}{% endif %}
+                  </div>
+                  {% endif %}
+
+
+                <div class="open">
+                  {% if section.settings.include_breadcrumbs or section.settings.include_sort or menu_count > 0 or filter_count > 0 or vendor_count or section.settings.include_pagination and section.settings.layout != 'form' %}
+                  <a href="javascript:void(0)" class="btn outline auto-width open-{{ section.id }}" title="{{ 'collections.sidebar.sort_filter' | t }}" aria-controls="collection-{{ section.id }}-filters"><span class="open-btn">{{ 'collections.sidebar.sort_filter' | t }}</span> <span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 6C12 6.53043 12.2107 7.03914 12.5858 7.41421C12.9609 7.78929 13.4696 8 14 8C14.5304 8 15.0391 7.78929 15.4142 7.41421C15.7893 7.03914 16 6.53043 16 6M12 6C12 5.46957 12.2107 4.96086 12.5858 4.58579C12.9609 4.21071 13.4696 4 14 4C14.5304 4 15.0391 4.21071 15.4142 4.58579C15.7893 4.96086 16 5.46957 16 6M12 6H4M16 6H20M6 12C6 12.5304 6.21071 13.0391 6.58579 13.4142C6.96086 13.7893 7.46957 14 8 14C8.53043 14 9.03914 13.7893 9.41421 13.4142C9.78929 13.0391 10 12.5304 10 12M6 12C6 11.4696 6.21071 10.9609 6.58579 10.5858C6.96086 10.2107 7.46957 10 8 10C8.53043 10 9.03914 10.2107 9.41421 10.5858C9.78929 10.9609 10 11.4696 10 12M6 12H4M10 12H20M15 18C15 18.5304 15.2107 19.0391 15.5858 19.4142C15.9609 19.7893 16.4696 20 17 20C17.5304 20 18.0391 19.7893 18.4142 19.4142C18.7893 19.0391 19 18.5304 19 18M15 18C15 17.4696 15.2107 16.9609 15.5858 16.5858C15.9609 16.2107 16.4696 16 17 16C17.5304 16 18.0391 16.2107 18.4142 16.5858C18.7893 16.9609 19 17.4696 19 18M15 18H4M19 18H20" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    </span></a>
+                  {% endif %}
+                  {% if section.settings.include_sort %}
+                  {% include 'collection-sort' %}
+                  {% endif %}
+                </div>
+                <div id="collection-{{ section.id }}-filters" class="open-slide">
+                  <div id="filters" class="collection-filters">
+
+                    {% if section.settings.layout != 'form' %}
+                    {% if template == 'collection.12' %}
+                    {%- assign paginationAmount = 12 -%}
+                    {% elsif template == 'collection.24' %}
+                    {%- assign paginationAmount = 24 -%}
+                    {% elsif template == 'collection.36' %}
+                    {%- assign paginationAmount = 36 -%}
+                    {% elsif template == 'collection.48' %}
+                    {%- assign paginationAmount = 48 -%}
+                    {% else %}
+                    {%- assign paginationAmount = section.settings.products_per_page | downcase -%}
+                    {% endif %}
+                    {% else %}
+                    {%- assign paginationAmount = 24 -%}
+                    {% endif %}
+
+                    {% if section.settings.include_breadcrumbs or section.settings.include_sort or section.settings.include_pagination and section.settings.layout != 'form' %}
+                    {% if section.settings.include_breadcrumbs and section.settings.include_sort and section.settings.include_pagination and section.settings.layout != 'form' %}<div class="twelve tablet-only">{% include 'collection-breadcrumbs' %}</div>{% endif %}
+                    <div class="table sortby twelve  short-desktop-wrapper">
+                      {% if section.settings.include_pagination and section.settings.layout != 'form' %}{% include 'collection-paginate' %}{% endif %}
+                      {% if section.settings.include_breadcrumbs %}<span class="table-cell{% if section.settings.include_sort and section.settings.include_pagination and section.settings.layout != 'form' %} desk-only{% endif %}">{% include 'collection-breadcrumbs' %}</span>{% endif %}
+                      {% if section.settings.include_sort %}{% include 'collection-sort' %}{% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% if section.settings.text_over == false or collection.description.size > 0 and section.settings.include_description %}
+                    <div class="collection-desc tab-body text-center bottompad-half">
+                      {% if section.settings.text_over == false and section.settings.include_image and collection.image %}<div class="twelve"><h1 role="text">{{ collection.title }}</h1></div>{% endif %}
+                      {% if collection.description.size > 0 and section.settings.include_description %}
+                      <div class="eight center">
+                        {{ collection.description }}
+                      </div>
+                      {% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% if menu_count > 0 or filter_count > 0 or vendor_count %}
+                    <div class="three">
+                      {% for block in section.blocks %}
+                      {% case block.type %}
+                      {% when 'filters' %}
+                      {% include 'collection-filters' %}
+                      {% when 'sub-menu' %}
+                      {% unless finalCt > 1 %}{% include 'collection-sub-menu' %}{% endunless %}
+                      {% when 'vendors' %}
+                      {% include 'collection-vendors' %}
+                      {% endcase %}
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <div id="collection" class="{% if section.settings.layout == 'grid' %}collection-products{% else %}cart-table{% endif %} {% if menu_count > 0 or filter_count > 0 or vendor_count %}nine right{% else %}twelve{% endif %}{% unless collection.products.size > 0 %} text-center bottompad{% endunless %}">
+                {%- comment -%}
+
+                <div class="icon-legend">
+                    <span>
+                      <i class="fas fa-globe"></i>
+                      = {{'products.general.available_online' | t}}
+                    </span>
+                    <span>
+                      <i class="fas fa-store" title=""></i>
+                      = {{'products.general.available_in_store' | t}}
+                    </span>
+                </div>
+                {%- endcomment -%}
+                {% if collection.products.size > 0 %}
+
+                {% paginate collection.products by paginationAmount %}
+
+                {%- if current_tags -%}
+                {%- assign canon = canonical_url | split: '/' | last -%}
+                {%- assign canon_last = canon | split: '_' | last -%}
+                {%- endif -%}
+
+
+                <div id="product-id-{{ section.id }}" class="product-loop product-loop__custom product-id" data-product-id="{{ section.id }}">
+                  {% if section.settings.layout == 'row' %}
+                  {% include 'collection-row' %}
+                  {% elsif section.settings.layout == 'form' %}
+                  {% include 'collection-order-form' %}
+                  {% else %}
+                  {% for product in collection.products %}
+                  {%- assign cycleIndex = collection.handle -%}
+                  {% comment %} {% include 'product-loop' %} {% endcomment %}
+
+                  {% render 'prduct-card-custom' , product: product  %}
+                  {% endfor %}
+                  {% endif %}
+                </div>
+                {% if paginate.pages > 1 %}
+                <div class="pagination">
+                  <div>
+                    {% include 'pagination' %}
+                  </div>
+                </div>
+                {% endif %}
+                {% endpaginate %}
+                {% else %}
+                <h5>{{ 'collections.general.no_matches' | t }}</h5>
+                {% endif %}
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .content-height-{{ section.id }} {
+    height:100%;
+    {% if section.settings.include_image and collection.image %}height:{{ section.settings.padding | times: 0.75 }}vh;min-height:{{ section.settings.padding | times: 0.75 }}vh{% else %}height:5vh;min-height:5vh;{% endif %}
+  }
+  .relative-{{ section.id }}{
+    {% if section.settings.include_image and collection.image %}margin-bottom:-{{ section.settings.padding | divided_by: 4 }}vh;padding-bottom:{{ section.settings.padding | divided_by: 4 }}vh;{% else %}margin-bottom:-5vh;padding-bottom:5vh;{% endif %}
+  }
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Collection pages",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "checkbox",
+        "id": "include_image",
+        "label": "Show collection image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "text_over",
+        "default": true,
+        "label": "Text over image"
+      },
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": false
+      },
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "%",
+        "label": "Height",
+        "default": 30
+      },
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+      {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-primary",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Sub collections"
+      },
+      {
+        "type": "checkbox",
+        "id": "include_sub_collection",
+        "label": "Show sub collections",
+		"info": "There must be 2 or more sub collections",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "use_product_image",
+        "label": "Show first product image",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "checkbox",
+        "id": "include_description",
+        "label": "Show description",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_pagination",
+        "label": "Show products per page",
+		"info": "Not available with the order form",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_breadcrumbs",
+        "label": "Show breadcrumbs",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_sort",
+        "label": "Show product sorting options",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Product layout",
+        "default": "grid",
+        "options": [
+          {
+            "value": "grid",
+            "label": "Grid"
+          },
+          {
+            "value": "row",
+            "label": "Row"
+          },
+          {
+            "value": "form",
+            "label": "Order form"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "min": 12,
+        "max": 48,
+        "step": 12,
+        "label": "Products per page",
+        "default": 24
+      }
+	],
+    "blocks": [
+      {
+        "type": "filters",
+        "name": "Filters",
+		"limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "type",
+            "label": "Use dropdown",
+            "default": false
+          },
+          {
+            "type": "select",
+            "id": "label",
+            "label": "Dropdown label location",
+            "default": "above",
+            "options": [
+              {
+                "value": "inside",
+                "label": "Inside dropdown"
+              },
+              {
+                "value": "above",
+                "label": "Above"
+              },
+              {
+                "value": "none",
+                "label": "None"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "label": "Filter list",
+            "id": "filter_list",
+            "info": "Add case sensitive filter group titles separated by a comma, ie: Size,Category,Brand"
+          },
+          {
+            "type": "text",
+            "label": "Color variant title",
+            "id": "var_color",
+            "default": "Color"
+          }
+        ]
+      },
+      {
+        "type": "sub-menu",
+        "name": "Sub menu",
+		"limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "type",
+            "label": "Use dropdown",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Label"
+          },
+          {
+            "type": "select",
+            "id": "label",
+            "label": "Location",
+            "default": "above",
+            "options": [
+              {
+                "value": "inside",
+                "label": "Inside dropdown"
+              },
+              {
+                "value": "above",
+                "label": "Above"
+              },
+              {
+                "value": "none",
+                "label": "None"
+              }
+            ]
+          }
+		]
+      },
+      {
+        "type": "vendors",
+        "name": "Vendors",
+		"limit": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "type",
+            "label": "Use dropdown",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Label"
+		  },
+          {
+            "type": "select",
+            "id": "label",
+            "label": "Location",
+            "default": "above",
+            "options": [
+              {
+                "value": "inside",
+                "label": "Inside dropdown"
+              },
+              {
+                "value": "above",
+                "label": "Above"
+              },
+              {
+                "value": "none",
+                "label": "None"
+              }
+            ]
+          }
+		]
+      }
+    ]
+  }
+{% endschema %}

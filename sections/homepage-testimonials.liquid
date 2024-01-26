@@ -1,0 +1,120 @@
+<div data-section-id="{{ section.id }}"
+     data-section-type="homepage-testimonials"
+     id="homepage-testimonials-{{ section.id }}"
+     class="homepage-testimonials {% if section.blocks.size > 1 %}swiper-enabled {% endif %} clearfix">
+
+     <h4 class="testimonials-header">
+       {{'homepage.testimonials.title' | t | upcase}}
+     </h4>
+
+   <div class='container'>
+     <div class='slideshow_column'>
+     {% if section.blocks.size > 0 %}
+      <div class='testimonials_slider'>
+        <div class="swiper-container">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+
+            <div class="swiper-slide tmn-item">
+              {% if block.settings.image != blank %}
+              <div class='tmn-user'>
+              	<img data-src='{{block.settings.image | img_url:"400x"}}' alt="{{block.settings.image.alt}}" data-sizes="auto" class="lazyload" />
+              </div>
+              {% endif %}
+              <div class='tmn-details'>
+              	{% if block.settings.product_title != blank %}
+                <h4 class='h3 tmn-details_title'> {{block.settings.product_title }}</h4>
+                {% endif %}
+                {% if block.settings.review_title != blank %}
+                <h4 class='h2 slideshow_column_title'>{{ block.settings.review_title }}</h4>
+                {% endif %}
+                {% if block.settings.content != blank %}
+                <div class='content'>
+                	{{block.settings.content}}
+                </div>
+                {% endif %}
+                {% if block.settings.author_name != blank %}
+                <h6>{{block.settings.author_name }}</h6>
+                {% endif %}
+              </div>
+
+            </div>
+            {% endfor %}
+          </div>
+
+          <div id="swiper-pagination-{{ section.id }}" class="swiper-pagination">
+            <div id="swiper-button-prev-{{ section.id }}" class="swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+            <div id="swiper-button-next-{{ section.id }}" class="swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+          </div>
+
+        </div>
+      </div>
+      {% endif %}
+     </div>
+     <div class='image_column'>
+       {% if section.settings.image != blank %}
+       <div class='img-area'>
+
+         {%- capture id -%}'homepage-testimonials-image'{%- endcapture -%}
+         {%- assign img_src = section.settings.image -%}
+         {%- assign size = 180 -%}
+         {% include 'image-load' %}
+       </div>
+       {% endif %}
+     </div>
+  </div>
+
+</div>
+
+
+{% schema %}
+  {
+    "name": "Testimonials",
+    "settings": [
+		{
+		"type":"image_picker",
+		"id":"image",
+		"label":"Image"
+		}
+	],
+"blocks": [
+      {
+        "type": "testimonial",
+        "name": "Testimonial",
+        "settings": [
+            {
+            "type":"image_picker",
+            "id":"image",
+            "label":"Product Image"
+            },
+ 			{
+            "type":"text",
+            "id":"product_title",
+            "label":"Product Title"
+            },
+ 			{
+            "type":"text",
+            "id":"review_title",
+            "label":"Testimonial Title"
+            },
+ 			{
+            "type":"richtext",
+            "id":"content",
+            "label":"Testimonial Content"
+            },
+ 			{
+            "type":"text",
+            "id":"author_name",
+            "label":"Author Name"
+            }
+		]
+	}
+],
+    "presets": [
+      {
+          "name": "Testimonials",
+        "category": "Custom Section"
+      }
+    ]
+  }
+{% endschema %}

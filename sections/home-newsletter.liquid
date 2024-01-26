@@ -1,0 +1,96 @@
+{%- assign full_width = section.settings.full_width -%}
+
+<div data-section-id="{{ section.id }}" 
+     data-section-type="home-newsletter" 
+     class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} colored-top-bottom {% endif %}{% if section.settings.include_color == 'color-none' %}margins-section {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  <div class="container{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+      <div class="tab-body{% if full_width == false and section.settings.include_color != 'color-none' %} twelve background-colored {{ section.settings.include_color }} colored-top-bottom{% endif %}">
+        <div class="six animate {{ section.settings.text_alignment }} {{ section.settings.text_alignment | split:'-' | last }} toppad">
+          {% if section.settings.title != blank %}<h2>{{ section.settings.title | escape }}</h2>{% endif %}
+          {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+          {% if section.settings.body != blank %}{{ section.settings.body }}{% endif %}
+          {% include 'newsletter' %}  
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Newsletter",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Newsletter"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Offer incentives for customers to sign up"
+      },
+	  {
+        "type": "richtext",
+        "id": "body",
+        "label": "Text" 
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+            "label": "Right"
+          }
+        ]
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width background",
+       "default": true
+      }
+    ],
+    "presets": [
+      {
+        "name": "Newsletter",
+        "category": "Social"
+      }
+    ]
+  }
+{% endschema %}

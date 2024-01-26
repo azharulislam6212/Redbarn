@@ -1,0 +1,251 @@
+{%- assign full_width = section.settings.full_width -%}
+ 
+<div data-section-id="{{ section.id }}" data-section-type="blog-page" class="bottompad-section clearfix">
+  
+  {% if blog.articles.size > 0 %}
+
+  {% paginate blog.articles by section.settings.number_of_articles %}
+
+  {% for article in blog.articles limit: 1 %}
+  {% if article.image and section.settings.include_image %}
+  {%- assign img_src = article.image -%}
+  {% include 'image-background-src' %}
+  {%- assign img_size = '1x' -%}  
+
+  <div class="{% if full_width %}background-cover lazyload {% endif %}relative-{{ section.id }} clearfix"
+       {% if full_width %} 
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+       {% endif %}>
+    {% if full_width %}
+    <noscript>
+      <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+    </noscript>
+    {% endif %}
+
+    <div{% if full_width %} class="relative-{{ section.id }} background-overlay-{{ section.id }}"{% endif %}>
+      <div class="container text-center clearfix">
+        <div{% if full_width == false %} class="twelve"{% endif %}>
+          <div class="{% if full_width == false %}background-cover lazyload relative-{{ section.id }} {% endif %}{% if section.settings.font_color %}white {% endif %}clearfix"
+               {% if full_width == false %} 
+               data-bgset="{{ image_data | strip }}"
+               data-sizes="auto"
+               style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+               {% endif %}>
+            {% if full_width == false %}
+            <noscript>
+              <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) center center no-repeat;"></div>
+            </noscript>
+            {% endif %}
+
+            <div class="{% if full_width == false %}relative-{{ section.id }} background-overlay-{{ section.id }}{% endif %}">
+              <div class="container {% if full_width %}remove-pad {% else %}no-pad {% endif %}clearfix">
+                <div class="table content-height-{{ section.id }} {% if full_width == false %}twelve{% endif %}">
+                  <div class="table-cell">
+                    <div class="twelve text-center">
+                      {% include 'blog-header' %} 
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% else %}
+  
+  <div class="relative-{{ section.id }} clearfix">
+
+    <div{% if full_width %} class="relative-{{ section.id }} background-colored color-primary"{% endif %}>
+      <div class="container text-center clearfix">
+        <div{% if full_width == false %} class="twelve"{% endif %}>
+          <div class="{% if full_width == false %}relative-{{ section.id }} {% endif %}{% if section.settings.font_color %}white {% endif %}clearfix">
+            <div class="{% if full_width == false %}relative-{{ section.id }} background-colored color-primary{% endif %}">
+              <div class="container {% if full_width %}remove-pad {% else %}no-pad {% endif %}clearfix">
+                <div class="table content-height-{{ section.id }} {% if full_width == false %}twelve{% endif %}">
+                  <div class="table-cell">
+                    <div class="twelve text-center">
+                      {% include 'blog-header' %} 
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  {% endif %}
+
+  <div class="container clearfix">
+    <div{% if full_width == false %} class="twelve"{% endif %}>
+      <div{% if full_width == false %} class="twelve"{% endif %}>
+        <div class="eight background-white needed text-center center">
+          <div class="row">
+            <div class="no-img"> 
+              {% include 'blog-details' %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+
+  <div class="container clearfix">
+    {% for article in blog.articles offset:1 %}    
+    <div class="eight center">   
+      <div class="row{% if forloop.last and paginate.pages < 2 %} last{% endif %}">   
+        {% if article.image and section.settings.include_image %}
+        <div class="bottompad">
+        {%- assign id = article.image.id -%}
+        {%- assign img_src = article.image -%}
+        {%- assign size = 780 -%}
+        {%- capture alt -%}{{ article.title | escape }}{%- endcapture -%}
+        <a href="{{ article.url }}" title="{{ article.title }}"> 
+          {% include 'image-load' %}
+        </a>
+        </div>
+        {% endif %}
+        {% include 'blog-details' %}
+      </div>
+    </div>
+    {% endfor %}
+
+    {% if paginate.pages > 1 %}
+    <div class="pagination">
+      <div>
+        {% include 'pagination' %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  {% endpaginate %}
+  
+  {% else %}
+  
+  <div class="container toppad clearfix">
+    <div{% if full_width == false %} class="twelve"{% endif %}>
+      <div class="toppad clearfix">
+        {% include 'blog-header' %}
+      </div>
+      <div{% if full_width == false %}  class="twelve"{% endif %}>
+        <div class="twelve clearfix">
+          <h3 class="blog-title">{{ 'homepage.onboarding.no_blog_body' | t }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {% endif %}
+
+</div>
+
+<style>
+  .content-height-{{ section.id }} {height:{{ section.settings.padding | times: 0.75 }}vh;min-height:{{ section.settings.padding | times: 0.75 }}vh}
+  .relative-{{ section.id }}{margin-bottom:-{{ section.settings.padding | divided_by: 4 }}vh;padding-bottom:{{ section.settings.padding | divided_by: 4 }}vh;}
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+  {
+    "name": "Blogs",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "checkbox",
+        "id": "include_image",
+        "label": "Show image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_rss",
+        "label": "Show RSS",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "font_color",
+        "label": "White text",
+        "default": true
+      }, 
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width banner",
+       "default": true
+      },
+      {
+        "type": "range",
+        "id": "padding",
+        "min": 0,
+        "max": 50,
+        "step": 5,
+        "unit": "%",
+        "label": "Banner height",
+        "default": 50
+      },
+	  {
+        "type": "color",
+        "id": "background_img_overlay",
+        "label": "Overlay"
+      },
+      {
+        "type": "range",
+        "id": "background_img_overlay_opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "label": "Opacity",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "type": "range",
+        "id": "number_of_articles",
+        "min": 4,
+        "max": 16,
+        "step": 4,
+        "label": "Number of articles",
+        "default": 4
+      },
+      {
+        "type": "checkbox",
+        "id": "include_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_tags",
+        "label": "Show tags",
+        "default": false
+      }
+    ]
+  }
+{% endschema %}

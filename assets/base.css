@@ -1,0 +1,196 @@
+.container {
+  margin: 0 auto;
+  padding: 0 15px;
+  max-width: 1190px;
+}
+
+
+body {
+    padding: 0;
+}
+body:before{
+    background: linear-gradient(180deg, #E0D5CA 0%, rgba(225, 214, 204, 0.00) 100%), #FFF;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 0 24px;
+  }
+}
+
+
+
+.btn--custom{
+    border-radius: 100px;
+    display: inline-flex;
+    min-width: 300px;
+    width: auto;
+    height: 64px;
+    min-height: 40px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* Button Text */
+    font-family: 'Heebo';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 900;
+    line-height: 140%; /* 22.4px */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0 15px;
+    text-decoration: none;
+}
+
+.btn--custom:hover:not([disabled]), .btn--custom:focus:not([disabled]){
+  background: #841b1a;
+  border-color: #841b1a;
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn--primary{
+    border: 1px solid var(--www-redbarn-com-tall-poppy, #B3282D);
+    background: var(--www-redbarn-com-tall-poppy, #B3282D);
+    color: var(--www-redbarn-com-nero, #FFF);
+}
+
+.btn--secondary{
+  border: 2px solid var(--www-redbarn-com-tall-poppy, #B3282D);
+  background: var(--www-redbarn-com-nero, #FFF);
+  color:var(--www-redbarn-com-tall-poppy, #B3282D);
+}
+
+.shopify-payment-button__button--branded, .shopify-payment-button__button{
+  min-height: 64px !important;
+  width: 100%;
+  min-width: 100%;
+}
+
+.shopify-payment-button button.shopify-payment-button__button{
+  width: 100%;
+  min-width: 100%;
+}
+
+.shopify-cleanslate>div {
+  border-radius: 100px!important;
+}
+
+.full-width-btn {
+  min-width: 100%;
+}
+
+.mb-12{
+  margin-bottom: 12px;
+}
+
+
+.slick-dots li button::before{
+    display: none;
+}
+
+.slick-dots li button{
+  width: 8px;
+height: 8px;
+background-color: #D9D9D9;
+border-radius: 50%;
+padding: 0;
+}
+
+.slick-dots li{
+  display: inline-flex;
+  margin: 0 6px;
+  text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 8px;
+    height: 8px;
+}
+
+.slick-dots li.slick-active button{
+ background-color: #B3282D;
+}
+
+
+.slick-dots {
+	position: relative;
+	bottom: 0;
+	width: 100%;
+	margin: 48px 0 0;
+	list-style: none;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	height: 18px;
+	align-items: center;
+}
+
+.slick-disabled{
+  opacity: 0.5;
+}
+
+.slick-arrow{
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    border-radius: 20px;
+    background: #FFF;
+    box-shadow: 0px 4px 40px 0px rgba(0, 0, 0, 0.20);
+    display: flex;
+    width: 40px;
+    height: 40px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.slick-prev-btn {
+   left: 25px;
+}
+.slick-next-btn {
+  right: 25px;
+}
+
+.slick-dotted.slick-slider {
+	margin-bottom: 0;
+}
+
+@media screen and (max-width: 768px) {
+
+  .slick-dots {
+    height: 48px;
+  }
+  .rebuy-cart__flyout-header>div {
+    margin-top: 25px !important;
+}
+
+}
+
+
+.dynamic-checkout__content img{
+  display: inline;
+}
+
+.stamped-badge-caption{
+  position: relative;
+  padding: 0 5px;
+}
+.prduct-card__info .stamped-badge-caption::before{
+  content: '(';
+  position: absolute;
+  left: 0;
+}
+.prduct-card__info .stamped-badge-caption[data-reviews][data-label][data-version="2"]::after{
+  content: ')' !important;
+  position: absolute;
+  right: 0;
+}
+
+.collection-filters span.form{
+  background: transparent;
+}
+
+
+.collection-filters span.form span{
+  background: transparent;
+}

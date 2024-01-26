@@ -1,0 +1,5 @@
+<div class="table-cell">
+  <span class="form">
+    <h5>{{ 'collections.general.paginate' | t }}{%- assign paginationAmounts = '12,24,36,48' | split:',' -%}{% for i in paginationAmounts %}{%- assign x = i | prepend:'collection.' -%}<a href="javascript:void(0)" class="paginateBy{% if forloop.first %} first{% endif %}{% if paginationAmount == i or template == x %} active-filter active{% endif %}" title="{{ i }}" role="button">{{ i }}</a>{% endfor %}</h5>
+  </span>
+</div>

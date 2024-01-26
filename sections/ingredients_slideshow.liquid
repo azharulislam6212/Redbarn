@@ -1,0 +1,184 @@
+<div data-section-id="{{ section.id }}"
+     data-section-type="ingredients_slideshow"
+     id="ingredients_slideshow-{{ section.id }}"
+     class="{% if section.blocks.size > 1 %}swiper-enabled {% endif %} clearfix">
+
+  {%- assign img_src = section.settings.bg_image -%}
+  {% if img_src != blank %}
+
+  {% include 'image-background-src' %}
+  {%- assign img_size = '1x' -%}
+
+  <div class="background-cover lazyload"
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+       ></div>
+  {% endif %}
+  <div class='container'>
+    <div class='slideshow_column'>
+      {% if section.settings.title != blank %}
+      <h4 class='h2 slideshow_column_title'>{{section.settings.title}}</h4>
+      {% endif %}
+      {% if section.blocks.size > 0 %}
+      <div class='ingredients_slider'>
+        <div class="swiper-container" id="ingredients-carousel-{{section.id}}">
+          <div class="swiper-wrapper" data-swiper-slide-index="{{ forloop.index0 }}">
+            {% for block in section.blocks %}
+
+            <div class="swiper-slide item ">
+              {% if block.settings.image != blank %}
+              <span class="ingre-img">
+                {%- capture id -%}'ingre-img-{{block.id}}'{%- endcapture -%}
+                {%- assign img_src = block.settings.image -%}
+                {%- assign size = 170 -%}
+                {% include 'image-load' %}
+              </span>
+              {% endif %}
+              {% if block.settings.title_ != blank %}
+              <span class='ingre-name'>{{block.settings.title_}}</span>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+
+          <div id="swiper-pagination-{{ section.id }}" class="swiper-pagination">
+            <div id="swiper-button-prev-{{ section.id }}" class="swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+            <div id="swiper-button-next-{{ section.id }}" class="swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+          </div>
+
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <div class='details_column'>
+      {% if section.settings.subtitle != blank %}
+      <h4 class='h3'> {{ section.settings.subtitle }} </h4>
+      {% endif %}
+
+      <ul class='list-unstyled'>
+        {% if section.settings.svg_icon_1 != blank or section.settings.detail_image_1 != blank or section.settings.details_text_1 != blank %}
+        <li>
+          {% if section.settings.svg_icon_1 != blank or section.settings.detail_image_1 != blank  %}
+          <span class="p-icon">
+            {% if section.settings.svg_icon_1 != blank  %}
+            <img width="52" height="52" src="{{section.settings.svg_icon_1}}" alt="">
+            {% else %}
+            <img width="52" height="52" src="{{section.settings.detail_image_1 | img_url: '110x' }}" alt="">
+            {% endif %}
+
+          </span>
+          {% endif %}
+
+          {% if section.settings.details_text_1 != blank %}
+          <span  class="p-details"> {{  section.settings.details_text_1 }}</span>
+          {% endif %}
+        </li>
+        {% endif %}
+         {% if section.settings.svg_icon_2 != blank or section.settings.detail_image_2 != blank or section.settings.details_text_2 != blank %}
+        <li>
+          {% if section.settings.svg_icon_2 != blank or section.settings.detail_image_2 != blank  %}
+          <span class="p-icon">
+            {% if section.settings.svg_icon_2 != blank  %}
+            <img width="52" height="52" src="{{section.settings.svg_icon_2}}" alt="">
+            {% else %}
+            <img width="52" height="52" src="{{section.settings.detail_image_2 | img_url: '110x' }}" alt="">
+            {% endif %}
+
+          </span>
+          {% endif %}
+
+          {% if section.settings.details_text_2 != blank %}
+          <span  class="p-details"> {{  section.settings.details_text_2 }}</span>
+          {% endif %}
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+
+
+{% schema %}
+  {
+    "name": "Ingredients slideshow",
+    "settings": [
+	{
+	"type":"image_picker",
+	"id":"bg_image",
+	"label":"Background Image"
+	},
+	{
+	"type":"text",
+	"id":"title",
+	"label":"Heading"
+	},
+	{
+	"type":"text",
+	"id":"subtitle",
+	"label":"Subheading"
+	},
+	{
+	"type":"header",
+	"content":"Details Content"
+	},
+	{
+	"type":"html",
+	"id":"svg_icon_1",
+    "label":"Details Image Svg 1"
+    },
+    {
+    "type":"image_picker",
+    "id":"detail_image_1",
+    "label":"Details Image 1"
+    },
+    {
+    "type":"text",
+    "id":"details_text_1",
+    "label":"Details Text 1"
+    },
+	{
+	"type":"html",
+	"id":"svg_icon_2",
+    "label":"Details Image Svg 2"
+    },
+ {
+    "type":"image_picker",
+    "id":"detail_image_2",
+    "label":"Details Image 2"
+    },
+    {
+    "type":"text",
+    "id":"details_text_2",
+    "label":"Details Text 2"
+    }
+
+    ],
+"blocks": [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+            {
+            "type":"image_picker",
+            "id":"image",
+            "label":"Image"
+            },
+ 			{
+            "type":"text",
+            "id":"title_",
+            "label":"Title"
+            }
+		]
+	}
+],
+    "presets": [
+      {
+        "name": "Ingredients slideshow",
+        "category": "Custom Section"
+      }
+    ]
+  }
+{% endschema %}

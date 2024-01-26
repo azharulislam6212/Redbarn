@@ -1,0 +1,11 @@
+{% include 'image-background-src' %}
+
+<div class="background-{{bg_size}} lazyload no-js-hide"
+     data-bgset="{{ image_data | strip }}"
+     data-sizes="auto"
+     style="background:url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7) center center no-repeat;">&nbsp;</div>
+
+<noscript>
+  {%- assign img_size = size | append: 'x' -%}
+  <div class="background-{{bg_size}} lazyload" style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"></div>
+</noscript>

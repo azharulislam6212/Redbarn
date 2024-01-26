@@ -1,0 +1,46 @@
+
+{{ 'product-card.css' | asset_url | stylesheet_tag }}
+
+
+
+{%- if product.collections != empty -%}
+    {%- assign collection = product.collections.first -%}
+    <div class="related-product">
+     <div class="container">
+      {% if section.settings.heading != blank %}
+        <h2 class="related-product__heading">{{section.settings.heading}}</h2>
+      {% endif %}
+        <ul class="related-product__list related-product__slider products ">
+            {% for rproduct in collection.products limit: 7 %}
+              {%- unless rproduct.handle contains product.handle %}
+              <li class="related-product__item">
+                {% render 'prduct-card-custom' , product: rproduct  %}
+              </li>
+            {% endunless -%}
+            {%- endfor -%}
+        
+          {%- endif -%}
+       </ul>
+     </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Related Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Customers who bought this item also bought"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Products"
+    }
+  ]
+}
+{% endschema %}

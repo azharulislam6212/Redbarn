@@ -1,0 +1,4 @@
+{% layout none %}
+{%- for tag in collection.tags -%}
+{{ tag | handle }}{%- unless forloop.last -%}, {%- endunless -%}
+{%- endfor -%}

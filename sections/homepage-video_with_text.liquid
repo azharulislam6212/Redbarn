@@ -1,0 +1,90 @@
+<div data-section-id="{{ section.id }}" 
+     data-section-type="homepage-video_with_text"
+     id="homepage-video_with_text-{{ section.id }}"
+     class="clearfix">
+  <div class='pets-safe'>
+    <div class='container'>
+      <div class='video_column'>
+        <div class='v-placeholder'>
+
+          {%- capture id -%}'v-placeholder-image'{%- endcapture -%}
+          {%- assign img_src = section.settings.image -%}                             
+          {%- assign size = 180 -%}
+
+          {% include 'image-load' %}
+          {% if section.settings.video_iframe != blank %}
+          <a href="javascript:void(0);"
+             class="play-btn"
+             data-fancybox
+             data-type="iframe"
+             data-src="{{section.settings.video_iframe }}"
+             data-target="#videoModal">
+            <img src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/play-btn-img.png?v=1607957429" alt="Play Button">
+          </a>
+          {% endif %}
+
+        </div>
+
+      </div>
+      <div class='text_column'>
+        {% if section.settings.title != blank %}
+        <h4 class='h2 text_column_title'> {{ section.settings.title  }}</h4>
+        {% endif %}
+        {% if section.settings.content != blank %}
+        <div class='video_content'>
+          {{ section.settings.content }}
+        </div>
+        {% endif %}
+        {% if section.settings.button_text != blank %}
+        <a href='{{ section.settings.button_link}}' class='btn'>{{section.settings.button_text}}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Video with text",
+    "settings": [
+
+		{
+		"type":"text",
+		"id":"title",
+		"label":"Title"
+		},
+		{
+		"type":"richtext",
+		"id":"content",
+		"label":"Content"
+		},
+		{
+		"type":"text",
+		"id":"button_text",
+		"label":"Button Text"
+		},
+		{
+		"type":"url",
+		"id":"button_link",
+		"label":"Button Link"
+		},
+		{
+		"type":"image_picker",
+		"id":"image",
+		"label":"Placeholder Image"
+		},
+		{
+		"type":"text",
+		"id":"video_iframe",
+		"label":"Video url"
+		}
+
+	],
+    "presets": [
+      {
+        "name": "Video with text",
+        "category": "Custom Section"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,19 @@
+{%- assign swiper-slide = '' -%}
+<div class="related-product-loop hidden{% unless related_products.size > 2 %} collection-products{% endunless %}">
+  <div data-block-id="related-products" class="{% if related_products.size > 2 %}swiper-container plus-grid {% else %}twelve center {% endif %}product-loop product-loop-{{ section.id }}"{% if related_products.size > 2 %} id="swiper-carousel-related-products-grid"{% endif %}>
+    {% if related_products.size > 2 %}<div class="swiper-wrapper swiper-wrapper-related-products{% if related_products.size < 5 %} swiper-center{% endif %}">{% endif %}
+    {% for product_handle in related_products limit: 4 %}
+    {% if all_products[product_handle] != blank %}
+    {%- assign product = all_products[product_handle] -%}
+    {%- assign cycleIndex = 'related' -%}
+    {% if related_products.size > 2 %}{%- assign swiper-slide = ' swiper-slide' -%}{% endif %}
+    {% include 'product-loop' %}
+    {% endif %}
+    {% endfor %}
+    {% if related_products.size > 2 %}</div>{% endif %}
+    <div id="swiper-pagination-related-products" class="swiper-pagination relative{% if section.settings.include_color != 'color-none' %} bottompad-quarter{% endif %} hidden">
+      <div id="swiper-button-prev-related-products" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+      <div id="swiper-button-next-related-products" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+    </div>
+  </div>
+</div>

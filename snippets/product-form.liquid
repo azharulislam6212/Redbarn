@@ -1,0 +1,442 @@
+{% assign sca_product_id_text = "," | append : product.id | append : "," %}{% assign sca_price = product.price %}{% assign sca_price_min = product.price_min %}{% assign sca_price_max = product.price_max %}{% assign sca_compare_at_price = product.compare_at_price %}{% assign sca_compare_at_price_min = product.compare_at_price_min %}{% assign sca_compare_at_price_max = product.compare_at_price_max %}{% assign sca_product_available = product.available %}{% assign sca_product_variantCount = product.variants.size %}{% assign sca_compare_at_price_varies = product.compare_at_price_varies %}{% assign sca_price_varies = product.price_varies %}{% assign sca_has_only_default_variant = false %}{% assign sca_product_variants_json = product.variants | json %}{% capture sca_product_json %}{ {% if sca_all_gift_products_ids == null or sca_all_gift_products_ids contains sca_product_id_text %}{% assign sca_product_available = false %}{% assign sca_product_variantCount = 0 %}{% assign sca_has_only_default_variant = false %}{% assign sca_is_first_variant = true %}{% capture sca_variants_json%}[{% for variant in product.variants %}{% unless variant.metafields.secomapp.freegifts %}{% unless variant.title contains '(Freegifts)' %}{% unless variant.title contains '% off)' %}{% unless variant.metafields.shappify_qb.qb_hide == "1" %}{% unless variant.metafields.shappify_bundle.is_bundle == "true" %}{% unless variant.metafields.brodev_scn.hide == "true" %}{% unless variant.metafields.wholesaler2.wholesale %}{% unless variant.metafields.Wholesaler.level %}{% unless variant.title contains '(Wholesale' %}{% if sca_is_first_variant %}{{ variant | json }}{% assign sca_price = variant.price %} {% assign sca_price_min = variant.price %}{% assign sca_price_max = variant.price %}{% assign sca_compare_at_price = variant.compare_at_price %}{% assign sca_compare_at_price_min = variant.compare_at_price %}{% assign sca_compare_at_price_max = variant.compare_at_price %}{% assign sca_product_available = variant.available %}{% assign sca_product_variantCount = 1 %}{% assign sca_is_first_variant = false %}{% else %},{{variant | json }}{% if sca_price_min >= variant.price %}{% assign sca_price_min = variant.price %}{% assign sca_price = variant.price %}{% endif %}{% if sca_price_max <= variant.price %}{% assign sca_price_max = variant.price %}{% endif %}{% if variant.compare_at_price %}{% if sca_compare_at_price_min == null or sca_compare_at_price_min >= variant.compare_at_price %}{% assign sca_compare_at_price_min = variant.compare_at_price %}{% assign sca_compare_at_price = variant.compare_at_price %}{% endif %}{% if sca_compare_at_price_max == null or sca_compare_at_price_max < variant.compare_at_price %}{% assign sca_compare_at_price_max = variant.compare_at_price %}{% endif %}{% endif %}{% if variant.available == true %}{% assign sca_product_available = true %}{% endif %}{% assign sca_product_variantCount = sca_product_variantCount | plus: 1 %}{% endif %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endfor %}]{% endcapture %}{% if sca_price_min < sca_price_max %}{% assign sca_price_varies = true %}{% else %}{% assign sca_price_varies = false %}{% endif %}{% if sca_compare_at_price_min < sca_compare_at_price_max %}{% assign sca_compare_at_price_varies = true %}{% else %}{% assign sca_compare_at_price_varies = false %}{% endif %}{% if sca_product_variantCount > 1 %}{% assign sca_has_only_default_variant = true %}{% endif %}{% if sca_product_variantCount == product.variants.size %}"variants":{{ product.variants }},{% else %}{% assign sca_product_variants_json = sca_variants_json %}"variants":{{sca_variants_json }},{% endif %}{% endif %}"id": {{ product.id }},"title": {{ product.title | json }},"handle": {{ product.handle | json }},"description": {{ product.description | json }},"published_at": {{ product.published_at | json }},"created_at": {{ product.created_at | json }},"vendor": {{ product.vendor | json }},"type": {{ product.type | json }},"tags": {{ product.tags | json }},"price": {{ sca_price }},"price_min": {{ sca_price_min }},"price_max": {{ sca_price_max }},"available": {{ product.available }},"price_varies": {{sca_price_varies }},"compare_at_price": {{ sca_compare_at_price }},"compare_at_price_min": {{ sca_compare_at_price_min }},"compare_at_price_max": {{ sca_compare_at_price_max }},"compare_at_price_varies": {{ sca_compare_at_price_varies }},"images": {{ product.images | json }},"featured_image": {{ product.featured_image | json }},"options": {{ product.options | json }},"media": {{ product.media | json }},"content": {{product.content | json}} }{% endcapture sca_product_json %}
+
+{%- assign hide_default_title = false -%}
+{% if sca_product_variantCount == 1 %}
+{%- assign hide_default_title = true -%}
+{% endif %}
+
+{% assign ShopLocalFlag = false %}
+{% assign ComingSoonFlag = false %}
+
+{% for tag in product.tags %}
+{% if tag contains "ShopLocal" %}
+{% assign ShopLocalFlag = true %}
+{% endif %}
+
+{% if tag contains "ComingSoon" %}
+{% assign ComingSoonFlag = true %}
+{% endif %}
+
+{% endfor %}
+
+
+{%- capture form_id -%}add-item-form-{{ section.id }}{%- endcapture -%}
+{%- capture form_class -%}{% if section.settings.go_to_cart_enable or template == 'product.quick' and settings.go_to_cart_enable %}go-to-cart-{{ section.id }} {% endif %}product-form-{{ section.id }} variants clearfix{%- endcapture -%}
+
+<div class="product-variants  clearfix">
+{% form 'product', product, data-productid: product.id, id:form_id, class:form_class %}
+
+  {% if section.settings.product_availability_enable or template == 'product.quick' and settings.product_availability_enable_quick %}
+  {% if template == 'product.quick' %}{%- assign avail_total = settings.product_availability_total_quick -%}{% else %}{%- assign avail_total = section.settings.product_availability_total -%}{% endif %}
+  <div class="twelve clearfix">
+    <span id="inventory-{{ section.id }}" class="variant-inventory bottompad" data-inv="{% if template == 'product.quick' %}{{ settings.product_availability_total_quick }}{% else %}{{ section.settings.product_availability_total }}{% endif %}" role="status">
+      <h4>{% if variant.available %}{% if variant.inventory_management and variant.inventory_quantity > 0 and variant.inventory_quantity < avail_total %}{{ 'products.general.inv_msg_1' | t }} {{ variant.inventory_quantity }} {{ 'products.general.inv_msg_2' | t }}{% else %}{{ 'products.product.available' | t }}{% endif %}{% else %} {% unless ShopLocalFlag %} {{ 'products.product.sold_out' | t }} {% endunless %} {% endif %}{% if variant.incoming %}<br/><span class="error-text"><small><span class="icon icon-bell"></span> {% if variant.incoming %}{% if variant.next_incoming_date != blank %}{% if variant.available %}{{ 'products.product.stock_more' | t }}{% else %}{{ 'products.product.stock_in' | t }}{% endif %} {{ variant.next_incoming_date | date: '%b %e' }}{% else %}{{ 'products.product.stock_soon' | t }}{% endif %}{% endif %}</small></span>{% endif %}</h4>
+    </span>
+  </div>
+  {% endif %}
+
+  {%- assign option_index = 0 -%}
+  {% for option in product.options %}
+  {%- capture downcased_option -%}{{ option | downcase }}{%- endcapture -%}
+  {%- assign option_index = forloop.index0 -%}
+  {%- assign how_many_options = 0 -%}
+  {%- assign current_options = '' -%}
+  {% for variant in product.variants %}
+{% unless variant.metafields.secomapp.freegifts %}
+{% unless variant.title contains '% off)' %}
+
+  {%- assign current_option = variant.options[option_index] -%}
+  {% unless current_options contains current_option %}
+  {% if how_many_options > 0 %}
+  {%- assign current_options = current_options | join: '|' | append: '|' -%}
+  {% endif %}
+  {%- assign current_options = current_options | append: current_option -%}
+  {%- assign current_options = current_options | split: '|' | sort -%}
+  {%- assign how_many_options = current_options | size -%}
+  {% endunless %}
+
+{% endunless %}
+{% endunless %}
+  {% endfor %}
+  {% if current_options.size > 1 %}{%- capture count -%}{% increment count %}{%- endcapture -%}{% endif %}
+  {% endfor %}
+  {%- assign count = count | plus:1 -%}
+
+  {% if section.settings.layout %}
+  {%- capture block_width -%}{{ count }}{%- endcapture -%}
+
+  {% case block_width %}
+  {% when '0' %}
+  {%- assign block_width = 'six' -%}
+  {% when '1' %}
+  {%- assign block_width = 'four' -%}
+  {% when '2' %}
+  {%- assign block_width = 'three' -%}
+  {% when '3' %}
+  {%- assign block_width = 'two-half' -%}
+  {% endcase %}
+  {% else %}
+  {%- assign block_width = 'six' -%}
+  {% endif %}
+
+  <div class="purchase-section{% if sca_product_variantCount > 1 %} multiple{% endif %}{% if section.settings.layout %} banner{% endif %}"> 
+
+    <select id="product-select-{{ section.id }}" class="{{ block_width }} center no-js hidden no-select product-select" name="id" data-productid="{{ product.id }}" data-cols="{{ block_width }}" data-length="{% if section.settings.var_length_enable or template == 'product.quick' and settings.var_length_enable_quick %}0{% else %}1{% endif %}"{% if hide_default_title %} style="display:none" aria-hidden="true"{% endif %}>
+      {% for variant in product.variants %}
+{% unless variant.metafields.secomapp.freegifts %}
+{% unless variant.title contains '% off)' %}
+
+      <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}"{% if variant.inventory_management and variant.inventory_policy != 'continue' %} data-inv="{% if variant.inventory_quantity > 0 %}{{ variant.inventory_quantity }}{% else %}0{% endif %}"{% endif %} data-inc="{{ variant.incoming }}"{% if variant.incoming %} data-inc_date="{% if variant.incoming %}{% if variant.next_incoming_date != blank %}{% if variant.available %}{{ 'products.product.stock_more' | t }}{% else %}{{ 'products.product.stock_in' | t }}{% endif %} {{ variant.next_incoming_date | date: '%b %e' }}{% else %}{{ 'products.product.stock_soon' | t }}{% endif %}{% endif %}"{% endif %}>{{ variant.title }} - {{ variant.price | money }}</option>
+
+{% endunless %}
+{% endunless %}
+      {% endfor %}
+    </select>
+
+    
+    {% unless product.tags contains 'non-food' %}
+
+
+    <div class='great-for'>
+      <h6>Helps support</h6>
+      <ul>
+        {% for tag in product.tags %}
+        {% if tag contains 'Focus_' %}
+        {% assign focus_text = tag | split:"Focus_" | last  | trim %}
+        {% assign focus_text_handle = focus_text | handle %}
+
+
+        {% if focus_text_handle == 'dental-hygiene' %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/DentalHygiene.svg?v=1607957429' %}
+        {% elsif focus_text_handle == 'boredom-busting'  %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/boredom-busting.svg?v=1607957429' %}
+        {% elsif focus_text_handle == 'healthy-weight'  %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/HealthyWeight.svg?v=1608385283' %}
+        {% elsif focus_text_handle == 'muscle-development'  %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/muscle-development.svg?v=1608385283' %}
+        {% elsif focus_text_handle == 'rewards_functional-ingredients'  %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/functional-ingredients.svg?v=1608385434' %}
+        {% elsif focus_text_handle == 'hydration'  %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Water_1.svg?v=1608385434' %}
+        {% elsif focus_text_handle == 'digestive-health'  %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/digestive-health.svg?v=1609937981' %}
+		{% elsif focus_text_handle == 'functional-ingredients'  %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/functional-ingredients_638e7c96-eb69-46f3-9c46-2ad309ad30d9.svg?v=1609937482' %}
+        {% elsif focus_text_handle == 'training-treats'  %}
+        {% assign focus_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/training-treats.svg?v=1611004263' %}
+
+
+
+        {% endif %}
+
+        <li>
+          <span class="icn-wrap">
+            <img src='{{focus_text_icon}}' alt='{{focus_text}}' />
+          </span>
+          <span>{{focus_text}}</span>
+        </li>
+
+
+        {% endif %}
+        {% endfor %}
+      </ul>
+
+      <h6>Recommended for</h6>
+      <ul>
+        {% for tag in product.tags %}
+        {% if tag contains 'Chew Type_' %}
+        {% assign chew_type_text = tag | split:"Chew Type_" | last  | trim %}
+        {% assign chew_type_text_handle = chew_type_text | handle %}
+
+
+        {% if chew_type_text_handle == 'light-chewer' %}
+        {% assign chew_type_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/light.svg?v=1607957429' %}
+        {% elsif chew_type_text_handle == 'moderate-chewer'  %}
+        {% assign chew_type_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/moderate.svg?v=1607957429' %}
+        {% elsif chew_type_text_handle == 'power-chewer'  %}
+        {% assign chew_type_text_icon = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/power.svg?v=1607957429' %}
+        {% endif %}
+
+        <li>
+          <span class="icn-wrap">
+            <img src='{{chew_type_text_icon}}' alt='{{chew_type_text}}' />
+          </span>
+          <span>{{chew_type_text}}</span>
+        </li>
+
+        {% endif %}
+        {% endfor %}
+      </ul>
+
+    </div>
+    {% endunless %}
+
+  {% if product.tags contains 'gift-card' %}
+    <div class='great-for'>
+       <h6>Gift card purchases do not count towards free shipping, but can be purchased individually with no shipping charges for any denomination.</h6>
+    <br>
+       <h6>Gift cards are redeemable only at redbarn.com.</h6>
+        <br>
+        <h6>Gift cards cannot be used for reoccurring subscription payments.</h6>
+          <br>
+      {% endif %}
+    </div>
+
+    {% comment %}
+    <a href="javascript:void(0);" class="btn btn-outline additional_details_anchor">Additional Details</a>
+    {% endcomment %}
+
+
+    <div class=" twelve {% if block_width == 'six' %} negative-left negative-right{% endif %}">
+
+
+
+      <div class='detail-price  {% if ShopLocalFlag %} ShopLocalFlag_wrapper {% endif %} {% if ComingSoonFlag %} hide_block {% endif %}'>
+        {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+        <h2 class="offers limoniapps-discountninja-productprice">
+          <span id="price-{{ section.id }}" class="price-preview price price-field">{% if product.selected_or_first_available_variant.price > 0 %}{{ product.selected_or_first_available_variant.price | money }}{% else %}{{ 'products.product.free' | t }}{% endif %}{% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %} <del>{{ product.selected_or_first_available_variant.compare_at_price | money }}</del>{% endif %}</span>
+          <span id="savings-{{ section.id }}" class="savings{% unless product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %} hidden{% endunless %}" aria-hidden="true"><span>{{ 'products.product.savings' | t }}</span> <span id="compare-{{ section.id }}">{{ product.selected_or_first_available_variant.compare_at_price | minus: product.selected_or_first_available_variant.price | money_without_trailing_zeros }}</span></span>
+        </h2>
+
+         {%- assign variant = product.selected_or_first_available_variant -%}
+    {% if section.settings.qty_enable or template == 'product.quick' and settings.qty_enable_quick %}
+      {% if ShopLocalFlag %}
+        {% else %}
+        <div class="four">
+      <span class="quantity form">
+        <button type="button" class="icon icon-minus btn qtybtn qtyminus_{{ section.id }} text-center" field="updates_{{ section.id }}" aria-label="{{ 'products.general.minus' | t }}"></button>
+        <input name="quantity" type="number" inputmode="numeric" pattern="[0-9]*" value="{% unless variant.available %}0{% else %}1{% endunless %}" min="{% unless product.available %}0{% else %}1{% endunless %}" class="ignore quantity item-qty text-center" field="error_{{ section.id }}" id="updates_{{ section.id }}"{% if variant.inventory_management and variant.inventory_policy != 'continue' %} max="{{ variant.inventory_quantity }}"{% endif %} />
+        <button type="button" class="icon icon-plus btn qtybtn qtyplus_{{ section.id }} text-center" field="updates_{{ section.id }}" aria-label="{{ 'products.general.plus' | t }}"></button>
+        <label class="stock error hidden" id="error_{{ section.id }}"></label>
+      </span>
+    </div>
+        {% endif %}
+    {% endif %}
+
+
+        {% assign search_params = "" %}
+        {% for tag in product.tags %}
+		{% if tag contains "stockist-" %}
+        	{% assign search_params = tag |split: "stockist-" | last %}
+        {% break%}
+        {% endif %}
+        {% endfor %}
+
+        {% if ShopLocalFlag %}
+        <span class=" {% if block_width == 'six' %} table-center{% endif %}">
+          <button class='store_locator_link btn' {% if search_params != "" %} data-search-params="{{search_params}}" {% endif %}>{{ 'products.product.store_locator_link' | t }}</button>
+        </span>
+
+        {% else %}
+
+        <span class="purchase{% if block_width == 'six' %} table-center{% endif %}">
+
+          {% comment %}
+          <div class='-half six'>
+            <button class='store_locator_link btn' {% if search_params != "" %} data-search-params="{{search_params}}" {% endif %}>{{ 'products.product.store_locator_link' | t }}</button>
+
+          </div>
+          {% endcomment %}
+
+
+          {% unless variant.available %}
+          <div class="{% if variant.available %}{% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %}-quarter{% else %}-half{% endif %}{% endif %}{% if block_width == 'six' %} six{% endif %}">
+            <input type="submit" id="add-to-cart-{{ section.id }}" class="btn add-to-cart addtocart auto-full-width disabled outline {% if variant.available %}{% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %}-quarter{% endif %}{% endif %}" disabled="disabled" value="{{ 'products.product.sold_out' | t }}" />
+          </div>
+          {% else %}
+          <div class="{% if variant.available %}{% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %}-quarter{% else %}-half{% endif %}{% endif %}{% if block_width == 'six' %} six{% endif %}">
+            <input type="submit" id="add-to-cart-{{ section.id }}" class="btn add-to-cart addtocart auto-full-width{% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %} smart-outline{% endif %}" name="add" value="{{ 'products.product.add_to_cart' | t }}" />
+            <div class="cart-animation hidden" aria-hidden="true"></div>
+          </div>
+          {% if section.settings.smart_enable or template == 'product.quick' and settings.smart_enable_quick %}
+          <div class="{% if block_width == 'six' %} six{% endif %} auto-full-width">
+            {{ form | payment_button }}
+          </div>
+          {% endif %}
+          {% endunless %}
+
+
+        </span>
+        {% endif %}
+
+
+      </div>
+      {% comment %}Added/Modified by Limoni Apps on March 30 2021 to support Discount Ninja{% endcomment %}
+      <div class="limoniapps-discountninja-promotioncard-productpage"></div>
+
+
+
+    </div>
+
+  </div>
+
+{% endform %}
+</div>
+
+{% unless product == empty %}
+<script type="application/json" id="ProductJson-{{ section.id }}">
+    {{ product | json }}
+</script>
+<script type="application/json" id="ModelJson-{{ section.id }}">
+    {{ product.media | where: 'media_type', 'model' | json }}
+</script>
+{% endunless %}
+
+<script>
+  //	Removes non-existent variants | Based on https://gist.github.com/jonathanmoore/c0e0e503aa732bf1c05b7a7be4230c61
+  {% unless template == 'product.quick' %}
+  window.addEventListener('DOMContentLoaded', function() {
+  {% endunless %}
+    var Shopify = Shopify || {},
+        section_id = '{{ section.id }}';
+    Shopify.arrayIncludes = function(e, t) {
+      for (var n = 0; n < e.length; n++)
+        if (e[n] == t) return !0;
+      return !1
+    }, Shopify.uniq = function(e) {
+      for (var t = [], n = 0; n < e.length; n++) Shopify.arrayIncludes(t, e[n]) || t.push(e[n]);
+      return t
+    }
+    Shopify.optionsMap = {};
+    Shopify.updateOptionsInSelector = function(selectorIndex) {
+      switch (selectorIndex) {
+        case 0:
+          var key = 'root';
+          var selector = $('#product-id-' + section_id + ' .single-option-selector:eq(0)');
+          break;
+        case 1:
+          var key = $('#product-id-' + section_id + ' .single-option-selector:eq(0)').val();
+          var selector = $('#product-id-' + section_id + ' .single-option-selector:eq(1)');
+          break;
+        case 2:
+          var key = $('#product-id-' + section_id + ' .single-option-selector:eq(0)').val();
+          key += ' / ' + $('#product-id-' + section_id + ' .single-option-selector:eq(1)').val();
+          var selector = $('#product-id-' + section_id + ' .single-option-selector:eq(2)');
+      }
+      var initialValue = selector.val();
+      selector.empty();
+      var availableOptions = Shopify.optionsMap[key];
+      for (var i=0; i<availableOptions.length; i++) {
+        var option = availableOptions[i];
+        var newOption = $('<option></option>').val(option).html(option);
+        selector.append(newOption);
+      }
+      if ($.inArray(initialValue, availableOptions) !== -1) {
+        selector.val(initialValue);
+      }
+      selector.trigger('change');
+    };
+    Shopify.linkOptionSelectors = function(product) {
+      for (var i=0; i<product.variants.length; i++) {
+        var variant = product.variants[i];
+        if (variant) {
+          Shopify.optionsMap['root'] = Shopify.optionsMap['root'] || [];
+          Shopify.optionsMap['root'].push(variant.option1);
+          Shopify.optionsMap['root'] = Shopify.uniq(Shopify.optionsMap['root']);
+          if (product.options.length > 1) {
+            var key = variant.option1;
+            Shopify.optionsMap[key] = Shopify.optionsMap[key] || [];
+            Shopify.optionsMap[key].push(variant.option2);
+            Shopify.optionsMap[key] = Shopify.uniq(Shopify.optionsMap[key]);
+          }
+          if (product.options.length === 3) {
+            var key = variant.option1 + ' / ' + variant.option2;
+            Shopify.optionsMap[key] = Shopify.optionsMap[key] || [];
+            Shopify.optionsMap[key].push(variant.option3);
+            Shopify.optionsMap[key] = Shopify.uniq(Shopify.optionsMap[key]);
+          }
+        }
+      }
+      Shopify.updateOptionsInSelector(0);
+      if (product.options.length > 1) Shopify.updateOptionsInSelector(1);
+      if (product.options.length === 3) Shopify.updateOptionsInSelector(2);
+      $('#product-id-' + section_id + ' .single-option-selector:eq(0)').change(function() {
+        Shopify.updateOptionsInSelector(1);
+        if (product.options.length === 3) Shopify.updateOptionsInSelector(2);
+        return true;
+      });
+      $('#product-id-' + section_id + ' .single-option-selector:eq(1)').change(function() {
+        if (product.options.length === 3) Shopify.updateOptionsInSelector(2);
+        return true;
+      });
+    };
+    {% if product.available and product.options.size > 1 %}
+    var $addToCartForm = $('#product-id-' + section_id + ' form[action="/cart/add" data-productid="{{ product.id }}"]');
+    if (window.MutationObserver && $addToCartForm.length) {
+      if (typeof observer === 'object' && typeof observer.disconnect === 'function') {
+        observer.disconnect();
+      }
+      var config = { childList: true, subtree: true };
+
+      "undefined"==typeof freegifts_product_json&&(window.freegifts_product_json=function(product){if(!Array.isArray){Array.isArray=function(arg){return Object.prototype.toString.call(arg)==='[object Array]'}}if(!String.prototype.endsWith){Object.defineProperty(String.prototype,'endsWith',{value:function(searchString,position){var subjectString=this.toString();if(position===undefined||position>subjectString.length){position=subjectString.length}position-=searchString.length;var lastIndex=subjectString.indexOf(searchString,position);return lastIndex!==-1&&lastIndex===position}})}if(product){if(product.options&&Array.isArray(product.options)){for(var i=0;i<product.options.length;i++){if(typeof product.options[i]!=='undefined'&&typeof product.options[i].values!=='undefined'){var option=product.options[i];if(option.values&&Array.isArray(option.values))for(var r=0;r<option.values.length;r++)(option.values[r].endsWith("(Freegifts)")||option.values[r].endsWith("% off)"))&&(option.values.splice(r,1),r--)}}}if(product.options_with_values&&Array.isArray(product.options_with_values)){for(var i=0;i<product.options_with_values.length;i++){if(typeof product.options_with_values[i]!=='undefined'&&typeof product.options_with_values[i].values!=='undefined'){var option=product.options_with_values[i];if(option.values&&Array.isArray(option.values))for(var r=0;r<option.values.length;r++)(option.values[r].title.endsWith("(Freegifts)")||option.values[r].title.endsWith("% off)"))&&(option.values.splice(r,1),r--)}}}var sca_price=product.price;var sca_price_min=product.price_max;var sca_price_max=product.price_min;var sca_compare_at_price=product.compare_at_price;var sca_compare_at_price_min=product.compare_at_price_max;var sca_compare_at_price_max=product.compare_at_price_min;if(product.variants&&Array.isArray(product.variants)){for(var id=0;id<product.variants.length,typeof product.variants[id]!=='undefined';id++){var variant=product.variants[id];var option_name=variant.option3?variant.option3:variant.option2?variant.option2:variant.option1?variant.option1:variant.title?variant.title:'';if("undefined"!=typeof SECOMAPP&&"undefined"!=typeof SECOMAPP.gifts_list_avai&&"undefined"!=typeof SECOMAPP.gifts_list_avai[variant.id]||option_name.endsWith("(Freegifts)")||option_name.endsWith("% off)")){product.variants.splice(id,1);id=id-1}else{if(sca_price_min>=variant.price){sca_price_min=variant.price;sca_price=variant.price}if(sca_price_max<=variant.price){sca_price_max=variant.price}if(variant.compare_at_price){if(sca_compare_at_price_min>=variant.compare_at_price){sca_compare_at_price_min=variant.compare_at_price;sca_compare_at_price=variant.compare_at_price}if(sca_compare_at_price_max<=variant.compare_at_price){sca_compare_at_price_max=variant.compare_at_price}}if(typeof variant.available!=='undefined'&&variant.available==true){product.available=true}}}}product.price=sca_price;product.price_max=sca_price_max;product.price_min=sca_price_min;product.compare_at_price=sca_compare_at_price;product.compare_at_price_max=sca_compare_at_price_max;product.compare_at_price_min=sca_compare_at_price_min;if(sca_price_min<sca_price_max){product.price_varies=true}else{product.price_varies=false}if(sca_compare_at_price_min<sca_compare_at_price_max){product.compare_at_price_varies=true}else{product.compare_at_price_varies=false}}return product});
+      var sca_product_info = freegifts_product_json({{ product | json }});
+
+      var observer = new MutationObserver(function() {
+        Shopify.linkOptionSelectors(sca_product_info);
+        observer.disconnect();
+      });
+      observer.observe($addToCartForm[0], config);
+    }
+    {% endif %}
+    var selector = $('#product-id-' + section_id + ' .single-option-selector:eq(0)');
+    selector.trigger('change');
+    // Thumbnail updates variant
+    {% if sca_product_variantCount > 1 %}
+    $(function(){
+      var variantImages = {},
+          thumbnails,
+          variant,
+          variantImage,
+          opt_key,
+          opt_val,
+          loop_index;
+      {% for variant in product.variants %}
+{% unless variant.metafields.secomapp.freegifts %}
+{% unless variant.title contains '% off)' %}
+
+      variant = {{ variant | json }};
+      if ( typeof variant.featured_image !== 'undefined' && variant.featured_image !== null ) {
+        variantImage =  variant.featured_image.src.split('?')[0].replace(/http(s)?:/,'');
+        variantImages[variantImage] = variantImages[variantImage] || {};
+        {% for option in product.options %}
+        {%- assign option_value = variant.options[forloop.index0] -%}
+        {%- assign option_key = 'option-' | append: forloop.index0 -%}
+        opt_key = {{ option_key | json }};
+        opt_val = {{ option_value | json }};
+        if (typeof variantImages[variantImage][opt_key] === 'undefined') {
+          variantImages[variantImage][opt_key] = opt_val;
+        }
+        else {
+          var oldValue = variantImages[variantImage][opt_key];
+          if ( oldValue !== null && oldValue !== opt_val )  {
+            variantImages[variantImage][opt_key] = null;
+          }
+        }
+        {% endfor %}
+      }
+
+{% endunless %}
+{% endunless %}
+      {% endfor %}
+      $(function(){
+        thumbnails = $('#product-id-' + section_id + ' img[src*="/products/"]').not(':first');
+        if (thumbnails.length) {
+          thumbnails.bind('click', function() {
+            var image = $(this).attr('src').split('?')[0].replace(/(_1x)/,'');
+            if (typeof variantImages[image] !== 'undefined') {
+              {% for option in product.options %}
+              loop_index = 'option-{{ forloop.index0 }}';
+              if (variantImages[image][loop_index] !== null) {
+                $('#product-id-' + section_id + ' .single-option-selector:eq({{ forloop.index0 }})').val(variantImages[image][loop_index]).trigger('change');
+              }
+              {% endfor %}
+            }
+          });
+        }
+      });
+    });
+    {% endif %}
+  {% unless template == 'product.quick' %}
+  });
+  {% endunless %}
+</script>

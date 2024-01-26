@@ -1,0 +1,106 @@
+<div data-section-id="{{ section.id }}" data-section-type="collection-list-page" class="container bottompad-section collection clearfix">
+  <div class="twelve">
+    <h1>{{ 'collections.general.title_list' | t }}</h1>
+    {% include "breadcrumbs" %}
+  </div>
+
+  {% if collections.size > 0 %}
+  {%- assign number = section.settings.products_per_page -%}
+  {% paginate collections by number %}
+  <div class="product-loop{% if section.settings.images_enable %} text-center{% endif %}">
+    {% for collection in collections %}
+      {% if collection.handle == "kibble-discount-product" or collection.handle == "free-samples"  %}
+        {% continue %}
+      {% endif %}
+    <div class="product two-half{% cycle cycleIndex: ' first', '', '', '', '' %}">
+      <div class="product-border">
+        {% if section.settings.images_enable %} 
+        <div class="product-thumb{% if section.settings.image_fit =='cover' %} title-align{% endif %}">
+          <div class="relative">
+            <a href="{{ collection.url }}" title ="{{ collection.title }}" class="img-align">              
+              {%- assign size = 580 -%}            
+              {% if section.settings.use_product_image %}
+              {%- assign img_src = collection.products.first.featured_media -%}
+              {%- capture alt -%}{{ collection.products.first.title }}{%- endcapture -%}
+              {% else %}
+              {% if collection.image %}
+              {%- assign img_src = collection.image -%}
+              {%- capture alt -%}{{ collection.title }}{%- endcapture -%}
+              {% else %}
+              {%- assign img_src = collection.products.first.featured_media -%}
+              {%- capture alt -%}{{ collection.products.first.title }}{%- endcapture -%}
+              {% endif %}
+              {% endif %}
+              {%- capture id -%}{{ collection.id }}{{ section.id }}{{ block.id }}{%- endcapture -%}
+              {% include 'image-load' %}                            
+            </a>
+          </div>
+        </div>
+        {% endif %}
+        <div class="product-details">
+          <div class="product-title collection">
+            <h5><a href="{{ collection.url }}" title="{{ collection.id }} - {{ collection.title }}">{{ collection.title }}</a></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if paginate.pages > 1 %}
+  <div class="pagination">
+    <div>
+      {% include 'pagination' %}
+    </div>
+  </div>
+  {% endif %}
+  {% endpaginate %}
+  {% else %}
+  <div class="twelve text-center"><p>{{ 'collections.general.no_matches_list' | t }}</p></div>
+  {% endif %}
+
+</div>
+
+{% schema %}
+  {
+    "name": "Collections list",
+    "settings": [
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "min": 5,
+        "max": 50,
+        "step": 5,
+        "label": "Collections per page",
+        "default": 25
+      },
+      {
+        "type": "checkbox",
+        "id": "images_enable",
+        "label": "Show image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "use_product_image",
+        "label": "Show first product image",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "image_fit",
+        "label": "Image fit",
+        "default": "contain",
+        "options": [
+          {
+            "value": "cover",
+            "label": "Fill space"
+          },
+          {
+            "value": "contain",
+            "label": "Fit to space"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

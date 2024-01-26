@@ -1,0 +1,35 @@
+
+{%- assign variant = product.selected_or_first_available_variant -%}
+<span id="offer-{{ section.id }}"{% unless variant.unit_price_measurement %} class="hidden"{% endunless %}>{% include 'product-unit-price' %}</span>
+{% if section.settings.vendor_enable or section.settings.sku_enable or template == 'product.quick' and settings.vendor_enable or settings.sku_enable_quick %}
+<p id="product-logistics-{{ section.id }}" class="product-logistics{% if section.settings.product_availability_enable == false or template == 'product.quick' and settings.product_availability_enable_quick == false %} bottompad-quarter{% endif %}">
+  {% if section.settings.sku_enable or template == 'product.quick' and settings.sku_enable_quick %}
+  <span id="sku-{{ section.id }}" class="variant-sku">{% if product.selected_or_first_available_variant.sku != blank %}{{ 'products.product.sku' | t }} {{ product.selected_or_first_available_variant.sku }}{% endif %}</span>
+  {% endif %}
+  {% if template == 'product.quick' and settings.vendor_enable and settings.sku_enable_quick %}
+  {%- assign divider = true -%}
+  {% elsif section.settings.vendor_enable and section.settings.sku_enable %}
+  {%- assign divider = true -%}
+  {% else %}
+  {%- assign divider = false -%}
+  {% endif %}
+  {% if divider %}<span class="separator{% unless product.selected_or_first_available_variant.sku != blank %} hidden{% endunless %}" aria-hidden="true"></span>{% endif %}
+  {% if section.settings.vendor_enable or template == 'product.quick' and settings.vendor_enable %}
+  <span class="vendor">
+    {%- assign product_vendor_handle = product.vendor | handle -%}
+    {% if collections[product_vendor_handle].handle == product_vendor_handle %}
+    {%- assign vendor_url = collections[product_vendor_handle].url -%}
+    {% else %}
+    {%- assign vendor_url = product.vendor | url_for_vendor -%}
+    {% endif %}
+    {{ product.vendor | link_to: vendor_url }}
+  </span>
+  {% endif %}
+</p>
+{% endif %}
+
+{% if section.settings.reviews_enable or template == 'product.quick' and settings.reviews_enable %}
+<!-- To add a new review app, install code between the comments -->
+<div class="reviews"><a href="#reviews" title="Scroll to Reviews"><span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span></a></div>
+<!-- End comments -->
+{% endif %}

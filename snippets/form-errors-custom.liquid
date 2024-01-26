@@ -1,0 +1,14 @@
+{% if form.errors %}
+<div class="errors note form-error">
+  <p>{{ 'contact.form.form_error' | t }}</p>
+  <ul>
+    {% for field in form.errors %}      
+    {% if field == 'form' %}
+    <li>{{ form.errors.messages[field] }}</li>
+    {% else %}
+    <li>{{ form.errors.translated_fields[field] }} - {{ form.errors.messages[field] }}</li>
+    {% endif %}
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

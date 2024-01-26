@@ -1,0 +1,195 @@
+{{ 'preference-section.css' | asset_url | stylesheet_tag }}
+
+{% if product.description contains '<!-- split -->' and product.metafields.global.Image != blank %}
+    <section class="preference-section">
+        <div class="container">
+            <div class="preference__inner-wrap">
+                <div class="preference__image-box">
+                    <div class='preference__image-wrap'>
+                        {% if product.metafields.global.Image contains 'wistia' %}
+                        {{ product.metafields.global.Image }}
+                        {% else %}
+                        <img src='{{ product.metafields.global.Image }}' alt='{{ product.title}} {{ 'products.general.img_alt_title' | t }}' />
+                        {% endif %}
+                      </div>
+
+                      {% if  product.metafields.customAttributes.pro_bottom_images_0_title != blank or product.metafields.customAttributes.pro_bottom_images_1_title != blank %}
+                        <div class='preference__icons  preference__icons-desktop'>
+                          {% for index in (0..5) %}
+                          {% capture metafield_name%}pro_bottom_images_{{index}}_title{% endcapture %}
+                    
+                    
+                          {% if  product.metafields.customAttributes[metafield_name] != blank %}
+                    
+                          {% assign tag_name = product.metafields.customAttributes[metafield_name] %}
+                    
+                          {% assign tag_img_src  = '' %}
+                          {% case tag_name %}
+                          {% when 'Grain-Free' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Grain-free.svg?v=1607957429' %}
+                          {% when 'No Rawhide' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/No-rawhide.svg?v=1607957429' %}
+                          {% when  'Chicken-Free' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Chicken-free.svg?v=1618857212' %}
+                    
+                    
+                          {% when 'All Natural' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_All-Natural_1.png?v=1689974410' %}
+                    
+                          {% when 'Natural' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/icon-leaf.svg?v=1607957429' %}
+                    
+                          {% when 'Healthy Joints' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/healthy-joints.svg?v=1609937482' %}
+                          {% when 'Functional Ingredients' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/functional-ingredients_638e7c96-eb69-46f3-9c46-2ad309ad30d9.svg?v=1609937482' %}
+                          {% when 'Dental Hygiene' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/DentalHygiene_3ac46403-d28d-420c-900f-6e6572b10443.svg?v=1609937482' %}
+                          {% when 'Made in the USA' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_MIUSA_1.png?v=1689962755' %}
+                          {% when 'Made in USA' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/MadeinUSA-140pX140p-082819.png?v=1609937482' %}
+                          {% when 'No Artificial Anything' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_No_Artificial_1.png?v=1689962755' %}
+                          {% when 'Boredom-Buster' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/boredom-busting.svg?v=1607957429' %}
+                          {% when 'Single Ingredient' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_Single_Ingredient_Circle.png?v=1690556289' %}
+                          {% when 'Long Lasting' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_Long_Lasting.png?v=1689962755' %}
+                          {% when 'Microbiome Health' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/GH_for_Web__Microbiome_Health_Default_2.png?v=1692051959' %}
+                          {% when 'Digestive Health' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/GH_for_Web__Digestive_Health_Default_1.png?v=1692051959' %}
+                          {% when 'Immunity Protection' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/GH_for_Web__Immunity_Protection_Default.png?v=1692051959' %}   
+                          {% when 'Great for Training' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_Training.png?v=1694816747' %}   
+                    
+                          
+                          {% endcase %}
+                    
+                          <div class='preference_icon'>
+                            {% if tag_img_src != blank %}
+                            <span class="grain-ico">
+                              <img src="{{tag_img_src}}" alt="{{tag_name}}" />
+                            </span>
+                            {% endif %}
+                            <h6>{{tag_name}}</h6>
+                          </div>
+                    
+                    
+                          {% endif %}
+                    
+                          {% endfor %}
+                    
+                    
+                        </div>
+                        {% endif %}
+                </div>
+
+                <div class="preference__content-box">
+                    {{ product.description | split:'<!-- split -->' | last }}
+
+                    
+                    {% if  product.metafields.customAttributes.pro_bottom_images_0_title != blank or product.metafields.customAttributes.pro_bottom_images_1_title != blank %}
+                        <div class='preference__icons  preference__icons-mobile'>
+                          {% for index in (0..5) %}
+                          {% capture metafield_name%}pro_bottom_images_{{index}}_title{% endcapture %}
+                    
+                    
+                          {% if  product.metafields.customAttributes[metafield_name] != blank %}
+                    
+                          {% assign tag_name = product.metafields.customAttributes[metafield_name] %}
+                    
+                          {% assign tag_img_src  = '' %}
+                          {% case tag_name %}
+                          {% when 'Grain-Free' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Grain-free.svg?v=1607957429' %}
+                          {% when 'No Rawhide' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/No-rawhide.svg?v=1607957429' %}
+                          {% when  'Chicken-Free' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Chicken-free.svg?v=1618857212' %}
+                    
+                    
+                          {% when 'All Natural' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_All-Natural_1.png?v=1689974410' %}
+                    
+                          {% when 'Natural' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/icon-leaf.svg?v=1607957429' %}
+                    
+                          {% when 'Healthy Joints' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/healthy-joints.svg?v=1609937482' %}
+                          {% when 'Functional Ingredients' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/functional-ingredients_638e7c96-eb69-46f3-9c46-2ad309ad30d9.svg?v=1609937482' %}
+                          {% when 'Dental Hygiene' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/DentalHygiene_3ac46403-d28d-420c-900f-6e6572b10443.svg?v=1609937482' %}
+                          {% when 'Made in the USA' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_MIUSA_1.png?v=1689962755' %}
+                          {% when 'Made in USA' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/MadeinUSA-140pX140p-082819.png?v=1609937482' %}
+                          {% when 'No Artificial Anything' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_No_Artificial_1.png?v=1689962755' %}
+                          {% when 'Boredom-Buster' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/boredom-busting.svg?v=1607957429' %}
+                          {% when 'Single Ingredient' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_Single_Ingredient_Circle.png?v=1690556289' %}
+                          {% when 'Long Lasting' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_Long_Lasting.png?v=1689962755' %}
+                          {% when 'Microbiome Health' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/GH_for_Web__Microbiome_Health_Default_2.png?v=1692051959' %}
+                          {% when 'Digestive Health' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/GH_for_Web__Digestive_Health_Default_1.png?v=1692051959' %}
+                          {% when 'Immunity Protection' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/GH_for_Web__Immunity_Protection_Default.png?v=1692051959' %}   
+                          {% when 'Great for Training' %}
+                          {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Web_Icons_1_Training.png?v=1694816747' %}   
+                    
+                          
+                          {% endcase %}
+                    
+                          <div class='preference_icon'>
+                            {% if tag_img_src != blank %}
+                            <span class="grain-ico">
+                              <img src="{{tag_img_src}}" alt="{{tag_name}}" />
+                            </span>
+                            {% endif %}
+                            <h6>{{tag_name}}</h6>
+                          </div>
+                    
+                    
+                          {% endif %}
+                    
+                          {% endfor %}
+                    
+                    
+                        </div>
+                        {% endif %}
+    
+                </div>
+            
+            
+            
+            </div>
+        
+        </div>
+    
+    </section>
+    {% endif %}
+
+{% schema %}
+{
+  "name": "Preference Section",
+  "settings": [
+     {
+        "type": "header",
+        "content": "Load Meta Contents"
+      }
+  ],
+  "presets": [
+    {
+      "name": "Preference Section"
+    }
+  ]
+}
+{% endschema %}

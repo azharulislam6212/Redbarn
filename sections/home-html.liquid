@@ -1,0 +1,51 @@
+{% if section.settings.html != blank %}
+{%- assign section_onboarding = false -%}
+{% else %}
+{%- assign section_onboarding = true -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" 
+     data-section-type="home-html">
+
+  {% unless section_onboarding == false and section.settings.html == blank %}
+  <div class="clearfix">
+    {% unless section.settings.full_width %}<div class="container clearfix"><div class="twelve">{% endunless %}
+    {% unless section_onboarding %}
+    {{ section.settings.html }}
+    {% else %}
+    <div class="text-center margins-section">
+      <h2 class="h1">{{ 'homepage.onboarding.no_title' | t }}</h2>
+      <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+    </div>
+    {% endunless %}
+    {% unless section.settings.full_width %}</div></div>{% endunless %}
+  </div>
+  {% endunless %}
+  
+</div>
+
+{% schema %}
+  {
+    "name": "HTML",
+    "settings": [
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": false
+      },
+      {
+         "type": "html",
+         "id": "html",
+         "label": "Custom HTML",
+         "default": "<div class='text-center margins-section'><p>Customize your content with HTML</p></div>"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Custom HTML",
+        "category": "General"
+      }
+    ]
+  }
+{% endschema %}

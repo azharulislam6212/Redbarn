@@ -1,0 +1,255 @@
+{%- assign full_width = section.settings.full_width -%}
+
+<div data-section-id="{{ section.id }}"  
+     data-section-type="home-blog-list" 
+     class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {{ section.settings.include_color_option }} colored-top-bottom {% endif %}{% if section.settings.include_color == 'color-none' %}margins-section {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  {%- assign blog = blogs[section.settings.blog] -%}
+
+  {% if section.settings.title != blank or section.settings.sub_title != blank %}
+  <div class="container clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+      <div class="tab-body{% if full_width == false and section.settings.include_color != 'color-none' %} twelve background-colored {{ section.settings.include_color }} colored-top{% endif %}">
+
+        <div class="tab-body">
+          <div class="twelve {{ section.settings.text_alignment }} bottompad-half">
+            {% if section.settings.title != blank%}<h2>{{ section.settings.title | escape }}</h2>{% endif %}
+            {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+          </div> 
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="container{% unless blog == blank or blog.articles_count == 0 %}{% if blog.articles_count > 2 and section.settings.post_limit > 2 %} grid{% endif %}{% else %}{% if section.settings.post_limit > 2 %} grid{% endif %}{% endunless %}{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve{% unless blog == blank or blog.articles_count == 0 %}{% if blog.articles_count > 2 and section.settings.post_limit > 2 %} grid{% endif %}{% else %}{% if section.settings.post_limit > 2 %} grid{% endif %}{% endunless %}"{% endif %}>
+      <div class="tab-body{% if full_width == false and section.settings.include_color != 'color-none' %} twelve{% unless blog == blank or blog.articles_count == 0 %}{% if blog.articles_count > 2 and section.settings.post_limit > 2 %} grid{% endif %}{% else %}{% if section.settings.post_limit > 2 %} grid{% endif %}{% endunless %} background-colored {{ section.settings.include_color }} {% if section.settings.title != blank or section.settings.sub_title != blank %}colored-bottom{% else %}colored-top-bottom{% endif %}{% endif %}">
+
+        {%- assign post_limit = section.settings.post_limit | downcase -%}
+        {% case post_limit %}
+        {% when '1' %}
+        {%- assign post_limit = 'twelve' -%}      
+        {%- assign size = 1200 -%}
+        {% when '2' %}
+        {%- assign post_limit = 'six' -%}      
+        {%- assign size = 600 -%}
+        {% when '3' %}
+        {%- assign post_limit = 'four' -%}      
+        {%- assign size = 400 -%}
+        {% when '4' %} 
+        {%- assign post_limit = 'three' -%}      
+        {%- assign size = 300 -%}
+        {% endcase %}
+
+        <div class="tab-body">
+          {% unless blog == blank or blog.articles_count == 0 %}
+          <div class="swiper-container{% if blog.articles_count > 2 and section.settings.post_limit > 2 %} plus-grid{% endif %}"{% if blog.articles_count > 2 and section.settings.post_limit > 2 %} id="swiper-carousel-{{ section.id }}-grid"{% endif %}>
+            <div{% if blog.articles_count > 2 and section.settings.post_limit > 2 %} class="swiper-wrapper swiper-wrapper-{{ section.id }} flex-wrap"{% endif %}>
+              {% for article in blog.articles limit: section.settings.post_limit %}
+              <div class="product {{ post_limit }} animate animate-loop-{{ forloop.index0 }} {{ section.settings.text_alignment_post }} swiper-slide">
+                {% if article.image and section.settings.include_image %}
+                {%- capture id -%}{{ article.image.id }}{{ section.id }}{{ block.id }}{%- endcapture -%}
+                {%- assign img_src = article.image -%}
+                {%- capture alt -%}{{ article.title }}{%- endcapture -%}
+                <a href="{{ article.url }}" title="{{ article.title }}">{% include 'image-load' %}</a>  
+                {% endif %}
+                <h5 class="blog-title">      
+                  <a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a>
+                </h5>
+                {% if section.settings.include_date %}<h6 class="blog-data">{{ article.published_at | date: settings.month_day_year }}</h6>{% endif %}
+                {% if section.settings.include_author %}<p class="blog-data">{{ article.author }}</p>{% endif %}
+                <p> 
+                  {% if article.excerpt != blank %}
+                  {{ article.excerpt | strip_html }}
+                  {% else %}
+                  {{ article.content | strip_html | truncatewords: 50 }}
+                  {% endif %} 
+                </p>
+                <a class="btn auto-width" href="{{ article.url }}"  title="{{ article.title }}">{{ 'blogs.article.read_more' | t }}</a>
+              </div>
+              {% endfor %}
+            </div>
+            <div id="swiper-pagination-{{ section.id }}" class="swiper-pagination relative hidden">
+              <div id="swiper-button-prev-{{ section.id }}" class="swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+              <div id="swiper-button-next-{{ section.id }}" class="swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+            </div>
+          </div>
+          {% else %}
+          <div class="swiper-container{% if section.settings.post_limit > 2 %} plus-grid{% endif %}"{% if section.settings.post_limit > 2 %} id="swiper-carousel-{{ section.id }}-grid"{% endif %}>
+            <div {% if section.settings.post_limit > 2 %}class="swiper-wrapper swiper-wrapper-{{ section.id }} flex-wrap"{% endif %}>
+              {% for i in (1..section.settings.post_limit) %}
+              <div class="product {{ post_limit }} animate animate-loop-{{ forloop.index0 }} {{ section.settings.text_alignment_post }} swiper-slide">
+                {% if section.settings.include_image %}
+                <a href="#" title="{{ 'homepage.onboarding.blog_title' | t }}">{{ 'image' | placeholder_svg_tag: 'placeholder-svg half' }}</a>
+                {% endif %}
+                <h5 class="blog-title">      
+                  <a href="#" title="{{ 'homepage.onboarding.blog_title' | t }}">{{ 'homepage.onboarding.blog_title' | t }}</a>
+                </h5>
+                {% if section.settings.include_date %}<h6 class="blog-data">{{ 'now' | date: settings.month_day_year }}</h6>{% endif %}
+                {% if section.settings.include_author %}<p class="blog-data">{{ 'homepage.onboarding.blog_author' | t }}</p>{% endif %}
+                <p>{{ 'homepage.onboarding.blog_excerpt' | t }}</p>
+                <span class="btn auto-width">{{ 'blogs.article.read_more' | t }}</span>
+              </div>
+              {% endfor %}
+            </div>
+            <div id="swiper-pagination-{{ section.id }}" class="swiper-pagination relative hidden">
+              <div id="swiper-button-prev-{{ section.id }}" class="swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+              <div id="swiper-button-next-{{ section.id }}" class="swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+            </div>
+          </div>
+          {% endunless %}          
+          {% if section.settings.include_all %}
+          <div class="twelve {{ section.settings.text_alignment }}">
+            <a class="btn outline" href="{{ blog.url }}"  title="{{ 'blogs.article.read_all' | t }} {{ blog.title }}">{{ 'blogs.article.read_all' | t }}</a>
+          </div>
+          {% endif %}          
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% schema %}
+  {
+    "name": "Blog posts",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Blog posts"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Add your latest news to the homepage"
+      },
+      {
+        "type": "select",
+        "id": "text_alignment",
+        "label": "Alignment",
+        "default": "text-center",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+           "label": "Right"
+          }
+        ]
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+      {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width background",
+       "default": true
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "id": "blog",
+        "type": "blog",
+        "label": "Category"
+      },
+      {
+        "type": "range",
+        "id": "post_limit",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "label": "Number of articles",
+        "default": 2
+      },
+      {
+        "type": "checkbox",
+        "id": "include_image",
+        "label": "Show image",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_author",
+        "label": "Show author",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_date",
+        "label": "Show date",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "text_alignment_post",
+        "label": "Alignment",
+        "default": "text-left",
+        "options": [
+          {
+            "value": "text-left",
+            "label": "Left"
+          },
+          {
+            "value": "text-center",
+            "label": "Center"
+          },
+          {
+            "value": "text-right",
+           "label": "Right"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": "include_all",
+        "label": "Show 'View all'"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Blog posts",
+        "category": "Blog",
+        "settings": {
+          "blog": "News",
+          "post_limit": 2
+        }
+      }
+    ]
+  }
+{% endschema %}

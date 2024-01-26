@@ -1,0 +1,26 @@
+{% if section.settings.collection != blank %}
+<div class="landing-collection-01" data-section-id="{{ section.id }}" data-section-type="collection-page">
+  <div class="container">
+    {% assign collection = collections[section.settings.collection] %}
+    <div class="product-loop product-id">
+      {% for product in collection.products limit: 6 %}
+      {%- assign cycleIndex = collection.handle -%}
+      {% include 'product-loop' menu_count: 1 %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Collection 01",
+    "settings": [
+	  {
+       "type": "collection",
+       "id": "collection",
+       "label": "Collection"
+      }
+    ]
+  }
+{% endschema %}

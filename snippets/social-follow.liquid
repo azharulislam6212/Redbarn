@@ -1,0 +1,85 @@
+{% if settings.addthis != blank %}
+<div class="addthis_horizontal_follow_toolbox"></div>
+{% elsif settings.social_twitter_link != blank or settings.social_facebook_link != blank or settings.social_pinterest_link != blank or settings.social_instagram_link != blank or settings.social_tumblr_link != blank or settings.social_snapchat_link != blank or settings.social_youtube_link != blank or settings.social_vimeo_link != blank %}
+<div class="socials-list{{ social-class }}">
+  <ul>
+    {% if settings.social_facebook_link != blank %}
+    <li>
+      <a href="{{ settings.social_facebook_link | escape }}" target="_blank" role="button" aria-label="{{ 'general.social.facebook' | t }}">
+        <span class="icon icon-facebook text-center"></span>
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_twitter_link != blank %}
+    <li>
+      <a href="{{ settings.social_twitter_link | escape }}" target="_blank" role="button" aria-label="{{ 'general.social.twitter' | t }}">
+        <span class="icon icon-twitter text-center"></span>
+      </a>
+    </li>
+    {% endif %}
+     {% if settings.social_linkedin_link != blank %}
+    <li>
+      <a href="{{ settings.social_linkedin_link | escape }}" target="_blank" role="button" aria-label="{{ 'general.social.linkedin' | t }}">
+
+        <svg width="20" height="20" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_3_901)">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M0.226562 14.9665H3.08293V5.31934H0.226562V14.9665Z" fill="currentColor"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7682 14.9662V9.6745C13.7682 7.07612 13.2343 5.07861 10.3475 5.07861C8.95912 5.07861 8.02766 5.87829 7.64717 6.63697H7.60816V5.31897H4.87256V14.9662H7.72252V10.194C7.72252 8.93547 7.9491 7.71687 9.43474 7.71687C10.8969 7.71687 10.9172 9.15617 10.9172 10.2748V14.9662H13.7682Z" fill="currentColor"/>
+          <mask id="mask0_3_901" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="4" height="4">
+          <path d="M0 3.99963V0.522949H3.30938V3.99963H0Z" fill="currentColor"/>
+          </mask>
+          <g mask="url(#mask0_3_901)">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M1.65533 0.522949C0.738298 0.522949 -0.000244141 1.30241 -0.000244141 2.26101C-0.000244141 3.22073 0.738298 3.99963 1.65533 3.99963C2.56809 3.99963 3.3093 3.22073 3.3093 2.26101C3.3093 1.30241 2.56809 0.522949 1.65533 0.522949Z" fill="currentColor"/>
+          </g>
+          </g>
+          <defs>
+          <clipPath id="clip0_3_901">
+          <rect width="14" height="14" fill="currentColor" transform="translate(0 0.5)"/>
+          </clipPath>
+          </defs>
+          </svg>
+          
+      </a>
+    </li>
+    {% endif %}
+    
+     {% if settings.social_vimeo_link != blank %}
+    <li>
+      <a href="{{ settings.social_vimeo_link | escape }}" target="_blank" role="button" aria-label="{{ 'general.social.vimeo' | t }}">
+        <span class="icon icon-vimeo text-center"></span>
+      </a>
+    </li>
+    {% endif %}
+    
+    {% if settings.social_pinterest_link != blank %}
+    <li>
+      <a href="{{ settings.social_pinterest_link | escape }}" target="_blank" role="button" aria-label="{{ 'general.social.pinterest' | t }}">
+        <span class="icon icon-pinterest text-center"></span>
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_instagram_link != blank %}
+    <li>
+      <a href="{{ settings.social_instagram_link | escape }}" target="_blank" role="button" aria-label="{{ 'general.social.instagram' | t }}">
+        <span class="icon icon-instagram text-center"></span>
+      </a>
+    </li>
+    {% endif %}
+    {% if settings.social_tumblr_link != blank %}
+    <li>
+      <a href="{{ settings.social_tumblr_link | escape }}" target="_blank" role="button" aria-label="{{ 'general.social.tumblr' | t }}">
+        <span class="icon icon-tumblr text-center"></span>
+      </a>
+    </li>
+    {% endif %}
+   
+    {% if settings.social_vimeo_link != blank %}
+    <li>
+      <a href="{{ settings.social_vimeo_link | escape }}" target="_blank" role="button" aria-label="{{ 'general.social.vimeo' | t }}">
+        <span class="icon icon-vimeo text-center"></span>
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</div>
+{% endif %}

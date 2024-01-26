@@ -1,0 +1,90 @@
+<div class="breadcrumbs breadcrumb_text text-left bottompad-half" aria-label="{{ 'general.breadcrumbs.breadcrumbs' | t }}" role="navigation">
+
+  {%- assign linkCt = 0 -%}
+  {%- assign linkCt1 = 0 -%}
+  {%- assign linkCt2 = 0 -%}
+  {%- assign linkCt3 = 0 -%}
+
+  {%- if settings.menu != blank -%}
+  {%- for link in linklists[settings.menu].links -%}
+  {%- if link.active -%}{%- capture linkCt1 -%}{%- increment linkCt -%}{%- endcapture -%}{%- endif -%}
+  {%- if link.links != blank -%}
+  {%- for sub_link in link.links -%}
+  {%- if sub_link.active -%}{%- capture linkCt2 -%}{%- increment linkCt -%}{%- endcapture -%}{%- endif -%}
+  {%- if sub_link.links != blank -%}
+  {%- for sub_sub_link in sub_link.links -%}    
+  {%- if sub_sub_link.active -%}{%- capture linkCt3 -%}{%- increment linkCt -%}{%- endcapture -%}{%- endif -%}
+  {%- endfor -%}
+  {%- endif -%}
+  {%- endfor -%}
+  {%- endif -%}
+  {%- endfor -%}
+  {%- assign finalCt = linkCt1 | plus:linkCt2 | plus:linkCt3 -%}
+  {%- endif -%}
+
+  <span><a href="{{ shop.url }}" title="{{ 'general.breadcrumbs.home_link_title' | t }}">{{ 'general.breadcrumbs.home' | t }}</a></span> 
+
+  {%- if finalCt > 0 -%}
+
+  <span class="separator" aria-hidden="true"></span>
+  <span>
+    {% if collection %}
+    <a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title }}</a>
+    {% else %}
+    <a href="{{ routes.all_products_collection_url }}" title="{{ collections.all.title }}">{{ collections.all.title }}</a>     
+    {% endif %}
+  </span>
+
+  {%- else -%}
+
+  {%- for link in linklists[settings.menu].links -%}
+  {%- if link.active or link.child_active or sub_link.child_active -%}
+  <span class="separator" aria-hidden="true"></span>
+  <span>
+    <a href="{{ link.url }}" title="{{ link.title | escape }}"><span>{{ link.title }}</span></a>
+  </span>
+  {%- if link.links != blank -%}
+  {%- for sub_link in link.links -%}
+  {%- if sub_link.active or sub_link.child_active or sub_sub_link.child_active -%}
+  {%- unless sub_link.url == product.url -%}
+  <span class="separator" aria-hidden="true"></span>
+  <span>
+    <a href="{{ sub_link.url }}" title="{{ sub_link.title | escape }}">{{ sub_link.title }}</a>
+  </span>
+  {%- if sub_link.links != blank -%}
+  {%- for sub_sub_link in sub_link.links -%}
+  {%- if sub_sub_link.active and sub_sub_link.url != product.url -%}
+  <span class="separator" aria-hidden="true"></span>              
+  <span>
+    <a href="{{ sub_sub_link.url }}" title="{{ sub_sub_link.title | escape }}">{{ sub_sub_link.title }}</a>
+  </span>       
+  {%- assign current = true -%}
+  {%- endif -%}
+  {%- endfor -%}
+  {%- endif -%}
+  {%- assign current = true -%}
+  {%- endunless -%}
+  {%- endif -%}
+  {%- endfor -%}
+  {%- endif -%}
+  {%- assign current = true -%}
+  {%- endif -%}
+  {%- endfor -%}
+
+  {%- unless current -%}
+  <span class="separator" aria-hidden="true"></span>
+  <span>
+    {%- if collection -%}
+    <a href="{{ collection.url }}" title="{{ collection.title | escape }}">{{ collection.title }}</a>
+    {%- else -%}
+    <a href="{{ routes.all_products_collection_url }}" title="{{ collections.all.title }}">{{ collections.all.title }}</a>     
+    {%- endif -%}
+  </span>       
+  {%- endunless -%}
+
+  {%- endif -%}
+
+  <span class="separator" aria-hidden="true"></span>
+  <span class="active">{{ product.title }}</span>
+
+</div>

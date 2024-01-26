@@ -1,0 +1,63 @@
+<div class="landing-image-with-text-07">
+  <div class="container">
+    <div class="landing-image-with-text-wrapper">
+      {% if section.settings.text != blank or section.settings.title != blank %}
+      <div class="text-block col-12 col-md-6">
+        {% if section.settings.title != blank %}
+        <h2>{{ section.settings.title | remove: '<p>' | remove: '</p>' }}</h2>
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+        <div class="rte">{{ section.settings.text }}</div>
+        {% endif %}
+
+        {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="text-block-btn btn btn-primary">{{ section.settings.button_text }}</a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if section.settings.image != blank %}
+      <div class="image-block col-12 col-md-6">
+        {%- assign id = section.settings.image.id -%}
+        {%- assign img_src = section.settings.image -%}
+        {%- assign size = 1900 -%}
+        {% include 'image-load' %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Image with text 07",
+    "settings": [
+	  {
+       "type": "image_picker",
+       "id": "image",
+       "label": "Image"
+      },
+      {
+         "type": "richtext",
+         "id": "title",
+         "label": "Title"
+      },
+	  {
+         "type": "richtext",
+         "id": "text",
+         "label": "Text"
+      },
+	  {
+         "type": "text",
+         "id": "button_text",
+         "label": "Button text"
+      },
+	  {
+         "type": "url",
+         "id": "button_link",
+         "label": "Button link"
+      }
+    ]
+  }
+{% endschema %}

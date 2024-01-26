@@ -1,0 +1,243 @@
+.hero-banner {
+  position: relative;
+  background-color: #F4EEE8;
+  overflow: hidden;
+}
+
+.hero-banner__img-wrap img {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;
+}
+
+.absolute-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.inner__container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.hero-banner__review {
+  margin-bottom: 32px;
+}
+.hero-banner__review ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 5px;
+}
+
+.hero-banner__review ul > li {
+  margin-bottom: 0;
+  padding: 0;
+  color: #fff;
+  display: inline-flex;
+  /* Body Text */
+  font-family: Heebo;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 160%; /* 25.6px */
+}
+
+.hero-banner__title {
+  color: var(--www-redbarn-com-nero, #fff);
+
+  /* Heading 1 */
+  font-family: 'ChunkFive';
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 58px; /* 90.625% */
+  letter-spacing: 0.001px;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.hero-banner__sub-title{
+    color: var(--www-redbarn-com-nero, #FFF);
+font-family: 'ChunkFive';
+font-size: 31.875px;
+font-style: normal;
+font-weight: 400;
+line-height: 36px; /* 112.941% */
+letter-spacing: 0.001px;
+margin-top: 0;
+margin-bottom: 32px;
+}
+
+
+.hero-banner__feature-list{
+    padding: 0;
+    list-style: none;
+    margin-bottom: 32px;
+}
+
+
+.hero-banner__feature-list>li{
+    padding-bottom: 0;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hero-banner__feature-list>li>img{
+    margin: 0;
+    align-self: center;
+}
+.hero-banner__feature-list>li>span{
+    color: #FFF;
+/* Button Text */
+font-family: Heebo;
+font-size: 16px;
+font-style: normal;
+font-weight: 900;
+line-height: 140%; /* 22.4px */
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+
+.hero-banner__content{
+    padding-left: 40px;
+}
+
+@media  (min-width:1025px) and (max-width:1199px) {
+
+    .inner__container {
+        align-items: end;
+        padding-bottom: 36px;
+    }
+}
+
+@media  (min-width:769px) and (max-width:1024px) {
+    .hero-banner__review ul>li svg{
+        width: 16px;
+        height: 16px;
+    }
+    .hero-banner__review ul>li{
+        font-size: 12px;
+        line-height: 160%; /* 19.2px */
+    }
+
+    .hero-banner__title{
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 120%; /* 38.4px */
+        letter-spacing: 0.001px;
+        margin-bottom: 16px;
+
+    }
+    
+    .hero-banner__sub-title{
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 120%; /* 28.8px */
+        letter-spacing: 0.001px;
+        margin-bottom: 29px;
+    }
+
+    .hero-banner__feature-list {
+        margin-bottom: 10px;
+    }
+
+    .inner__container {
+        height: 100%;
+        display: flex;
+        align-items: end;
+    }
+    .hero-banner__review {
+        margin-bottom: 14px;
+    }
+
+    .hero-banner__content{
+        padding-bottom: 34px;
+    }
+    .hero-banner__feature-list>li {
+        margin-bottom: 10px;
+    }
+
+}
+
+
+@media screen and (max-width:768px) {
+
+    .hero-banner__btn {
+        min-width: 100%;
+    }
+
+    .hero-banner__content{
+        padding-left: 0;
+    }
+    
+
+    .hero-banner__review ul>li svg{
+        width: 16px;
+        height: 16px;
+    }
+    .hero-banner__review ul>li{
+        color: #11181F;
+        font-size: 12px;
+        line-height: 160%; /* 19.2px */
+    }
+    .hero-banner__review {
+        margin-bottom: 12px;
+    }
+    .hero-banner__title{
+        color: #11181F;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 120%; /* 38.4px */
+        letter-spacing: 0.001px;
+        margin-bottom: 16px;
+
+    }
+
+    .hero-banner__sub-title{
+        color: #11181F;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 120%; /* 28.8px */
+        letter-spacing: 0.001px;
+        margin-bottom: 29px;
+    }
+
+    .hero-banner__feature-list>li>img{
+        border-radius: 32px;
+        background: #FFF;
+        box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.16);
+    }
+    .hero-banner__feature-list>li>span{
+        color: #11181F;
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 140%; /* 22.4px */
+        letter-spacing: 1px;
+
+    }
+    .hero-banner__feature-list {
+        margin-bottom: 24px;
+    }
+    .hero-banner__content{
+        padding-bottom: 70px;
+    }
+
+}
+
+@media screen and (max-width:576px) {
+    .hero-banner {
+       padding-top: 117px;
+    }
+
+}

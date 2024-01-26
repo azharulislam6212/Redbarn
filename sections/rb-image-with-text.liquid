@@ -1,0 +1,118 @@
+{{ 'section-image-with-text.css' | asset_url | stylesheet_tag }}
+
+<section class="rb-image-wtih-text">
+  <div class="container">
+      <div class="image-inner-flex">
+            <div class="text-box__wrap">
+              
+
+                {% if section.settings.heading != blank %}
+                    <h2 class="text-box__heading">{{section.settings.heading}}</h2>
+                  {% endif %}
+                  {% if section.settings.text != blank %}
+                    <div class="text-box__content">
+                        {{section.settings.text }}
+                    </div>
+                    
+                  {% endif %}
+
+                     {% if section.settings.button_text != blank %}
+                        <a href="{{ section.settings.button_link }}" class="text-box__btn btn btn--custom btn--primary">{{ section.settings.button_text }}</a>
+                      {% endif %}
+            </div>
+            <div class="image-box__wrap">
+
+                <div class="img-wrap">
+
+                    {% if section.settings.image != blank %}
+                        {% comment %} {% render 'responsive-image', image: section.settings.image%} {% endcomment %}
+
+                        <img src="{{section.settings.image | img_url: "master"}}" alt="{{section.settings.image.alt }}">
+                      {% else %}
+                        {{ 'image' | placeholder_svg_tag: 'placeholder-svg hero-placeholder' }}
+                      {% endif %}
+            
+                    <span class="shape-red">
+                        <svg width="78" height="82" viewBox="0 0 78 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g filter="url(#filter0_d_6_7862)">
+                            <path d="M37.4679 1.26524C37.655 1.02681 37.8939 0.834027 38.1664 0.701457C38.439 0.568888 38.7381 0.5 39.0412 0.5C39.3443 0.5 39.6434 0.568888 39.916 0.701457C40.1885 0.834027 40.4274 1.02681 40.6145 1.26524L46.6445 8.93191C46.8893 9.24373 47.2211 9.4758 47.598 9.59865C47.9749 9.7215 48.3797 9.7296 48.7612 9.62191L58.1445 6.96191C58.4359 6.87888 58.7423 6.86312 59.0407 6.91584C59.339 6.96855 59.6215 7.08836 59.8667 7.26621C60.112 7.44406 60.3137 7.67531 60.4565 7.9425C60.5993 8.20969 60.6796 8.50583 60.6912 8.80858L61.0579 18.5586C61.0733 18.9547 61.206 19.3372 61.4393 19.6577C61.6725 19.9782 61.9957 20.2221 62.3679 20.3586L71.5245 23.7252C71.8088 23.8295 72.0657 23.997 72.2758 24.215C72.4859 24.433 72.6438 24.6959 72.7375 24.9838C72.8312 25.2717 72.8584 25.5772 72.8169 25.8771C72.7753 26.177 72.6663 26.4636 72.4979 26.7152L67.0645 34.8186C66.8438 35.1479 66.726 35.5354 66.726 35.9319C66.726 36.3284 66.8438 36.7159 67.0645 37.0452L72.4979 45.1486C72.6663 45.4002 72.7753 45.6868 72.8169 45.9867C72.8584 46.2867 72.8312 46.5921 72.7375 46.88C72.6438 47.1679 72.4859 47.4308 72.2758 47.6488C72.0657 47.8668 71.8088 48.0343 71.5245 48.1386L62.3679 51.5052C61.9963 51.6422 61.6739 51.8864 61.4412 52.2068C61.2086 52.5273 61.0764 52.9096 61.0612 53.3052L60.6912 63.0552C60.6796 63.358 60.5993 63.6541 60.4565 63.9213C60.3137 64.1885 60.112 64.4198 59.8667 64.5976C59.6215 64.7755 59.339 64.8953 59.0407 64.948C58.7423 65.0007 58.4359 64.9849 58.1445 64.9019L48.7612 62.2419C48.3796 62.1331 47.9742 62.1403 47.5967 62.2626C47.2192 62.3849 46.8866 62.6167 46.6412 62.9286L40.6179 70.5986C40.4307 70.837 40.1919 71.0298 39.9193 71.1624C39.6468 71.2949 39.3476 71.3638 39.0445 71.3638C38.7414 71.3638 38.4423 71.2949 38.1698 71.1624C37.8972 71.0298 37.6583 70.837 37.4712 70.5986L31.4412 62.9319C31.1965 62.6201 30.8646 62.388 30.4878 62.2652C30.1109 62.1423 29.706 62.1342 29.3245 62.2419L19.9412 64.9019C19.6498 64.9849 19.3434 65.0007 19.0451 64.948C18.7467 64.8953 18.4643 64.7755 18.219 64.5976C17.9737 64.4198 17.7721 64.1885 17.6292 63.9213C17.4864 63.6541 17.4062 63.358 17.3945 63.0552L17.0279 53.3052C17.0125 52.9092 16.8797 52.5266 16.6465 52.2061C16.4132 51.8856 16.09 51.6417 15.7179 51.5052L6.5612 48.1386C6.27694 48.0343 6.02006 47.8668 5.80995 47.6488C5.59983 47.4308 5.44195 47.1679 5.34823 46.88C5.2545 46.5921 5.22737 46.2867 5.26889 45.9867C5.3104 45.6868 5.41947 45.4002 5.58787 45.1486L11.0212 37.0452C11.2419 36.7159 11.3597 36.3284 11.3597 35.9319C11.3597 35.5354 11.2419 35.1479 11.0212 34.8186L5.58787 26.7152C5.41947 26.4636 5.3104 26.177 5.26889 25.8771C5.22737 25.5772 5.2545 25.2717 5.34823 24.9838C5.44195 24.6959 5.59983 24.433 5.80995 24.215C6.02006 23.997 6.27694 23.8295 6.5612 23.7252L15.7179 20.3586C16.0894 20.2216 16.4119 19.9774 16.6445 19.657C16.8771 19.3365 17.0094 18.9543 17.0245 18.5586L17.3945 8.80858C17.4062 8.50583 17.4864 8.20969 17.6292 7.9425C17.7721 7.67531 17.9737 7.44406 18.219 7.26621C18.4643 7.08836 18.7467 6.96855 19.0451 6.91584C19.3434 6.86312 19.6498 6.87888 19.9412 6.96191L29.3245 9.62191C29.706 9.7296 30.1109 9.7215 30.4878 9.59865C30.8646 9.4758 31.1965 9.24373 31.4412 8.93191L37.4745 1.26524H37.4679Z" fill="#B3282D"/>
+                            <path d="M29.0413 35.9319L35.7079 42.5986L49.0413 29.2653" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </g>
+                            <defs>
+                            <filter id="filter0_d_6_7862" x="0.25" y="0.5" width="77.5857" height="80.8638" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                            <feOffset dy="5"/>
+                            <feGaussianBlur stdDeviation="2.5"/>
+                            <feComposite in2="hardAlpha" operator="out"/>
+                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_6_7862"/>
+                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_6_7862" result="shape"/>
+                            </filter>
+                            </defs>
+                            </svg>
+                            
+                    </span>
+                </div>
+            
+            </div>
+    </div>
+
+       {% comment %} image {% endcomment %}
+       {% if section.settings.dogs_image != blank %}
+        <div class="dogs-imge">
+          <img src="{{section.settings.dogs_image | img_url: "master"}}" alt="{{section.settings.dogs_image.alt }}">
+        </div>
+      {% endif %}
+
+
+  </div>
+</section>
+
+
+
+{% schema %}
+{
+  "name": "RB Image With Text",
+  "settings": [
+    {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "YOUR PET'S SAFETY IS OUR TOP PRIORITY"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>At Redbarn, we recognize every decision we make directly impacts the health and wellness of our extended family members— you and your pets. </p>"
+      },
+      {
+        "type": "text",
+        "id": "button_text",
+        "label": "Button text",
+        "default": "OUR QUALITY ASSURANCE"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      },
+      {
+        "type": "image_picker",
+        "id": "dogs_image",
+        "label": "Dogs Image"
+      }
+  ],
+  "presets": [
+    {
+      "name": "RB Image With Text"
+    }
+  ]
+}
+{% endschema %}

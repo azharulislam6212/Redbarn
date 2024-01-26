@@ -1,0 +1,1165 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{%- capture image_alt -%}{{ product.title }} Background{%- endcapture -%}
+{% for media in product.media %}
+{% if media.alt == image_alt %}
+{%- assign header_image = media -%}
+{% endif %}
+{% endfor %}
+
+{% if header_image %}
+{%- assign img_src = header_image -%}
+{% include 'image-background-src' %}
+{%- assign img_size = '1x' -%}
+{% endif %}
+
+
+{% assign netWeight = false %}
+{% for tag in product.tags %}
+{% if tag contains 'NetWeight-' %}
+{% assign netWeight = tag | split:"NetWeight-" | last %}
+{% break %}
+{% endif %}
+{% endfor %}
+
+{% assign ShopLocalTag  = false  %}
+{% assign DiscountinuedTag  = false  %}
+
+{% for tag in product.tags %}
+{% if tag contains 'ShopLocal' %}
+{% assign ShopLocalTag  = true  %}
+{% break %}
+{% endif %}
+{% if tag contains 'Discontinued' %}
+{% assign DiscountinuedTag  = true  %}
+{% break %}
+{% endif %}
+{% endfor %}
+
+{% if ShopLocalTag %}
+<style>
+  .product-grid-product-template .product-details .detail-price .purchase  {
+  	display:none !important;
+  }
+</style>
+{% endif %}
+
+{% if DiscountinuedTag %}
+<style>
+  .product-grid-product-template .product-details .detail-price .store_locator_link  {
+  	visibility:hidden !important;
+  }
+</style>
+{% endif %}
+
+
+<div id="product-id-{{ section.id }}"
+     data-product-id="{{ product.id }}"
+     data-section-id="{{ section.id }}"
+     data-section-type="product-page"
+     class="product-id product-{{ section.id }} clearfix">
+
+  {%- assign featured_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media -%}
+
+  <div class="{% if full_width %}{% if section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}background-cover lazyload {% endif %}relative-{{ section.id }} clearfix"
+       {% if full_width and header_image %}
+       data-bgset="{{ image_data | strip }}"
+       data-sizes="auto"
+       style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+       {% endif %}>
+    {% if full_width and header_image %}
+    <noscript>
+      <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1900x' }}) center center no-repeat;"></div>
+    </noscript>
+    {% endif %}
+
+    {% if section.settings.layout or section.settings.include_color != 'color-none' or header_image %}
+    <div {% if full_width and header_image %} class="relative-{{ section.id }} background-overlay background-overlay-{{ section.id }}"{% endif %}>
+      <div class="container clearfix">
+                              {% if section.settings.include_breadcrumbs %}
+                      {% include 'product-breadcrumbs' %}
+                      {% endif %}
+        <div {% if full_width == false and section.settings.include_color != 'color-none' or header_image %} class="twelve"{% endif %}>
+          <div class="{% if full_width == false %}{% if section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} {% endif %}background-cover lazyload {% endif %}{% if header_image %}relative-{{ section.id }} {% endif %}{% if section.settings.font_color and section.settings.include_color != 'color-none' or header_image %}white {% endif %}clearfix"
+               {% if full_width == false and header_image %}
+               data-bgset="{{ image_data | strip }}"
+               data-sizes="auto"
+               style="background:url({{ img_src | img_url: img_size }}) center center no-repeat;"
+               {% endif %}>
+            {% if full_width == false and header_image %}
+            <noscript>
+              <div class="no-js-bg background-cover content-height-{{ section.id }} relative-{{ section.id }}" style="background:url({{ img_src | img_url: '1200x' }}) center center no-repeat;"></div>
+            </noscript>
+            {% endif %}
+            <div class="{% if full_width == false and header_image %}relative-{{ section.id }} background-overlay background-overlay-{{ section.id }}{% endif %}">
+              <div class="container {% if section.settings.include_color != 'color-none' or header_image %}{% if full_width %}remove-pad {% else %}no-pad {% endif %}{% else %}remove-pad {% endif %}clearfix">
+                <div class="table {% if section.settings.include_color != 'color-none' or header_image %}content-height-{{ section.id }} {% endif %}{% if full_width == false %}{% if section.settings.include_color != 'color-none' or header_image %}twelve{% endif %}{% endif %}">
+                  {% if section.settings.layout %}
+                  <div class="table-cell">
+                    <div class="twelve text-center">
+
+                      <h1 class="product-header">{{ product.title }}</h1>
+
+<span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}" data-product-type="{{ product.type }}" style="display: block;"></span>
+
+                      {% include 'product-form-details' %}
+                      {% if section.settings.include_social %}{% include 'social-share', share_title: product.title, share_permalink: product.url, share_image: product %}{% endif %}
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <div class="container{% unless section.settings.include_color != 'color-none' or header_image %} toppad{% endunless %} clearfix">
+    <div {% if full_width == false and section.settings.include_color != 'color-none' or header_image %} class="twelve"{% endif %}>
+      <div {% if full_width == false and section.settings.include_color != 'color-none' or header_image %} class="twelve"{% endif %}>
+        <div class="product-grid-{{ section.id }}{% if section.settings.include_color != 'color-none' or header_image %} twelve{% endif %}">
+          <div class="{% if section.settings.include_color != 'color-none' or header_image %}twelve background-white {% endif %}clearfix">
+
+            {% if section.settings.layout == false and section.settings.include_breadcrumbs %}
+            <div class="bottompad-half toppad clearfix">
+              {% include 'product-breadcrumbs' %}
+            </div>
+            {% endif %}
+
+            {% if section.settings.layout %}
+            <div class="text-center bottompad-quarter">
+              {% include 'product-form-gift-card' %}
+            </div>
+            {% endif %}
+
+            {%- assign product_tabs = false -%}
+            {%- assign icon_blocks = 0 -%}
+            {%- assign icon_blocks_check = false -%}
+            {% for block in section.blocks %}
+            {% if block.type == 'text' or block.type == 'page' %}
+            {%- assign product_tabs = true -%}
+            {% endif %}
+            {% if block.type == 'icon' %}
+            {%- capture icon_blocks -%}{{ icon_blocks | plus: 1 }}{%- endcapture -%}
+            {%- assign icon_blocks_check = true -%}
+            {% endif %}
+            {% endfor %}
+
+            {% if section.settings.layout and icon_blocks_check %}
+            <div class="{% if product.media.size == 0 or product_tabs == false and product.description.size == 0 %}twelve center full-width{% else %}six right{% endif %}">{% include 'product-icons' %}</div>
+            {% endif %}
+
+            {% if product.media.size > 0 %}
+            <div class="product-images five{% unless product_tabs or section.settings.layout == false or product.description.size > 0 %} center{% endunless %} bottompad">
+              {% include 'product-images' %}
+            </div>
+            {% endif %}
+
+            {% if section.settings.layout == false %}
+            <div class="product-details {% if product.media.size > 0 %}seven{% else %}eight center{% endif %}{% unless product.media.size > 0 %}{% unless product_tabs or product.description.size > 0 %} center{% endunless %}{% endunless %} text-left bottompad">
+              <h1 class="product-header">{{ product.title }}</h1>
+
+
+              <div class='subtitle_row'>
+                {% if netWeight != false %}
+                <div class='netWeight'> {{ netWeight }}</div>
+                {% endif %}
+
+                <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{product.id}}" data-product-title="{{product.title}}" data-product-type="{{product.type}}" style="display: block;"></span>
+              </div>
+
+              {% include 'product-form-gift-card' %
+              {% include 'product-form-details' %}
+
+                {% assign search_params = "" %}
+              {% for tag in product.tags %}
+              {% if tag contains "stockist-" %}
+                  {% assign search_params = tag |split: "stockist-" | last %}
+              {% break%}
+              {% endif %}
+              {% endfor %}
+
+              <div class="check-avaliability-link product-availability">
+                {%- comment -%}
+
+                  <span class="icon icon-map-marker"></span>
+                {%- endcomment -%}
+                {% unless product.tags contains 'non-food' %}
+
+                <span class="stockist-icon stockist-icon-marker stockist-feature-color"></span>
+                <span class="shop-local-link">
+                  <a class="store_locator_link" {% if search_params != "" %} data-search-params="{{search_params}}" {% endif %}>{{ 'products.general.shop_local' | t }}</a>
+                </span>
+
+                {% endunless %}
+              </div>
+
+              <div class="extra-info">
+                <span>
+                  <img src="https://cdn.shopify.com/s/files/1/0508/4767/8644/files/icon-guarantee.svg?v=1607957429"
+                      alt="REDBARN PROMISE"
+                      class="" />
+                </span>
+                <div class="info">
+                  <h5>{{ 'products.general.our_Redbarn_Promise_title' | t }}</h5>
+                  <p> {{ 'products.general.our_Redbarn_Promise_text' | t }}</p>
+                </div>
+              </div>
+
+              {% if icon_blocks_check %}{% include 'product-icons' %}{% endif %}
+              {% if section.settings.include_social %}{% include 'social-share', share_title: product.title, share_permalink: product.url, share_image: product %}{% endif %}
+            </div>
+            {% endif %}
+
+            {% if product_tabs or product.description.size > 0 %}
+            <div {% if section.settings.layout == false and product.media.size > 0 %} class="row last clearfix"{% endif %}>
+              <div class="{% if section.settings.layout == false %}{% if product.media.size > 0 %}w100{% else %}seven{% endif %} center text-left{% else %}{% if product.media.size > 0 %}six{% else %}ten center text-left{% endif %}{% endif %} bottompad clearfix">
+
+                {% comment %}Used with permission: https://gist.github.com/tairli/aecb41ffd3ffc0c08ba502636461fb97{%- endcomment -%}
+                {%- assign product_description = false -%}
+                {% if product.description.size > 0 %}
+                {%- assign description = product.description -%}
+                {%- assign product_description = true -%}
+                {% if product.description contains '<h6>' %}
+                {%- assign tab_heads = '' -%}
+                {%- assign tab_texts = '' -%}
+                {%- assign chunks = description | strip | split: '<h6>' -%}
+                {% for c in chunks %}
+                {% if c contains '</h6>' %}
+                {%- assign chunk = c | split: '</h6>' -%}
+                {%- assign tab_heads = tab_heads | append: ',,' | append: chunk.first -%}
+                {%- assign tab_texts = tab_texts | append: ',,' | append: chunk.last | split:"<div>" | first -%}
+                {% elsif forloop.first %}
+                {% if c == '' %}
+                {%- assign product_description = false -%}
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                {%- assign tab_heads = tab_heads | remove_first: ',,' | split: ',,' -%}
+                {%- assign tab_texts = tab_texts | remove_first: ',,' | split: ',,' -%}
+                {% endif %}
+                {% endif %}
+<div data-rebuy-id="43811" data-rebuy-shopify-product-ids="{{ product.id }}"></div>
+
+                <div class='custom_tabs'>
+                  <div class="desktop_tabs">
+                    <ul class='tabs_menu'>
+                      {% for head in tab_heads %}
+                      <li>
+                        <a id="tab-{{ forloop.index }}"
+                           href="javascript:void(0)"
+                           data-href="#description-{{ forloop.index }}"
+                           data-index="{{forloop.index}}"
+                           class="title {% if forloop.first %}active{% endif %}">
+                          <h5>{{ head }}</h5>
+                        </a>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                    <div class='tabs_content'>
+                      {% for text in tab_texts %}
+                      <div id="description-{{ forloop.index }}" class="{% if forloop.first %}active{% endif %} custom-tab-body-content">
+                        <div class="tabindex">{{ text }}</div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="mobile_tabs">
+                    <div class='tabs_content'>
+                      {% for text in tab_texts %}
+                      <div id="mobile_title_tab-{{ forloop.index }}"
+                           data-index="{{forloop.index}}"
+                           data-href="#description-{{ forloop.index }}"
+                           class=" mobile_accordion_title title {% if forloop.first %}active{% endif %}">
+                        <h5>{{ tab_heads[forloop.index0] }}</h5>
+                      </div>
+
+
+                      <div id="description-{{ forloop.index }}" class="custom-tab-body-content {% if forloop.first  %} active_tab{% endif %}" {% unless forloop.first %}style="display: none;"{% endunless %}>
+                        <div class="tabindex">{{ text }}</div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+
+
+
+                {% comment %}
+                <div class="tabs tabs-id-{{ section.id }} relative" role="tablist">
+                  <div class="swiper-container" id="swiper-tabs-{{ section.id }}">
+                    <div class="swiper-wrapper swiper-wrapper-{{ section.id }} product-page" role="tablist">
+                      {% if product_description %}
+                      <a id="tab-description" href="#description" class="swiper-slide title first active" aria-controls="description" role="tab" aria-selected="true" tabindex="0">
+                        <h5>{{ 'products.general.description' | t }}</h5>
+                      </a>
+                      {% endif %}
+                      {% for head in tab_heads %}
+                      <a id="tab-{{ forloop.index }}" href="#description-{{ forloop.index }}" class="swiper-slide title{% unless product_description %}{% if forloop.first %} first active{% endif %}{% endunless %}" aria-controls="block-{{ block.id }}" role="tab" aria-selected="{% if forloop.first %}{% if product_description %}false{% else %}true{% endif %}{% else %}false{% endif %}" tabindex="0" {{ block.shopify_attributes }}>
+                        <h5>{{ head }}</h5>
+                      </a>
+                      {% endfor %}
+                      {%- assign tab_blocks = 0 -%}
+                      {% for block in section.blocks %}
+                      {% if block.type == 'text' or block.type == 'page' %}
+                      {%- capture tab_blocks -%}{{ tab_blocks | plus: 1 }}{%- endcapture -%}
+                      <a id="tab-block-{{ block.id }}" href="#block-{{ block.id }}" class="swiper-slide title{% unless product.description.size > 0 %}{% if tab_blocks == '1' %} first active{% endif %}{% endunless %}" aria-controls="block-{{ block.id }}" role="tab" aria-selected="{% if forloop.first %}{% if product.description.size > 0 %}false{% else %}true{% endif %}{% else %}false{% endif %}" tabindex="0" {{ block.shopify_attributes }}>
+                        {% case block.type %}
+                        {% when 'page' %}
+                        {% assign page = pages[block.settings.page] %}
+                        <h5>{% if block.settings.title != blank %}{{ block.settings.title }}{% else %}{% unless page == blank %}{{ page.title }}{% else %}{{block.type | capitalize }} Tab{% endunless %}{% endif %}</h5>
+                        {% when 'text' %}
+                        <h5>{% unless block.settings.title == blank %}{{ block.settings.title }}{% else %}{{block.type | capitalize }} Tab{% endunless %}</h5>
+                        {% endcase %}
+                      </a>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+
+                {% if product_description %}
+                <div id="description" class="product-desc tab-body tab-body-content tab-body-id-{{ section.id }}" aria-labelledby="tab-description" role="tabpanel" aria-hidden="false">
+                  <div class="tabindex">{{ product.description | split: '<h6>' | first }}</div>
+                </div>
+                {% endif %}
+
+                {% for text in tab_texts %}
+
+
+                <div id="tab-{{ forloop.index }}" data-href="#description-{{ forloop.index }}" class=" mobile_accordion_title title{% unless product_description %}{% if forloop.first %} first active{% endif %}{% endunless %}" aria-controls="block-{{ block.id }}" role="tab" aria-selected="{% if forloop.first %}{% if product_description %}false{% else %}true{% endif %}{% else %}false{% endif %}" tabindex="0" {{ block.shopify_attributes }}>
+                  <h5>{{ tab_heads[forloop.index0] }}</h5>
+                </div>
+
+
+                <div id="description-{{ forloop.index }}" class="{% if forloop.first %} first active{% endif %} tab-body tab-body-content tab-body-id-{{ section.id }}{% if product_description %} hide{% else %}{% unless forloop.first %} hide{% endunless %}{% endif %}" aria-labelledby="tab-{{ forloop.index }}" role="tabpanel" aria-hidden="{% if product_description %}true{% else %}{% if forloop.first %}false{% else %}true{% endif %}{% endif %}">
+                  <div class="tabindex">{{ text }}</div>
+                </div>
+                {% endfor %}
+
+                {%- assign tab_blocks = 0 -%}
+                {% for block in section.blocks %}
+                {% if block.type == 'text' or block.type == 'page' %}
+                {%- capture tab_blocks -%}{{ tab_blocks | plus: 1 }}{%- endcapture -%}
+                <div id="block-{{ block.id }}" class="tab-body tab-body-content tab-body-id-{{ section.id }}{% if product.description.size > 0 %} hide{% else %}{% unless tab_blocks == '1' %} hide{% endunless %}{% endif %}" aria-labelledby="tab-block-{{ block.id }}" role="tabpanel" aria-hidden="{% if product.description.size > 0 %}true{% else %}{% if forloop.first %}false{% else %}true{% endif %}{% endif %}">
+                  <div class="tabindex">
+                    {% case block.type %}
+
+                    {% when 'page' %}
+                    {% assign page = pages[block.settings.page] %}
+
+                    {% unless page == blank %}{% assign page_content = page.content %}{% else %}{% capture page_content %}<p>{{ 'homepage.onboarding.page_excerpt' | t }}</p>{% endcapture %}{% endunless %}
+                    {{ page_content }}
+
+                    {% when 'text' %}
+                    {% if block.settings.body != blank %}{{ block.settings.body }}{% else %}<p>{{ 'homepage.onboarding.product_text' | t }}</p>{% endif %}
+
+                    {% endcase %}
+                  </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endcomment %}
+
+              </div>
+            </div>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+{% if product.description contains '<!-- split -->' and product.metafields.global.Image != blank %}
+<div class='image_with_text_section'>
+  <div class='container'>
+    <div class='text_column'>
+      {{ product.description | split:'<!-- split -->' | last }}
+
+
+    </div>
+    <div class='img_column'>
+      <div class='img_wrapper'>
+        {% if product.metafields.global.Image contains 'wistia' %}
+        {{ product.metafields.global.Image }}
+        {% else %}
+        <img src='{{ product.metafields.global.Image }}' alt='{{ product.title}} {{ 'products.general.img_alt_title' | t }}' />
+        {% endif %}
+      </div>
+    </div>
+
+
+    {% if  product.metafields.customAttributes.pro_bottom_images_0_title != blank or product.metafields.customAttributes.pro_bottom_images_1_title != blank %}
+    <div class='preference_icons'>
+      {% for index in (0..5) %}
+      {% capture metafield_name%}pro_bottom_images_{{index}}_title{% endcapture %}
+
+
+      {% if  product.metafields.customAttributes[metafield_name] != blank %}
+
+      {% assign tag_name = product.metafields.customAttributes[metafield_name] %}
+
+      {% assign tag_img_src  = '' %}
+      {% case tag_name %}
+      {% when 'Grain-Free' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Grain-free.svg?v=1607957429' %}
+      {% when 'No Rawhide' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/No-rawhide.svg?v=1607957429' %}
+      {% when  'Chicken-Free' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/Chicken-free.svg?v=1618857212' %}
+
+
+      {% when 'All Natural' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/icon-leaf.svg?v=1607957429' %}
+
+      {% when 'Natural' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/icon-leaf.svg?v=1607957429' %}
+
+      {% when 'Healthy Joints' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/healthy-joints.svg?v=1609937482' %}
+      {% when 'Functional Ingredients' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/functional-ingredients_638e7c96-eb69-46f3-9c46-2ad309ad30d9.svg?v=1609937482' %}
+      {% when 'Dental Hygiene' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/DentalHygiene_3ac46403-d28d-420c-900f-6e6572b10443.svg?v=1609937482' %}
+      {% when 'Made in the USA' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/MadeinUSA-140pX140p-082819.png?v=1609937482' %}
+       {% when 'Made in USA' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/MadeinUSA-140pX140p-082819.png?v=1609937482' %}
+
+
+      {% when 'Boredom Busting' %}
+      {% assign tag_img_src  = 'https://cdn.shopify.com/s/files/1/0508/4767/8644/files/boredom-busting.svg?v=1607957429' %}
+      {% endcase %}
+
+      <div class='preference_icon'>
+        {% if tag_img_src != blank %}
+        <span class="grain-ico">
+          <img src="{{tag_img_src}}" alt="{{tag_name}}" />
+        </span>
+        {% endif %}
+        <h6>{{tag_name}}</h6>
+      </div>
+
+
+      {% endif %}
+
+      {% endfor %}
+
+
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<script type="application/ld+json">
+
+
+{
+  "@context": "http://schema.org/",
+  "@type": "Product",
+  "name": {{ product.title | json }},
+  "productID": {{ product.id | json }},
+  "@id": {{ shop.url | append: product.url | json }},
+  "url": {{ shop.url | append: product.url | json }},
+  {% if product.featured_media %}{%- assign image_size = product.featured_media.width | append: 'x' -%}"image": [{{ product.featured_media.src | img_url: image_size | prepend: 'https:' | json }}],{% endif %}
+  "description": {{ product.description | strip_html | json }},
+  {% if current_variant.sku != blank %}"sku": {{ current_variant.sku | json }},{% endif %}
+  "brand": {
+    "@type": "Thing",
+    "name": {{ product.vendor | json }}
+  },
+  "offers": [
+  {%- for variant in product.variants -%}
+  {
+    "@type": "Offer",
+    {% if variant.sku != blank %}"sku": {{ variant.sku | json }},{% endif %}
+    "priceCurrency": {{ cart.currency.iso_code | json }},
+    "price": "{{ variant.price | divided_by: 100.00 }}",
+    "priceValidUntil": "{{ 'now' | date: '%s' | plus: 31536000 | date: '%Y-%m-%d' | uri_encode | replace:'+','%20' }}",
+    "availability": "http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+    "url" : {{ shop.url | append: variant.url | json }},
+    "seller": {
+      "@type": "Organization",
+      "name": {{ shop.name | json }}
+    }
+  }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+  ]
+}
+
+</script>
+
+{% if section.settings.show_product_relations %}
+<div class="{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+  <div class="container grid{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+    <div class="product-more">
+      <div class="product-page related clearfix">
+
+        {%- assign current_product = product -%}
+
+        {% if section.settings.show_product_relations %}
+        {% comment %}Add tags to your product using the related product's handle and a prefix of 'related-'{% endcomment %}
+        {%- assign related_products = '' -%}
+        {% for tag in product.tags %}
+        {% if tag contains 'related-' %}
+        {%- assign product_handle = tag | remove: 'related-' -%}
+        {%- assign related_products = related_products | append: ',' | append: product_handle -%}
+        {% endif %}
+        {% endfor %}
+        {%- assign related_products = related_products | remove_first: ',' | split: ',' -%}
+        {% if related_products.size > 0 %}
+        <div id="related" class="bottompad clearfix">
+          {% if section.settings.product_relations_heading != blank %}
+          <div class="twelve{% unless settings.borders_enable %} bottompad{% endunless %}">
+            <h2 class="text-center">{{ section.settings.product_relations_heading }}{% if section.settings.product_relations_heading_include %} {{ product.title }}{% endif %}</h2>
+          </div>
+          {% endif %}
+          <div class="product-relations relative row last">{% include 'product-related' %}<div class="loading margins-bottom-section margins-top-section twelve"></div></div>
+        </div>
+        {% endif %}
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<style>
+  .content-height-{{ section.id }} {
+    height:100%;
+    {% if section.settings.layout or header_image %}height:{{ section.settings.padding | times: 0.75 }}vh;min-height:{{ section.settings.padding | times: 0.75 }}vh{% else %}height:5vh;min-height:5vh;{% endif %}
+  }
+  .relative-{{ section.id }}{
+    {% if section.settings.layout or header_image %}margin-bottom:-{{ section.settings.padding | divided_by: 4 }}vh;padding-bottom:{{ section.settings.padding | divided_by: 4 }}vh;{% else %}margin-bottom:-5vh;padding-bottom:5vh;{% endif %}
+  }
+  {% if section.settings.background_img_overlay != blank %}{%- assign alpha = section.settings.background_img_overlay_opacity | times: 0.01 -%}.background-overlay-{{ section.id }}{background:{{ section.settings.background_img_overlay |  color_modify: 'alpha', alpha }};}{% endif %}
+</style>
+
+{% schema %}
+
+{
+  "name": "Product pages",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner"
+    }, {
+      "type": "checkbox",
+      "id": "font_color",
+      "label": "White text",
+      "default": false
+    }, {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    }, {
+      "type": "range",
+      "id": "padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Height",
+      "default": 30
+    }, {
+      "type": "color",
+      "id": "background_img_overlay",
+      "label": "Overlay"
+    }, {
+      "type": "range",
+      "id": "background_img_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Opacity",
+      "default": 0
+    }, {
+      "type": "select",
+      "id": "include_color",
+      "label": "Background color",
+      "default": "color-primary",
+      "options": [
+        {
+          "value": "color-primary",
+          "label": "Primary"
+        }, {
+          "value": "color-secondary",
+          "label": "Secondary"
+        }, {
+          "value": "color-none",
+          "label": "None"
+        }
+      ]
+    }, {
+      "type": "header",
+      "content": "Media"
+    }, {
+      "type": "paragraph",
+      "content": "Learn more about [media types](https:\/\/help.shopify.com\/en\/manual\/products\/product-media)"
+    }, {
+      "type": "checkbox",
+      "id": "zoom_enable",
+      "label": "Enable image zoom",
+      "default": true
+    }, {
+      "type": "checkbox",
+      "id": "loop_enable",
+      "label": "Enable video looping",
+      "default": true
+    }, {
+      "type": "header",
+      "content": "Options"
+    }, {
+      "type": "checkbox",
+      "id": "layout",
+      "label": "Banner layout",
+      "default": false
+    }, {
+      "type": "checkbox",
+      "id": "include_breadcrumbs",
+      "label": "Show breadcrumbs",
+      "default": true
+    }, {
+      "type": "checkbox",
+      "id": "sku_enable",
+      "label": "Show product SKU",
+      "default": true
+    }, {
+      "type": "checkbox",
+      "id": "vendor_enable",
+      "label": "Show product vendor",
+      "default": true
+    }, {
+      "type": "checkbox",
+      "id": "reviews_enable",
+      "label": "Show product reviews",
+      "info": "Install the free Shopify [Product Reviews](https:\/\/apps.shopify.com\/product-reviews) app to add product reviews.",
+      "default": false
+    }, {
+      "type": "checkbox",
+      "id": "product_availability_enable",
+      "label": "Show product availability",
+      "default": true
+    }, {
+      "type": "range",
+      "id": "product_availability_total",
+      "min": 2,
+      "max": 100,
+      "step": 1,
+      "label": "Minimum number of products remaining to display remaining stock",
+      "default": 15
+    }, {
+      "type": "checkbox",
+      "id": "var_length_enable",
+      "label": "Show single option variant",
+      "default": false
+    }, {
+      "type": "checkbox",
+      "id": "qty_enable",
+      "label": "Show product quantity",
+      "default": true
+    }, {
+      "type": "checkbox",
+      "id": "go_to_cart_enable",
+      "label": "Product add to cart redirection",
+      "info": "Use to stay on the product page after clicking add to cart",
+      "default": true
+    }, {
+      "type": "checkbox",
+      "id": "smart_enable",
+      "label": "Show dynamic checkout button",
+      "info": "Each customer will see their preferred payment method from those available on your store, such as PayPal or Apple Pay. [Learn more](https://help.shopify.com/manual/using-themes/change-the-layout/dynamic-checkout)",
+      "default": true
+    }, {
+      "type": "checkbox",
+      "id": "include_social",
+      "label": "Show social sharing buttons",
+      "default": true
+    }, {
+      "type": "header",
+      "content": "Related products"
+    }, {
+      "type": "checkbox",
+      "id": "show_product_relations",
+      "label": "Show related",
+      "info": "Relate products using tags. [Learn more](https://redplugdesign.zendesk.com/hc/en-us/articles/360011955114)",
+      "default": true
+    }, {
+      "type": "text",
+      "id": "product_relations_heading",
+      "label": "Heading",
+      "default": "Related to the"
+    }, {
+      "type": "checkbox",
+      "id": "product_relations_heading_include",
+      "label": "Include product name in heading",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }, {
+          "type": "richtext",
+          "id": "body",
+          "label": "Text",
+          "default": "<p>Add custom text to promote products, specials or offers</p>"
+        }
+      ]
+    }, {
+      "type": "page",
+      "name": "Page",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Use the default title or select your own"
+        }, {
+          "id": "page",
+          "type": "page",
+          "label": "Page"
+        }
+      ]
+    }, {
+      "type": "icon",
+      "name": "Icon",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "shield",
+          "options": [
+            {
+              "group": "TRUST",
+              "value": "lock",
+              "label": "Lock"
+            }, {
+              "group": "TRUST",
+              "value": "lock-encrypt",
+              "label": "Lock encryption"
+            }, {
+              "group": "TRUST",
+              "value": "shield",
+              "label": "Shield"
+            }, {
+              "group": "TRUST",
+              "value": "shield-check",
+              "label": "Shield with check"
+            }, {
+              "group": "TRUST",
+              "value": "shield-star",
+              "label": "Shield with star"
+            }, {
+              "group": "MOTIVATION",
+              "value": "certificate-vert",
+              "label": "Certificate 1"
+            }, {
+              "group": "MOTIVATION",
+              "value": "certificate-horiz",
+              "label": "Certificate 2"
+            }, {
+              "group": "MOTIVATION",
+              "value": "fire",
+              "label": "Hot"
+            }, {
+              "group": "MOTIVATION",
+              "value": "leaf",
+              "label": "Eco-friendly"
+            }, {
+              "group": "MOTIVATION",
+              "value": "medal",
+              "label": "Medal"
+            }, {
+              "group": "MOTIVATION",
+              "value": "power",
+              "label": "Power"
+            }, {
+              "group": "MOTIVATION",
+              "value": "recycle",
+              "label": "Recycle"
+            }, {
+              "group": "MOTIVATION",
+              "value": "star",
+              "label": "Star"
+            }, {
+              "group": "MOTIVATION",
+              "value": "trophy",
+              "label": "Trophy"
+            }, {
+              "group": "SUPPORT",
+              "value": "axe",
+              "label": "Axe"
+            }, {
+              "group": "SUPPORT",
+              "value": "gear",
+              "label": "Gear"
+            }, {
+              "group": "SUPPORT",
+              "value": "hammer",
+              "label": "Hammer"
+            }, {
+              "group": "SUPPORT",
+              "value": "hammer-wrench",
+              "label": "Hammer and wrench"
+            }, {
+              "group": "SUPPORT",
+              "value": "screwdriver",
+              "label": "Screwdriver"
+            }, {
+              "group": "SUPPORT",
+              "value": "wrench-screwdriver",
+              "label": "Screwdriver and wrench"
+            }, {
+              "group": "SUPPORT",
+              "value": "smartphone",
+              "label": "Smartphone"
+            }, {
+              "group": "SUPPORT",
+              "value": "support",
+              "label": "Support"
+            }, {
+              "group": "SUPPORT",
+              "value": "telephone",
+              "label": "Telephone"
+            }, {
+              "group": "SUPPORT",
+              "value": "telephone-answer",
+              "label": "Telephone answered"
+            }, {
+              "group": "SUPPORT",
+              "value": "wrench",
+              "label": "Wrench"
+            }, {
+              "group": "COMMERCE",
+              "value": "box-ship",
+              "label": "Box"
+            }, {
+              "group": "COMMERCE",
+              "value": "cube-ship",
+              "label": "Cube"
+            }, {
+              "group": "COMMERCE",
+              "value": "cube-return",
+              "label": "Cube with return"
+            }, {
+              "group": "COMMERCE",
+              "value": "credit-card",
+              "label": "Credit card"
+            }, {
+              "group": "COMMERCE",
+              "value": "gift",
+              "label": "Gift"
+            }, {
+              "group": "COMMERCE",
+              "value": "hand-truck",
+              "label": "Hand truck"
+            }, {
+              "group": "COMMERCE",
+              "value": "tag",
+              "label": "Tag"
+            }, {
+              "group": "COMMERCE",
+              "value": "tag-text",
+              "label": "Tag with text"
+            }, {
+              "group": "COMMERCE",
+              "value": "tank-top",
+              "label": "Tank top"
+            }, {
+              "group": "COMMERCE",
+              "value": "shirt",
+              "label": "T-shirt"
+            }, {
+              "group": "COMMERCE",
+              "value": "truck",
+              "label": "Truck"
+            }, {
+              "group": "COMMERCE",
+              "value": "truck-check",
+              "label": "Truck with check"
+            }, {
+              "group": "COMMERCE",
+              "value": "weight-kg",
+              "label": "Weight in kg"
+            }, {
+              "group": "COMMERCE",
+              "value": "weight-lb",
+              "label": "Weight in lb"
+            }, {
+              "group": "COMMERCE",
+              "value": "weight-oz",
+              "label": "Weight in oz"
+            }, {
+              "group": "INFORMATION",
+              "value": "calendar",
+              "label": "Calendar"
+            }, {
+              "group": "INFORMATION",
+              "value": "bubble-shiny",
+              "label": "Chat bubble"
+            }, {
+              "group": "INFORMATION",
+              "value": "bubble-chat",
+              "label": "Chat bubbles"
+            }, {
+              "group": "INFORMATION",
+              "value": "clipboard-text",
+              "label": "Clipboard"
+            }, {
+              "group": "INFORMATION",
+              "value": "clipboard-paper",
+              "label": "Clipboard with paper"
+            }, {
+              "group": "INFORMATION",
+              "value": "file-text",
+              "label": "Document"
+            }, {
+              "group": "INFORMATION",
+              "value": "edit",
+              "label": "Edit"
+            }, {
+              "group": "INFORMATION",
+              "value": "envelope",
+              "label": "Envelope"
+            }, {
+              "group": "INFORMATION",
+              "value": "envelope-open",
+              "label": "Envelope open"
+            }, {
+              "group": "INFORMATION",
+              "value": "envelope-letter",
+              "label": "Envelope with letter"
+            }, {
+              "group": "INFORMATION",
+              "value": "map",
+              "label": "Map"
+            }, {
+              "group": "INFORMATION",
+              "value": "map-marker",
+              "label": "Map marker"
+            }, {
+              "group": "INFORMATION",
+              "value": "map-marker-check",
+              "label": "Map marker with check"
+            }, {
+              "group": "INFORMATION",
+              "value": "megaphone",
+              "label": "Megaphone"
+            }, {
+              "group": "INFORMATION",
+              "value": "newsletter",
+              "label": "Newsletter"
+            }, {
+              "group": "INFORMATION",
+              "value": "pen",
+              "label": "Pen"
+            }, {
+              "group": "INFORMATION",
+              "value": "pencil",
+              "label": "Pencil"
+            }, {
+              "group": "INFORMATION",
+              "value": "pencil-ruler",
+              "label": "Pencil and ruler"
+            }, {
+              "group": "INFORMATION",
+              "value": "bubble-text",
+              "label": "Text"
+            }, {
+              "group": "INFORMATION",
+              "value": "bubble-two",
+              "label": "Texts"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "alarm",
+              "label": "Alarm"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "bell",
+              "label": "Bell"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "binoculars",
+              "label": "Binoculars"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "bookmark",
+              "label": "Bookmark"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "camera",
+              "label": "Camera"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "cloud",
+              "label": "Cloud"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "cloud-check",
+              "label": "Cloud with check"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "monitor",
+              "label": "Computer"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "crown",
+              "label": "Crown"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "diamond",
+              "label": "Diamond"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "diamond-shield",
+              "label": "Diamond shield"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "heart",
+              "label": "Heart"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "history",
+              "label": "History"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "lamp-bright",
+              "label": "Light bulb"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "smiley",
+              "label": "Happy 1"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "pleased",
+              "label": "Happy 2"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "paper-plane",
+              "label": "Paper plane"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "platter",
+              "label": "Platter"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "piggy-bank",
+              "label": "Piggy bank"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "return",
+              "label": "Revert"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "rocket",
+              "label": "Rocket"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "horns",
+              "label": "Rock on!"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "stop",
+              "label": "Stop"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "sync",
+              "label": "Sync"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "thumbs-up",
+              "label": "Thumbs up 1"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "thumbs-up-fb",
+              "label": "Thumbs up 2"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "ticket",
+              "label": "Ticket"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "trash",
+              "label": "Trash"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "volume",
+              "label": "Volume"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "warning-triangle",
+              "label": "Warning 1"
+            }, {
+              "group": "MISCELLANEOUS",
+              "value": "warning-octagon",
+              "label": "Warning 2"
+            }, {
+              "group": "HOLIDAY",
+              "value": "christmas-tree",
+              "label": "Christmas tree"
+            }, {
+              "group": "HOLIDAY",
+              "value": "easter-egg",
+              "label": "Easter egg"
+            }, {
+              "group": "HOLIDAY",
+              "value": "ghost",
+              "label": "Ghost"
+            }, {
+              "group": "HOLIDAY",
+              "value": "halloween",
+              "label": "Halloween"
+            }, {
+              "group": "HOLIDAY",
+              "value": "snowman",
+              "label": "Snowman"
+            }, {
+              "group": "HOLIDAY",
+              "value": "witch-hat",
+              "label": "Witch hat"
+            }
+          ]
+        }, {
+          "type": "image_picker",
+          "id": "block_img",
+          "label": "Custom icon"
+        }, {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon color"
+        }, {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p><strong>Trust</strong><br/>Icon</p>"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

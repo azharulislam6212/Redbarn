@@ -1,0 +1,28 @@
+<div class="table icon-text-table{% if section.settings.layout == false or template == 'index' %} center{% endif %}">
+  {% for block in section.blocks %}
+  {% case block.type %}
+
+  {% when 'icon' %}
+  <div class="icon-text">
+    <div class="table-cell{% if block.settings.block_img != blank %} img{% endif %}"> 
+      {% if block.settings.block_img != blank %}
+      {%- capture image_size -%}60x{%- endcapture -%}
+      <img src="{{ block.settings.block_img | img_url: image_size }}"
+           srcset="{{ block.settings.block_img | img_url: image_size }} 1x, {{ block.settings.block_img | img_url: image_size, scale: 2 }} 2x"
+           alt="{% if block.settings.block_img.alt != blank %}{{ block.settings.block_img.alt }}{% else %}{{ block.settings.block_img | split: '/' | last | replace: '-', ' ' | replace: '_', ' ' | split: '.' | first | capitalize }}{% endif %}">
+      {% else %}
+      <span class="icon icon-{{ block.settings.icon }} icon-color-{{ block.id }}{% unless block.settings.text != blank %} no-pad{% endunless %}" aria-label="{{ block.settings.icon | replace: '-', ' ' | capitalize }}"></span>
+      {% endif %}    
+    </div>
+    {% if block.settings.text != blank %}
+    <div class="table-cell text-left no-pad">
+      {{ block.settings.text }}
+    </div>
+    {% endif %}
+  </div>
+
+  {% if block.settings.icon_color != blank %}{% unless block.settings.icon_color == 'rgba(0,0,0,0)' %}<style>.icon-color-{{ block.id }}{color:{{ block.settings.icon_color }}}</style>{% endunless %}{% endif %}
+
+  {% endcase %}
+  {% endfor %}
+</div>

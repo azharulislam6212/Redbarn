@@ -1,0 +1,48 @@
+<div class="sidebar">
+
+  {% if section.settings.include_newsletter %}
+  <div class="bottompad">
+    <h5>{{ 'blogs.sidebar.subscribe' | t }}</h5>
+    {% include 'newsletter' %}
+  </div>
+  {% endif %}
+
+  {% if section.settings.include_articles %}
+  <div class="recent-articles">
+    <h6 >{{ 'blogs.sidebar.recent_articles' | t }}</h6>
+    <div class='related-row'>
+      {%- assign current_article = article -%}
+      {%- assign counter = 0 -%}
+      {%- assign break_at = section.settings.number_of_articles -%}
+      {% for article in blog.articles %}
+      {% unless article.handle == current_article.handle %}
+      <div class="article">
+        <div class='article_wrapper'>
+        {% if article.image and section.settings.include_image %}
+        {%- assign id = article.image.id -%}
+        {%- assign img_src = article.image -%}
+        {%- assign size = 580 -%}
+        {%- capture alt -%}{{ article.title | escape }}{%- endcapture -%}
+        <div class="article_img_wrapper clearfix"><a href="{{ article.url }}" title="{{ article.title }}">{% include 'image-load' %}</a></div>
+        {% endif %}
+        <h3><a href="{{ article.url }}" title="{{ article.title }}">{{ article.title }}</a></h3>
+        {% if section.settings.include_author or section.settings.include_date %}
+        {% if section.settings.include_date %}<h6 class="blog-data">{{ article.published_at | date: settings.month_day_year }}</h6>{% endif %}
+        {% endif %}
+        </div>
+      </div>
+      {%- assign counter = counter | plus: 1 -%}
+      {% if counter == break_at %}
+      {% break %}
+      {% endif %}
+      {% endunless %}  
+      {% endfor %}
+      {% if counter < 1 %}
+      <p>{{ 'blogs.sidebar.empty' | t }}</p>  
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+ 
+</div>

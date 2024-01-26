@@ -1,0 +1,83 @@
+<div data-section-id="{{ section.id }}" data-section-type="error-page" class="bottompad {% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+  <div class="container clearfix">
+    <div class="twelve text-center">
+      <h1>{% if section.settings.title != blank %}{{ section.settings.title | escape }}{% else %}{{ 'general.404.title' | t }}{% endif %}</h1>
+      {% if section.settings.sub_title != blank %}<h2>{{ section.settings.sub_title | escape }}</h2>{% endif %}
+      {% if section.settings.body != blank %}{{ section.settings.body }}{% endif %}
+      {% if section.settings.include_search %}
+      <div class="search-form">
+        {% assign search_class = 'page' %}
+        {% include 'search' %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.settings.include_products %}   
+  {% if section.settings.collection != empty %}
+  {%- assign collection = collections[section.settings.collection] -%}
+  {% else %}
+  {%- assign collection = collections.all -%}
+  {% endif %}
+  <div class="container{% if collection.products.size > 2 %} grid{% endif %}{% if settings.animation_enable %} animate-section load{% endif %} clearfix">
+    <div class="{% unless collection.products.size > 2 %}collection-products {% endunless %}toppad bottompad clearfix">
+      <div data-block-id="{{ section.id }}" class="{% if collection.products.size > 2 %}swiper-container plus-grid {% endif %}table-center product-loop product-loop-{{ section.id }}"{% if collection.products.size > 2 %} id="swiper-carousel-{{ section.id }}-grid"{% endif %}>
+        <div class="{% if collection.products.size > 2 %}swiper-wrapper swiper-wrapper-{{ section.id }} {% endif %}center">
+          {% for product in collection.products limit: 4 %}
+          {% if collection.products.size > 2 %}{%- assign swiper-slide = ' swiper-slide' -%}{% endif %}
+          {% include 'product-loop' %}
+          {% endfor %}
+        </div>
+        <div id="swiper-pagination-{{ section.id }}" class="swiper-pagination relative hidden">
+          <div id="swiper-button-prev-{{ section.id }}" class="swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+          <div id="swiper-button-next-{{ section.id }}" class="swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  
+</div>
+
+{% schema %}
+  {
+    "name": "404 page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "404 Page"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "This is not the page you are looking for"
+      },
+      {
+        "type": "richtext",
+        "id": "body",
+        "label": "Text",
+		"default": "<p>Nothing to see here, please move on. Click <a href=\"/collections/all\">here</a> to continue shopping.</p>"
+      },
+      {
+        "type": "checkbox",
+        "id": "include_search",
+        "label": "Show search bar",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "include_products",
+        "label": "Show products",
+        "default": true
+      },
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Collection"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,350 @@
+{%- assign full_width = section.settings.full_width -%}
+
+{% if section.blocks.size == 0 and section.settings.title == blank and section.settings.sub_title == blank %}
+{%- assign section_onboarding = true -%}
+{% else %}
+{%- assign section_onboarding = false -%}
+{% endif %}
+
+<div data-section-id="{{ section.id }}" 
+     data-section-type="home-collections-tabbed" 
+     class="{% if full_width and section.settings.include_color != 'color-none' %}background-colored {{ section.settings.include_color }} colored-top-bottom {% endif %}{% if section.settings.include_color == 'color-none' %}margins-section {% endif %}{% if settings.animation_enable %}animate-section-div {% endif %}clearfix">
+
+  {% if section_onboarding or section.settings.title != blank or section.settings.sub_title != blank %}
+  <div class="container clearfix">
+    <div{% if full_width == false and section.settings.include_color != 'color-none' %} class="twelve"{% endif %}>
+      <div class="tab-body{% unless full_width or section.settings.include_color == 'color-none' %} twelve{% endunless %}{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }} colored-top{% endif %}">
+
+        <div class="twelve text-center">
+          {% if section_onboarding %}
+          <h2>{{ 'homepage.onboarding.no_title' | t }}</h2>
+          <h3>{{ 'homepage.onboarding.no_body' | t }}</h3>
+          {% else %}
+          {% if section.settings.title != blank%}<h2>{{ section.settings.title | escape }}</h2>{% endif %}
+          {% if section.settings.sub_title != blank %}<h3>{{ section.settings.sub_title | escape }}</h3>{% endif %}
+          {% endif %}
+        </div>
+        <div class="twelve"><hr/></div>
+
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="container{% if full_width %} no-pad{% endif %} clearfix">
+    <div{% unless full_width %} class="twelve"{% endunless %}>
+      <div class="tab-body text-center{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }}{% unless section_onboarding or section.settings.title != blank or section.settings.sub_title != blank or section.settings.background_img != blank %} colored-top{% endunless %}{% endif %}">
+        <div class="tabs tabs-id-{{ section.id }}" role="tablist">
+          <div class="swiper-container" id="swiper-tabs-{{ section.id }}"> 
+            <div class="swiper-wrapper swiper-wrapper-{{ section.id }}">
+              {% for block in section.blocks %}
+              {%- assign index = 0 -%}
+              {% for i in (1..10) %}
+              {%- capture collection_number -%}collection_{{ i }}{%- endcapture -%}
+              {%- assign collection_link = block.settings[collection_number] -%}            
+              {%- assign collection = collections[collection_link] -%}  
+              {% if collection != empty %}
+              {%- assign index = 1 -%}
+              {% endif %}
+              {% endfor %}
+              {% if index == 0 %}
+              {%- capture current -%}{% cycle 'tabs': 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+              <a class="swiper-slide title{% if forloop.first %} first active{% endif %}" href="#collection_title_{{ current }}_{{ section.id }}" title="collection_title_{{ current }}_{{ section.id }}" data-swiper-slide-index="{{ forloop.index0 }}" role="tab" aria-controls="collection_title_{{ current }}_{{ section.id }}" tabindex="0" {{ block.shopify_attributes }}>
+                <h5 class="underline">{% if block.settings.title != blank %}{{ block.settings.title }}{% else %}{{ 'homepage.onboarding.collection_title' | t }}{% endif %}</h5>
+              </a>          
+              {% else %}
+              <a class="swiper-slide title{% if forloop.first %} first active{% endif %}" href="#{% if block.settings.title != blank %}{{ block.settings.title | handle }}{% else %}{{ 'homepage.onboarding.collection_title' | t | handle }}{% endif %}-{{ block.id }}" title="{% if block.settings.title != blank %}{{ block.settings.title }}{% else %}{{ 'homepage.onboarding.collection_title' | t }}{% endif %}" data-swiper-slide-index="{{ forloop.index0 }}" role="tab" aria-controls="{% if block.settings.title != blank %}{{ block.settings.title | handle }}{% else %}{{ 'homepage.onboarding.collection_title' | t | handle }}{% endif %}-{{ block.id }}" tabindex="0" {{ block.shopify_attributes }}>
+                <h5 class="underline">{% if block.settings.title != blank %}{{ block.settings.title }}{% else %}{{ 'homepage.onboarding.collection_title' | t }}{% endif %}</h5>
+              </a>
+              {% endif %}  
+              {% endfor %}
+            </div>
+            <div id="swiper-button-next-{{ section.id }}" class="swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+            <div id="swiper-button-prev-{{ section.id }}" class="swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+          </div>
+        </div>
+      </div> 
+    </div>
+  </div>
+  
+  {% for block in section.blocks %}  
+  {%- assign index = 0 -%}    
+  {%- capture collection_total -%}
+  {% for i in (1..10) %}
+  {%- capture collection_number -%}collection_{{ i }}{%- endcapture -%}
+  {%- assign collection_link = block.settings[collection_number] -%}            
+  {%- assign collection = collections[collection_link] -%}
+  {{collection_link}}
+  {% if collection != empty %}
+  {%- assign index = 1 -%}
+  {% endif %}
+  {% endfor %}
+  {%- endcapture -%}
+  
+  {%- assign collection_total_array = collection_total | split: ' ' -%}
+  
+  <div class="container{% if full_width %}{% if section.settings.use_slider and collection_total_array.size > 3 or index == 0 %} no-pad{% else %} grid{% endif %}{% endif %}{% if settings.animation_enable %} animate-section animate-section-margin load{% endif %} clearfix">
+    <div{% unless full_width %}{% if section.settings.include_color != 'color-none' %} class="twelve"{% endif %}{% endunless %}>
+      {% if index == 0 %}
+      {%- capture current -%}{% cycle 'products': 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+      <div id="collection_title_{{ current }}_{{ section.id }}" class="tab-body tab-body-id-{{ section.id }}{% unless forloop.first %} hide{% endunless %}{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }}{% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.background_img != blank %} colored-bottom{% else %} colored-top-bottom{% endif %}{% unless section.settings.use_slider %} twelve grid{% endunless %}{% elsif full_width == false %}{% if section.settings.use_slider %} twelve{% else %} plus-grid{% endif %}{% endif %}" role="tabpanel" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+        <div class="tab-body tab-body-content"> 
+          <div data-block-id="{{ block.id }}" class="swiper-container{% if section.settings.use_slider %} plus-slider{% else %} plus-grid{% endif %} product-loop product-loop-{{ section.id }} text-center" id="swiper-carousel-{{ block.id }}{% unless section.settings.use_slider %}-grid{% endunless %}">
+            <div class="swiper-wrapper swiper-wrapper-{{ section.id }}{% unless section.settings.use_slider %} flex-wrap{% endunless %}">        
+              {% for i in (1..5) %}
+              {%- capture current -%}{% cycle 1, 2, 3, 4, 5, 6 %}{%- endcapture -%}
+              {%- capture current_cycle -%}swiper-carousel-{{ block.id }}{%- endcapture -%}
+              <div class="product animate swiper-slide{% if section.settings.use_slider %} three{% else %} two-half animate-loop-{{ forloop.index0 }}{% endif %}">
+                <div class="product-thumb">
+                  <a href="{{ routes.all_products_collection_url }}" tabindex="-1">
+                    {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+                  </a>
+                </div>
+                <div class="product-details">
+                  <div class="product-title collection">
+                    <h5>
+                      <a href="{{ routes.all_products_collection_url }}" tabindex="-1">
+                        {{ 'homepage.onboarding.collection_title' | t }}
+                      </a>
+                    </h5>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}      
+            </div>
+            <div id="swiper-pagination-{{ block.id }}" class="swiper-pagination relative hidden">
+              <div id="swiper-button-prev-{{ block.id }}" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+              <div id="swiper-button-next-{{ block.id }}" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div id="{% if block.settings.title != blank %}{{ block.settings.title | handle }}{% else %}{{ 'homepage.onboarding.collection_title' | t | handle }}{% endif %}-{{ block.id }}" class="tab-body tab-body-id-{{ section.id }}{% unless forloop.first %} hide{% endunless %}{% if full_width == false and section.settings.include_color != 'color-none' %} background-colored {{ section.settings.include_color }}{% if section.settings.title != blank or section.settings.sub_title != blank or section.settings.background_img != blank %} colored-bottom{% else %} colored-top-bottom{% endif %}{% unless section.settings.use_slider and collection_total_array.size > 3 %} twelve{% if collection_total_array.size > 2 %} grid{% endif %}{% endunless %}{% elsif full_width == false and collection_total_array.size > 2 %}{% if section.settings.use_slider and collection_total_array.size > 3 %} twelve{% else %} plus-grid{% endif %}{% elsif full_width and collection_total_array.size < 3 %} plus-grid{% endif %}" role="tabpanel" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+        <div class="tab-body tab-body-content">
+          <div data-block-id="{{ block.id }}" class="{% if collection_total_array.size > 2 %}swiper-container {% if section.settings.use_slider and collection_total_array.size > 3 %}plus-slider {% elsif collection_total_array.size > 2 %}plus-slider-grid {% endif %}{% endif %}product-loop{% if collection_total_array.size < 3 %} center twelve swiper-product{% endif %} product-loop-{{ section.id }} text-center"{% if collection_total_array.size > 2 %} id="swiper-carousel-{{ block.id }}{% unless section.settings.use_slider and collection_total_array.size > 3 %}-grid{% endunless %}"{% endif %}>
+            {% if collection_total_array.size > 2 %}<div class="swiper-wrapper swiper-wrapper-{{ section.id }}{% if collection_total_array.size < 4 %} swiper-center{% endif %}{% unless section.settings.use_slider and collection_total_array.size > 3 %} flex-wrap{% endunless %}">{% endif %}
+
+              {% for i in (1..10) %}
+              {%- capture collection_number -%}collection_{{ i }}{%- endcapture -%}
+              {%- assign collection_link = block.settings[collection_number] -%}         
+              {%- assign collection = collections[collection_link] -%} 
+
+              {% if collection != empty %}          
+              {%- capture current_cycle -%}multi-collection-carousel-{{ block.id }}{%- endcapture -%}
+              <div class="product animate swiper-slide three animate-loop-{{ forloop.index0 }}">
+                <div class="product-border">
+                  {% if collection.image != blank or collection != empty %}
+                  <div class="product-thumb">
+                    <a href="{{ collection.url }}" title="{{ collection.title }}" tabindex="-1">
+                      {% if section.settings.use_product_image %}
+                      {%- assign img_src = collection.products.first.featured_media -%}
+                      {% else %}
+                      {% if collection.image %}
+                      {%- assign img_src = collection.image -%}
+                      {% else %}
+                      {%- assign img_src = collection.products.first.featured_media -%}
+                      {% endif %}
+                      {% endif %}
+                      {%- assign bg_size = section.settings.image_fit -%}
+                      {%- assign size = 300 -%}
+                      {%- assign img_size = '1x' -%}
+                      <div class="lazypadding ">
+                        {% include 'image-background' %}
+                      </div>
+                    </a>
+                  </div>
+                  {% endif %}
+                  <div class="product-details">
+                    <div class="product-title collection">
+                      <h5><a href="{{ collection.url}}" title="{{ collection.title }}" tabindex="-1">{{ collection.title }}</a></h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+              {% endfor %}
+
+            {% if collection_total_array.size > 2 %}</div>{% endif %}
+            {% if collection_total_array.size > 2 %}
+            <div id="swiper-pagination-{{ block.id }}" class="swiper-pagination relative hidden">
+              <div id="swiper-button-prev-{{ block.id }}" class="tabindex swiper-button-prev icon icon-chevron-left" role="button" aria-label="{{ 'products.general.previous' | t }}"></div>
+              <div id="swiper-button-next-{{ block.id }}" class="tabindex swiper-button-next icon icon-chevron-right" role="button" aria-label="{{ 'products.general.next' | t }}"></div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+
+{% schema %}
+  {
+    "name": "Tabbed collections",
+    "max_blocks": 10,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Banner"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+		"default": "Tabbed collections"
+      },
+      {
+        "type": "text",
+        "id": "sub_title",
+        "label": "Subheading",
+		"default": "Group collections by primary and secondary interests"
+      },
+	  {
+        "type": "select",
+        "id": "include_color",
+        "label": "Background color",
+        "default": "color-none",
+        "options": [
+          {
+            "value": "color-primary",
+            "label": "Primary"
+          },
+          {
+            "value": "color-secondary",
+            "label": "Secondary"
+          },
+          {
+            "value": "color-none",
+            "label": "None"
+          }
+        ]
+      },
+	  {
+       "type": "checkbox",
+       "id": "full_width",
+       "label": "Full width",
+       "default": true
+      },
+      {
+        "type": "header",
+        "content": "Options"
+      },
+      {
+        "type": "checkbox",
+        "id": "use_slider",
+        "label": "Use slider for collections",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "use_product_image",
+        "label": "Show first product image",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "image_fit",
+        "label": "Image fit",
+        "default": "contain",
+        "options": [
+          {
+            "value": "cover",
+            "label": "Fill space"
+          },
+          {
+            "value": "contain",
+            "label": "Fit to space"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+        	"default": "Tab title"
+          },
+          {
+            "type": "collection",
+            "id": "collection_1",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_2",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_3",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_4",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_5",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_6",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_7",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_8",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_9",
+            "label": "Sub collection"
+          },
+          {
+            "type": "collection",
+            "id": "collection_10",
+            "label": "Sub collection"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Tabbed collections",
+        "category": "Collection",
+        "blocks": [
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          },
+          {
+            "type": "collection"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

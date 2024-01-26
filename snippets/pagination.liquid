@@ -1,0 +1,72 @@
+<div class="nav-links">
+  {% assign first_paginate_page = paginate.parts | first %}
+  {% assign last_paginate_page = paginate.parts | last %}
+
+  {% if paginate.previous %}
+  <span class='previous_link'>
+    {% if paginate.previous.is_link %}
+    <a href="{{ paginate.previous.url }}" class="prev"></a>
+    {% endif %}
+  </span>
+
+  {% if paginate.current_page != first_paginate_page.title %}
+  <span>
+    <a href="{{ first_paginate_page.url }}"><span class="first_paginate_page">{{ first_paginate_page.title }}</span></a>
+  </span>
+  {% endif %}
+
+  {% if paginate.previous.is_link %}
+
+  {% assign previous_page_title =  paginate.current_page | minus: 1 %}
+  {% if previous_page_title != first_paginate_page.title %}
+  {% assign prev_dot_page = previous_page_title | minus: 1 %}
+  {% if prev_dot_page != first_paginate_page.title %}
+  <span class='dot'>.</span>
+  {% endif %}
+  <span class='previous_page'>
+    <a href="{{  paginate.previous.url }}"><span >{{previous_page_title }}</span></a>
+  </span>
+  {% endif %}
+  {% endif %}
+  {% endif%}
+
+  <span class="current_page">
+   {{ paginate.current_page }}
+  </span>
+
+  {% if paginate.next %}
+  {% if paginate.next.is_link %}
+  {% assign next_page_title =  paginate.current_page | plus: 1 %}
+  
+  {% if next_page_title != paginate.parts.size %}
+  <span class='next_page'>
+    <a href="{{  paginate.next.url }}"><span >{{next_page_title }}</span></a>
+  </span>
+  {% endif %}
+  {% endif %}
+  
+
+  {% if next_page_title != paginate.parts.size and next_page_title != last_paginate_page.title %}
+
+  {% assign next_dot_page = next_page_title | plus: 1 %}
+  {% if next_dot_page != last_paginate_page.title %}
+  <span class='dot'>.</span>
+  {% endif %}
+
+  {% endif %}
+
+  {% if paginate.parts.size != paginate.current_page %}
+  <span class='last_paginate_page'>
+    <a href="{{ last_paginate_page.url }}">
+      <span class="pagination-circle">{{ last_paginate_page.title }}</span>
+    </a>
+  </span>
+  {% endif %}
+
+  <span class="next_arrow">
+    {% if paginate.next.is_link %}
+    <a href="{{ paginate.next.url }}" class="next">Next</a>
+    {% endif %}
+  </span>
+  {% endif%}
+</div>

@@ -1,0 +1,79 @@
+<div data-section-id="{{ section.id }}" 
+     data-section-type="hp-blog"
+     id="hp-blog-{{ section.id }}"
+     class="hp-blog clearfix">
+
+
+  {%- assign blog = blogs[section.settings.blog] -%}
+
+  <div class="container">
+
+
+
+    <div class="first_article">
+      <div class='featured-blog'>
+
+        {% assign first_article = blog.articles[0] %}
+        {%- capture id -%}'first_article-image'{%- endcapture -%}
+        {%- assign img_src = first_article.image -%}                             
+        {%- assign size = 180 -%}
+
+        {% if img_src != blank %}
+        <div class='img-box-blog'>
+          {% include 'image-load' %}
+        </div>
+        {% endif %}
+        <div class='featured-content'>
+          <h4 class='h2 featured-content-title'><a href='{{first_article.url}}'>{{first_article.title}}</a></h4>
+          <h6> {{ first_article.published_at | date: settings.month_day_year  }} </h6>
+          <div class='article_desc'>
+            {% if first_article.excerpt != blank %}
+            {{ first_article.excerpt | strip_html }}
+            {% else %}
+            {{ first_article.content | strip_html | truncatewords: 50 }}
+            {% endif %} 
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class='other_articles'>
+
+      <ul class='list-unstyled b-list'>
+        {% for article in blog.articles  limit:5 %}
+        {% if forloop.first %}
+        {% continue %}
+        {% endif %}
+
+        <li>
+          <h5>{{article.title}}</h5>
+          <h6> {{ article.published_at | date: settings.month_day_year  }} </h6>
+        </li>
+
+        {% endfor %}
+      </ul>
+      <a href="{{blog.url}}" class="more-link">{{ 'blogs.article.read_more' | t }}</a>
+
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Featured Blog",
+    "settings": [
+{
+        "id": "blog",
+        "type": "blog",
+        "label": "Category"
+      }
+],
+    "presets": [
+      {
+         "name": "Featured Blog",
+        "category": "Custom Section"
+      }
+    ]
+  }
+{% endschema %}

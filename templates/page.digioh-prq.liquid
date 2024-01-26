@@ -1,0 +1,353 @@
+{%- comment -%}
+************************************
+Digioh Product Recommendation Template
+
+This template renders a list of products from a Digioh Product Recommendation Quiz. This is a very
+basic template intended to be modified to match the store's Theme
+
+Possible places to edit are tagged with "DIGIOH-OPTION"
+
+URL Parameters:
+products : comma separated list of product handles
+show_hero : if set to 'true' will show the hero section, defaults to 'false'
+rowlen : the number of products to show per row, defaults to 3
+max_products : the maximum number of products to show
+hide_oos : hide products that are out of stock, defaults to false
+add_to_cart : add to cart, with option selection
+
+************************************
+{%- endcomment -%}
+
+{%- comment -%} Include Required CSS {%- endcomment -%}
+{% comment %} {{ 'template-collection.css' | asset_url | stylesheet_tag }} {% endcomment %}
+
+{%- comment -%}
+************************************
+SECTION: Template Variables
+************************************
+{%- endcomment -%}
+{% assign queryString = '' %}
+{% assign product_handles = "" | split: ',' %} {% comment %} product_handles the products to display, in order {% endcomment %}
+{% assign show_hero = false %} {% comment %} show_hero Show the first recommended product on a single line {% endcomment %}
+{% assign rowlen = 3 %} {% comment %} rowlen sets default number of products to display per row {% endcomment %}
+{% assign max_products = 12 %} {% comment %} max_products maximum number of products to render {% endcomment %}
+{% assign hide_oos = false %} {% comment %} hide_oos if true will skip displaying products that are not currentlyavailable (out of stock) {% endcomment %}
+{% assign add_to_cart = true %} {% comment %} enable quick add on product item, defaults to true {% endcomment %}
+{% assign my_custom_param = '' %} {% comment %} debug used to display debug info. see SECTION: Set custom variables {% endcomment %}
+{% assign debug = false %} {% comment %} debug used to display debug info {% endcomment %}
+
+{%- comment -%}
+************************************
+END SECTION:Template Variables
+************************************
+{%- endcomment -%}
+
+{%- comment -%}
+************************************
+SECTION: Url Parsing
+************************************
+{%- endcomment -%}
+
+{%- comment -%} Capture the content for header containing the tracking data {%- endcomment -%}
+{%- capture contentForQuerystring -%}{{ content_for_header }}{%- endcapture -%}
+
+{% comment %} Use string splitting to pull the value from content_for_header and apply some string clean up {% endcomment %}
+{%- assign pageUrl = contentForQuerystring
+| split: '"pageurl":"'
+| last
+| split: '"'
+| first
+| split: '.myshopify.com'
+| last
+| replace: '\/', '/'
+| replace: '%20', ' '
+| replace: '\u0026', '&'
+-%}
+{% assign debug = false %}
+{%- for i in (1..1) -%}
+    {%- comment -%} If the string doesn't contain a ? then we have no querystring. Go no further {%- endcomment -%}
+    {%- unless pageUrl contains '?' -%}{% break %}{%- endunless -%}
+
+    {%- comment -%} Split the url at the ? to get all values after it {%- endcomment -%}
+    {%- assign pageQuerystring = pageUrl | split: '?' | last -%}
+    {%- assign parts = pageQuerystring | split: '&' -%}
+    {% assign queryString = parts %}
+    {%- for part in parts -%}
+      {%- assign keyAndValue = part | split: '=' -%}
+      {%- if keyAndValue.size > 1 -%}
+
+      {% comment %} Set Template Variables {% endcomment %}
+      {%- if keyAndValue[0] == 'show_hero' and keyAndValue[1] == 'true' -%}
+        {%- assign show_hero = true -%}
+      {%- endif -%}
+      {%- if keyAndValue[0] == 'hide_oos' and keyAndValue[1] == 'true' -%}
+        {%- assign hide_oos = true -%}
+      {%- endif -%}
+      {%- if keyAndValue[0] == 'rowlen' or keyAndValue[0] == 'rowlenN' -%}
+        {%- assign rowlen = keyAndValue[1] | plus: 0 -%}
+      {%- endif -%}
+      {%- if keyAndValue[0] == 'max_products' -%}
+        {%- assign max_products = keyAndValue[1] | plus: 0 -%}
+      {%- endif -%}
+      {% if keyAndValue[0] == 'debug' %}
+        {% assign debug = true %}
+      {%- endif -%}
+      {% if keyAndValue[0] == 'products' %}
+        {% assign product_handles = keyAndValue[1] | url_decode | split: ',' %}
+      {%- endif -%}
+
+      {%- comment -%}
+      ************************************
+      SECTION: Set custom variables
+      ************************************
+      {%- endcomment -%}
+
+      {%- if keyAndValue[0] == 'my_custom_param' -%}
+        {%- assign my_custom_param = keyAndValue[1] | strip_html -%}
+      {%- endif -%}
+
+      {%- comment -%}
+      ************************************
+      END SECTION: Set custom variables
+      ************************************
+      {%- endcomment -%}
+
+      {%- endif -%}
+  {%- endfor -%}
+{%- endfor -%}
+
+
+{%- comment -%}
+************************************
+END SECTION: Url Parsing
+************************************
+{%- endcomment -%}
+
+{%- comment -%}
+************************************
+SECTION: Layout CSS
+************************************
+{%- endcomment -%}
+
+<style>
+  .column {
+    float: left;
+    width: 33.33%;
+    padding: 10px;
+  }
+
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  @media screen and (max-width: 600px) {
+    .column {
+      width: 100%;
+    }
+  }
+
+  .product-recommendation-content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 900px;
+  }
+</style>
+
+{%- comment -%}
+************************************
+ENDSECTION: Layout CSS
+************************************
+{%- endcomment -%}
+
+<div class="product-recommendation-content">
+  {%- comment -%} Render Title {%- endcomment -%}
+  <h1>
+    {%- comment -%}DIGIOH-OPTION: Hero Text - Edit this as desired {%- endcomment -%}
+    Here are the recommendations for you!!
+  </h1>
+
+  {%- comment -%}
+  ************************************
+  SECTION: Display Recommended Products
+  ************************************
+  {%- endcomment -%}
+
+  {% assign products_rendered_count = 0 %} {% comment %} local counter to keep track of how many products we have shown
+  {% endcomment %}
+  {% assign products_rendered_in_row = 0 %} {% comment %} local counter to keep track of how many products we have shown
+  for this row {% endcomment %}
+  {% assign current_row = 1 %} {% comment %} local counter to keep track of the current row {% endcomment %}
+
+  <div class="row">
+
+    {% comment %} Loop over the passed in products {% endcomment %}
+    {%- for product_handle in product_handles -%}
+
+    {% assign product = all_products[product_handle] %}
+
+    {% comment %} Check if we should skip this product because it is out of stock {% endcomment %}
+    {% if hide_oos == true %}
+      {% if product.available == false %}
+        {% continue %}
+      {% endif %}
+      {% comment %} loop over variants to see if any have quantity > 0 {% endcomment %}
+      {% assign quantityFound = false %}
+      {% for variant in product.variants %}
+        {% if variant.available and variant.inventory_quantity > 0 %}
+            {% assign quantityFound = true %}
+        {% endif %}
+      {% endfor %}
+      {% if quantityFound == false %}
+        {% continue %}
+      {% endif %}
+    {% endif %}
+    
+    {% comment %} Render an individual product {% endcomment %} 
+    {%- comment -%}DIGIOH-OPTION: change to a different snippet to render item {%- endcomment -%} 
+    <div class="column">
+
+      {%- comment -%}
+      ************************************
+      SECTION: Render Single Product
+      ************************************
+      {%- endcomment -%}
+      <div>
+        {%- if product.featured_media -%}
+        {%- liquid
+        assign featured_media_aspect_ratio = product.featured_media.aspect_ratio
+
+        if product.featured_media.aspect_ratio == null
+        assign featured_media_aspect_ratio = 1
+        endif
+        -%}
+
+        <div>
+          <img srcset="
+                    {%- if product.featured_media.width >= 165 -%}{{ product.featured_media | img_url: '165x' }} 165w,{%- endif -%}
+                    {%- if product.featured_media.width >= 360 -%}{{ product.featured_media | img_url: '360x' }} 360w,{%- endif -%}
+                    {%- if product.featured_media.width >= 533 -%}{{ product.featured_media | img_url: '533x' }} 533w,{%- endif -%}
+                    {%- if product.featured_media.width >= 720 -%}{{ product.featured_media | img_url: '720x' }} 720w,{%- endif -%}
+                    {%- if product.featured_media.width >= 940 -%}{{ product.featured_media | img_url: '940x' }} 940w,{%- endif -%}
+                    {%- if product.featured_media.width >= 1066 -%}{{ product.featured_media | img_url: '1066x' }} 1066w,{%- endif -%}
+                    {{ product.featured_media | img_url: 'master' }} {{ product.featured_media.width }}w
+                " src="{{ product.featured_media | img_url: '533x' }}"
+            sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 130 | divided_by: 4 }}px, (min-width: 990px) calc((100vw - 130px) / 4), (min-width: 750px) calc((100vw - 120px) / 3), calc((100vw - 35px) / 2)"
+            alt="{{ product.featured_media.alt | escape }}" loading="lazy">
+
+        </div>
+        {%- else -%}
+        <div>
+          <h2>
+            <a href="{{ product_card_product.url | default: '#' }}">
+              {{ product_card_product.title }}
+            </a>
+          </h2>
+        </div>
+        {%- endif -%}
+
+
+        {%- if product.featured_media -%}
+        <h3>
+          <a href="{{ product.url | default: '#' }}" class="">
+            {{ product.title | escape }}
+          </a>
+        </h3>
+        {%- endif -%}
+
+
+        {% if on_sale == true %}
+        <div class="product-price">
+          <span class="original-price">{{ product.compare_at_price | money }}</span>
+          <span class="sale-price">{{ product.price | money }}</span>
+        </div>
+        {% else %}
+        <div class="product-price">
+          <span class="regular-price">{{ product.price | money }}</span>
+        </div>
+        {% endif %}
+
+        {% comment %} Add to Cart {% endcomment %}
+
+        {% if add_to_cart == true %}
+        <form action="/cart/add" method="post">
+
+          {% if product.variants.size > 1 %}
+          <select name="id">
+            {% for variant in product.variants %}
+              {% if variant.available %}
+              <option value="{{ variant.id }}">{{ variant.title }}</option>
+              {% else %}
+              <option disabled="disabled">{{ variant.title }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+          {% else %}
+          <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+          {% endif %}
+
+          <div>
+            <button type="submit" name="add">Add to cart</button>
+          </div>
+        </form>
+        {% endif %}
+
+      </div>
+
+      {%- comment -%}
+      ************************************
+      END SECTION: Render Single Product
+      ************************************
+      {%- endcomment -%}
+
+  </div>
+
+  {%- comment -%}
+    ************************************
+    SUB SECTION: Check New Row
+    ************************************
+    {%- endcomment -%}
+
+    {% assign products_rendered_count = products_rendered_count | plus: 1 %} {% comment %} Increase rendered count {% endcomment %}
+    {% assign products_rendered_in_row = products_rendered_in_row | plus: 1 %} {% comment %} Increase rendered count {% endcomment %}
+
+    {% comment %} Determine if we are at the max products to display {% endcomment %}
+    {%if products_rendered_count >= max_products %}
+        {% break %}
+    {% endif %}
+
+    {% comment %} Determine if we need to start a new row {% endcomment %}
+    {% assign need_new_row = false %}
+    {% if current_row == 1 and show_hero == true %}
+        {% assign need_new_row = true %}
+    {% endif %}
+    {% if products_rendered_in_row >= rowlen %}
+        {% assign need_new_row = true %}
+    {% endif %}
+
+    {% if need_new_row == true %}
+        </div>
+        <div class="row">
+        {% assign products_rendered_in_row = 0 %} 
+        {% assign current_row = current_row | plus: 1 %}
+        {% assign need_new_row = false %} {% comment %} reset for new row {% endcomment %}
+    {% endif %}
+
+    {%- comment -%}
+    ************************************
+    END SUB SECTION: Check New Row
+    ************************************
+    {%- endcomment -%}
+
+  {%- endfor -%}
+
+
+{%- comment -%}
+************************************
+END SECTION: Display Recommended Products
+************************************
+{%- endcomment -%}
+
+</div>

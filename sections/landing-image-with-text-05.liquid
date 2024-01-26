@@ -1,0 +1,49 @@
+<div class="landing-image-with-text-05">
+  <div class="container">
+    <div class="landing-image-with-text-wrapper">
+      {% if section.settings.image != blank %}
+      <div class="image-block col-12 col-md-6">
+        {%- assign id = section.settings.image.id -%}
+        {%- assign img_src = section.settings.image -%}
+        {%- assign size = 1900 -%}
+        {% include 'image-load' %}
+      </div>
+      {% endif %}
+
+      {% if section.settings.text != blank or section.settings.title != blank %}
+      <div class="text-block col-12 col-md-6">
+        {% if section.settings.title != blank %}
+        <h2>{{ section.settings.title | remove: '<p>' | remove: '</p>' }}</h2>
+        {% endif %}
+
+        {% if section.settings.text != blank %}
+        <div class="rte">{{ section.settings.text }}</div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Image with text 05",
+    "settings": [
+	  {
+       "type": "image_picker",
+       "id": "image",
+       "label": "Image"
+      },
+      {
+         "type": "richtext",
+         "id": "title",
+         "label": "Title"
+      },
+	  {
+         "type": "richtext",
+         "id": "text",
+         "label": "Text"
+      }
+    ]
+  }
+{% endschema %}

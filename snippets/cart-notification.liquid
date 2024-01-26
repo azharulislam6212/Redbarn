@@ -1,0 +1,38 @@
+<div class="cart-notification-wrapper container clearfix">
+  <div id="cart-notification" class="cart-notification" aria-modal="true" role="dialog" tabindex="-1">
+    <div class="cart-notification__header">
+      <h5 class="cart-notification__heading"><span class="icon icon-check"></span> {{ 'cart.general.item_added' | t }}</h5>
+      <span type="button" class="cart-notification__close modal__close-button link">
+        <span class='close-btn'>
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="15px" viewBox="0 0 15 15" version="1.1">
+            <!-- Generator: sketchtool 54.1 (76490) - https://sketchapp.com -->
+            <title>31B7BFCD-587D-4A9A-95B0-8ECED6D94F9F@2x</title>
+            <desc>Created with sketchtool.</desc>
+            <g id="Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+              <g id="Menu" transform="translate(-353.000000, -7.000000)" fill="#11181f" fill-rule="nonzero">
+                <g id="Close" transform="translate(345.000000, 0.000000)">
+                  <path d="M17.7310403,14.5002289 L22.7809907,19.5492181 C23.0730031,19.8417339 23.0730031,20.3156189 22.7809907,20.607677 L21.607677,21.7809907 C21.3151611,22.0730031 20.8412762,22.0730031 20.5492181,21.7809907 L15.4997711,16.731498 L10.4507819,21.7814485 C10.1582661,22.0734609 9.68438115,22.0734609 9.39232302,21.7814485 L8.21900926,20.6081347 C7.92699691,20.3156189 7.92699691,19.8417339 8.21900926,19.5496758 L13.268502,14.5002289 L8.21900926,9.45078195 C7.92699691,9.15826605 7.92699691,8.68433537 8.21900926,8.39232302 L9.39186525,7.21946703 C9.68438115,6.92745468 10.1582661,6.92745468 10.4503242,7.21946703 L15.4997711,12.2689597 L20.5487603,7.21900926 C20.8412762,6.92699691 21.3151611,6.92699691 21.6072192,7.21900926 L22.780533,8.39232302 C23.0725453,8.68483892 23.0725453,9.15872383 22.780533,9.45078195 L17.7310403,14.5002289 Z" id="icon-close"/>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </span>
+      </span>
+    </div> 
+    <div id="cart-notification-product" class="cart-notification-product">
+
+      <img class="cart-notification-product__image" src="" alt="cart notification image" />
+
+      <div class="cart-notification-product__info">
+        <div class="cart-notification-product__name"></div>
+        <div class="cart-notification-product__options"></div>
+
+    <div class="cart-notification__links">
+      <a href="{{ routes.cart_url }}" id="cart-notification-button" class="btn auto-full-width outline"></a>
+      <form action="{{ routes.cart_url }}" method="post" id="cart-notification-form">
+        <button class="btn auto-full-width " name="checkout">{{ 'cart.general.checkout' | t }}</button>
+      </form>
+      <span  class="link continue_shopping modal__close-button ">{{ 'cart.general.continue_shopping' | t }}</span>
+    </div>
+  </div>
+</div>
